@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Center colors */
+    --color-gut: #dc2626;
+    --color-heart: #22c55e;
+    --color-head: #3b82f6;
+
+    /* Warm Editorial palette */
+    --color-cream: #FAFAF5;
+    --color-cream-dark: #F5F2EB;
+    --color-charcoal: #2D2A24;
+    --color-charcoal-light: #5C584E;
+    --color-charcoal-muted: #8A8578;
+    --color-terracotta: #C4785C;
+    --color-sage: #7D9B84;
+    --color-gold: #C9A962;
+    --color-border: #E8E4DB;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-100 text-charcoal antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+
+  /* Serif headings */
+  h1, h2, h3, .font-display {
+    @apply font-serif;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  /* Smooth focus states */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-terracotta-500 ring-offset-2 ring-offset-cream-100;
+  }
+
+  .dark *:focus-visible {
+    @apply ring-offset-gray-900;
+  }
+}
+
+@layer components {
+  /* Warm Editorial Card */
+  .card-warm {
+    @apply bg-white rounded-2xl border border-warm-border shadow-warm;
+  }
+
+  .card-warm-header {
+    @apply px-6 py-4 border-b border-warm-border;
+  }
+
+  .card-warm-body {
+    @apply p-6;
+  }
+
+  /* Section pills */
+  .pill {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all;
+  }
+
+  .pill-default {
+    @apply bg-cream-200 text-charcoal-light hover:bg-cream-300;
+  }
+
+  .pill-active {
+    @apply bg-charcoal text-white;
+  }
+
+  /* Quote block */
+  .quote-block {
+    @apply pl-4 border-l-4 border-terracotta-500 italic text-charcoal-light;
+  }
+
+  /* Type node styles */
+  .type-node {
+    @apply w-12 h-12 rounded-full flex items-center justify-center font-bold text-white cursor-pointer transition-transform hover:scale-110;
+  }
+
+  .type-node-gut {
+    @apply bg-gut-500 hover:bg-gut-600;
+  }
+
+  .type-node-heart {
+    @apply bg-heart-500 hover:bg-heart-600;
+  }
+
+  .type-node-head {
+    @apply bg-head-500 hover:bg-head-600;
+  }
+
+  /* SVG lines */
+  .integration-line {
+    stroke: theme('colors.sage.500');
+    stroke-width: 2;
+    stroke-dasharray: none;
+  }
+
+  .stress-line {
+    stroke: theme('colors.terracotta.500');
+    stroke-width: 2;
+    stroke-dasharray: 5, 5;
+  }
+
+  .wing-line {
+    stroke: theme('colors.charcoal.muted');
+    stroke-width: 1;
+  }
+
+  /* Instinct colors */
+  .instinct-sp {
+    --instinct-color: #C9A962;
+  }
+
+  .instinct-so {
+    --instinct-color: #7D9B84;
+  }
+
+  .instinct-sx {
+    --instinct-color: #C4785C;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Warm gradients */
+  .bg-warm-gradient {
+    background: linear-gradient(135deg, #F5EFE6 0%, #FBF8F3 100%);
+  }
+
+  .bg-warm-gradient-subtle {
+    background: linear-gradient(180deg, #FAFAF5 0%, #F5F2EB 100%);
+  }
+
+  /* Prose styling for narrative content */
+  .prose-warm {
+    @apply text-charcoal-light leading-relaxed;
+  }
+
+  .prose-warm p {
+    @apply mb-4 last:mb-0;
+  }
+
+  .prose-warm em {
+    @apply text-charcoal-muted not-italic;
+  }
+}

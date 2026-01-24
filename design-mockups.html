@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enneagram Sync - Design Mockups</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+    }
+
+    .mockup-nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .mockup-nav button {
+      padding: 12px 24px;
+      border: 2px solid #6366f1;
+      background: transparent;
+      color: #6366f1;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .mockup-nav button:hover,
+    .mockup-nav button.active {
+      background: #6366f1;
+      color: white;
+    }
+
+    .mockup-container {
+      display: none;
+    }
+
+    .mockup-container.active {
+      display: block;
+    }
+
+    .mockup-title {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-desc {
+      color: #a0a0c0;
+      margin-bottom: 32px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .mockup-frame {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ===================== */
+    /* MOCKUP 1: WARM EDITORIAL (Recommended) */
+    /* ===================== */
+    .warm-editorial {
+      --bg-cream: #FAFAF5;
+      --bg-warm: #F5F2EB;
+      --text-primary: #2D2A24;
+      --text-secondary: #5C584E;
+      --text-muted: #8A8578;
+      --accent-terracotta: #C4785C;
+      --accent-sage: #7D9B84;
+      --accent-gold: #C9A962;
+      --border-light: #E8E4DB;
+    }
+
+    .warm-editorial .page {
+      background: var(--bg-cream);
+      min-height: 700px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .warm-editorial .header {
+      background: var(--bg-warm);
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .warm-editorial .logo {
+      font-family: 'Lora', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .warm-editorial .nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    .warm-editorial .nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .warm-editorial .hero {
+      padding: 60px 40px;
+      max-width: 800px;
+    }
+
+    .warm-editorial .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-terracotta);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .warm-editorial .type-number {
+      font-family: 'Lora', serif;
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .warm-editorial .type-name {
+      font-family: 'Lora', serif;
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .warm-editorial .type-desc {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+
+    .warm-editorial .section-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 40px;
+      margin-bottom: 40px;
+    }
+
+    .warm-editorial .section-tab {
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+    }
+
+    .warm-editorial .section-tab.active {
+      background: var(--text-primary);
+      color: white;
+      border-color: var(--text-primary);
+    }
+
+    .warm-editorial .content {
+      padding: 0 40px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .warm-editorial .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border-light);
+    }
+
+    .warm-editorial .card-title {
+      font-family: 'Lora', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .warm-editorial .card-text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .warm-editorial .quote-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #F5EFE6 0%, #FBF8F3 100%);
+      border-left: 4px solid var(--accent-terracotta);
+    }
+
+    .warm-editorial .quote-text {
+      font-family: 'Lora', serif;
+      font-size: 24px;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* ===================== */
+    /* MOCKUP 2: CONTEMPLATIVE MINIMAL */
+    /* ===================== */
+    .contemplative {
+      --bg: #FFFFFF;
+      --bg-subtle: #F8F9FA;
+      --text-dark: #1a1a1a;
+      --text-medium: #4a4a4a;
+      --text-light: #8a8a8a;
+      --accent: #2563EB;
+      --accent-muted: #EFF6FF;
+    }
+
+    .contemplative .page {
+      background: var(--bg);
+      min-height: 700px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .contemplative .header {
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .contemplative .logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: -0.5px;
+    }
+
+    .contemplative .hero {
+      padding: 80px 48px 60px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .contemplative .type-number {
+      font-size: 120px;
+      font-weight: 200;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .contemplative .type-name {
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .contemplative .type-desc {
+      font-size: 18px;
+      color: var(--text-medium);
+      line-height: 1.8;
+    }
+
+    .contemplative .section-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 48px;
+      margin-bottom: 48px;
+    }
+
+    .contemplative .section-tab {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .contemplative .section-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .contemplative .content {
+      padding: 0 48px 60px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .contemplative .card {
+      padding: 40px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .contemplative .card:last-child {
+      border-bottom: none;
+    }
+
+    .contemplative .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .contemplative .card-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .contemplative .card-text {
+      color: var(--text-medium);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* ===================== */
+    /* MOCKUP 3: ORGANIC FLOW */
+    /* ===================== */
+    .organic {
+      --bg-base: #F9F7F4;
+      --bg-card: #FFFFFF;
+      --text-primary: #3D3D3D;
+      --text-secondary: #6B6B6B;
+      --accent-earth: #8B6F4E;
+      --accent-forest: #4A6741;
+      --accent-clay: #B8805A;
+      --gradient-warm: linear-gradient(135deg, #F5E6D3 0%, #E8DFD3 100%);
+    }
+
+    .organic .page {
+      background: var(--bg-base);
+      min-height: 700px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .organic .header {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .organic .logo {
+      font-family: 'Lora', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .organic .hero {
+      padding: 40px;
+    }
+
+    .organic .hero-card {
+      background: var(--gradient-warm);
+      border-radius: 32px;
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .organic .type-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(139, 111, 78, 0.15);
+    }
+
+    .organic .type-number {
+      font-family: 'Lora', serif;
+      font-size: 72px;
+      font-weight: 600;
+      color: var(--accent-earth);
+    }
+
+    .organic .type-info h1 {
+      font-family: 'Lora', serif;
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .organic .type-info p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .organic .section-tabs {
+      display: flex;
+      gap: 12px;
+      padding: 32px 40px;
+    }
+
+    .organic .section-tab {
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .organic .section-tab.active {
+      background: var(--accent-earth);
+      color: white;
+    }
+
+    .organic .content {
+      padding: 0 40px 60px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .organic .card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .organic .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: var(--gradient-warm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .organic .card-title {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .organic .card-text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .organic .story-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #4A6741 0%, #5C7A52 100%);
+      color: white;
+    }
+
+    .organic .story-card .card-title {
+      color: white;
+    }
+
+    .organic .story-card .card-text {
+      color: rgba(255,255,255,0.85);
+      font-size: 16px;
+    }
+
+    /* ===================== */
+    /* MOCKUP 4: DARK IMMERSIVE */
+    /* ===================== */
+    .dark-immersive {
+      --bg-deep: #0F0F14;
+      --bg-card: #1A1A22;
+      --bg-elevated: #252530;
+      --text-bright: #FFFFFF;
+      --text-medium: #A0A0B0;
+      --text-dim: #606070;
+      --accent-violet: #8B5CF6;
+      --accent-rose: #EC4899;
+      --gradient-glow: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+    }
+
+    .dark-immersive .page {
+      background: var(--bg-deep);
+      min-height: 700px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .dark-immersive .header {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dark-immersive .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+
+    .dark-immersive .hero {
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .dark-immersive .type-glow {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--gradient-glow);
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 60px rgba(139, 92, 246, 0.4);
+    }
+
+    .dark-immersive .type-number {
+      font-size: 64px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .dark-immersive .type-name {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+    }
+
+    .dark-immersive .type-desc {
+      font-size: 16px;
+      color: var(--text-medium);
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .dark-immersive .section-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 40px;
+      margin-bottom: 40px;
+    }
+
+    .dark-immersive .section-tab {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-medium);
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+    }
+
+    .dark-immersive .section-tab.active {
+      background: var(--gradient-glow);
+      color: white;
+      border-color: transparent;
+    }
+
+    .dark-immersive .content {
+      padding: 0 40px 60px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .dark-immersive .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dark-immersive .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dark-immersive .card-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--gradient-glow);
+      border-radius: 2px;
+    }
+
+    .dark-immersive .card-text {
+      color: var(--text-medium);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    /* Color swatches display */
+    .color-swatches {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .swatch {
+      text-align: center;
+    }
+
+    .swatch-color {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .swatch-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="font-size: 40px; margin-bottom: 12px;">Design Mockups</h1>
+  <p style="color: #a0a0c0; margin-bottom: 40px;">Click each option to preview. Based on Delphi consensus, <strong>Warm Editorial</strong> is recommended.</p>
+
+  <div class="mockup-nav">
+    <button class="active" onclick="showMockup('warm-editorial')">Warm Editorial (Recommended)</button>
+    <button onclick="showMockup('contemplative')">Contemplative Minimal</button>
+    <button onclick="showMockup('organic')">Organic Flow</button>
+    <button onclick="showMockup('dark-immersive')">Dark Immersive</button>
+  </div>
+
+  <!-- MOCKUP 1: WARM EDITORIAL -->
+  <div id="warm-editorial" class="mockup-container active">
+    <h2 class="mockup-title">Warm Editorial</h2>
+    <p class="mockup-desc">
+      Combines Contemplative Editorial's typography and whitespace with Organic Flow's warmth.
+      Cream backgrounds, terracotta accents, serif headings. Sophisticated yet approachable.
+    </p>
+    <div class="mockup-frame warm-editorial">
+      <div class="page">
+        <div class="header">
+          <div class="logo">Enneagram Sync</div>
+          <nav class="nav">
+            <a href="#">Circle</a>
+            <a href="#">Mind Map</a>
+            <a href="#">Compare</a>
+            <a href="#">Profile</a>
+          </nav>
+        </div>
+        <div class="hero">
+          <div class="type-badge">
+            <span>Heart Center</span>
+          </div>
+          <div class="type-number">4</div>
+          <h1 class="type-name">The Individualist</h1>
+          <p class="type-desc">
+            Driven by a need to understand themselves and find their unique identity.
+            Fours experience emotions deeply and seek authenticity in all things.
+          </p>
+        </div>
+        <div class="section-tabs">
+          <button class="section-tab active">Core</button>
+          <button class="section-tab">Experience</button>
+          <button class="section-tab">Growth</button>
+          <button class="section-tab">Framework</button>
+        </div>
+        <div class="content">
+          <div class="card">
+            <h3 class="card-title">Core Fear</h3>
+            <p class="card-text">Being ordinary, without identity or personal significance. The fear of having no unique value or being fundamentally flawed.</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Core Desire</h3>
+            <p class="card-text">To find themselves and their significance, to create an identity out of their inner experience.</p>
+          </div>
+          <div class="card quote-card">
+            <p class="quote-text">"I am not what happened to me, I am what I choose to become."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="color-swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #FAFAF5;"></div>
+        <div class="swatch-label">Cream</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #C4785C;"></div>
+        <div class="swatch-label">Terracotta</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #7D9B84;"></div>
+        <div class="swatch-label">Sage</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #2D2A24;"></div>
+        <div class="swatch-label">Charcoal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOCKUP 2: CONTEMPLATIVE MINIMAL -->
+  <div id="contemplative" class="mockup-container">
+    <h2 class="mockup-title">Contemplative Minimal</h2>
+    <p class="mockup-desc">
+      Clean, spacious, editorial-inspired. Focus on typography and whitespace.
+      Blue accent for clarity and trust. Best for users who prefer minimal distraction.
+    </p>
+    <div class="mockup-frame contemplative">
+      <div class="page">
+        <div class="header">
+          <div class="logo">Enneagram Sync</div>
+        </div>
+        <div class="hero">
+          <div class="type-number">4</div>
+          <h1 class="type-name">The Individualist</h1>
+          <p class="type-desc">
+            Driven by a need to understand themselves and find their unique identity.
+          </p>
+        </div>
+        <div class="section-tabs">
+          <button class="section-tab active">Core</button>
+          <button class="section-tab">Experience</button>
+          <button class="section-tab">Growth</button>
+          <button class="section-tab">Framework</button>
+        </div>
+        <div class="content">
+          <div class="card">
+            <div class="card-label">Core Fear</div>
+            <h3 class="card-title">Having No Identity</h3>
+            <p class="card-text">Being ordinary, without personal significance. The fear of having no unique value or being fundamentally flawed in a way that cannot be fixed.</p>
+          </div>
+          <div class="card">
+            <div class="card-label">Core Desire</div>
+            <h3 class="card-title">To Be Uniquely Themselves</h3>
+            <p class="card-text">To find themselves and their significance, creating an identity from inner experience that sets them apart from others.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="color-swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #FFFFFF;"></div>
+        <div class="swatch-label">White</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #2563EB;"></div>
+        <div class="swatch-label">Blue</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #1a1a1a;"></div>
+        <div class="swatch-label">Black</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #8a8a8a;"></div>
+        <div class="swatch-label">Gray</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOCKUP 3: ORGANIC FLOW -->
+  <div id="organic" class="mockup-container">
+    <h2 class="mockup-title">Organic Flow</h2>
+    <p class="mockup-desc">
+      Warm, earthy, grounded. Rounded shapes and natural colors create a nurturing feel.
+      Great for users seeking a calming, non-clinical experience.
+    </p>
+    <div class="mockup-frame organic">
+      <div class="page">
+        <div class="header">
+          <div class="logo">Enneagram Sync</div>
+        </div>
+        <div class="hero">
+          <div class="hero-card">
+            <div class="type-circle">
+              <span class="type-number">4</span>
+            </div>
+            <div class="type-info">
+              <h1>The Individualist</h1>
+              <p>Driven by a need to understand themselves and find their unique identity in the world.</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-tabs">
+          <button class="section-tab active">Core</button>
+          <button class="section-tab">Experience</button>
+          <button class="section-tab">Growth</button>
+          <button class="section-tab">Framework</button>
+        </div>
+        <div class="content">
+          <div class="card">
+            <div class="card-icon">💔</div>
+            <h3 class="card-title">Core Fear</h3>
+            <p class="card-text">Being ordinary, without identity or personal significance in the world.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">✨</div>
+            <h3 class="card-title">Core Desire</h3>
+            <p class="card-text">To find themselves and create a unique, authentic identity.</p>
+          </div>
+          <div class="card story-card">
+            <div class="card-icon" style="background: rgba(255,255,255,0.2);">📖</div>
+            <h3 class="card-title">The Story</h3>
+            <p class="card-text">"I woke at dawn, feeling that familiar weight—the sense that something essential was missing. Not from the room, but from within..."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="color-swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #F9F7F4;"></div>
+        <div class="swatch-label">Linen</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #8B6F4E;"></div>
+        <div class="swatch-label">Earth</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #4A6741;"></div>
+        <div class="swatch-label">Forest</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #B8805A;"></div>
+        <div class="swatch-label">Clay</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOCKUP 4: DARK IMMERSIVE -->
+  <div id="dark-immersive" class="mockup-container">
+    <h2 class="mockup-title">Dark Immersive</h2>
+    <p class="mockup-desc">
+      Bold, modern, focused. Dark backgrounds with vibrant gradients.
+      Best for users who prefer dark mode and a more dramatic aesthetic.
+    </p>
+    <div class="mockup-frame dark-immersive">
+      <div class="page">
+        <div class="header">
+          <div class="logo">Enneagram Sync</div>
+        </div>
+        <div class="hero">
+          <div class="type-glow">
+            <span class="type-number">4</span>
+          </div>
+          <h1 class="type-name">The Individualist</h1>
+          <p class="type-desc">Driven by a need to understand themselves and find their unique identity.</p>
+        </div>
+        <div class="section-tabs">
+          <button class="section-tab active">Core</button>
+          <button class="section-tab">Experience</button>
+          <button class="section-tab">Growth</button>
+          <button class="section-tab">Framework</button>
+        </div>
+        <div class="content">
+          <div class="card">
+            <h3 class="card-title">Core Fear</h3>
+            <p class="card-text">Being ordinary, without identity or personal significance.</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Core Desire</h3>
+            <p class="card-text">To find themselves and their unique significance.</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Vice</h3>
+            <p class="card-text">Envy — comparing themselves to others and feeling lacking.</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Virtue</h3>
+            <p class="card-text">Equanimity — accepting what is without needing to be special.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="color-swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background: #0F0F14;"></div>
+        <div class="swatch-label">Deep</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #8B5CF6;"></div>
+        <div class="swatch-label">Violet</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #EC4899;"></div>
+        <div class="swatch-label">Rose</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background: #1A1A22;"></div>
+        <div class="swatch-label">Card</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showMockup(id) {
+      // Hide all mockups
+      document.querySelectorAll('.mockup-container').forEach(el => {
+        el.classList.remove('active');
+      });
+      // Show selected mockup
+      document.getElementById(id).classList.add('active');
+      // Update nav buttons
+      document.querySelectorAll('.mockup-nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
