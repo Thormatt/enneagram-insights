@@ -50,6 +50,7 @@ interface AppState {
   addSavedComparison: (type1: TypeNumber, type2: TypeNumber) => void;
   removeSavedComparison: (type1: TypeNumber, type2: TypeNumber) => void;
   completeOnboarding: (experienceLevel: 'new' | 'familiar') => void;
+  dismissOnboarding: () => void;
   clearSelection: () => void;
 }
 
@@ -156,6 +157,10 @@ export const useAppStore = create<AppState>()(
       completeOnboarding: (experienceLevel) => set({
         hasCompletedOnboarding: true,
         userExperienceLevel: experienceLevel
+      }),
+
+      dismissOnboarding: () => set({
+        hasCompletedOnboarding: true
       }),
 
       clearSelection: () => set({

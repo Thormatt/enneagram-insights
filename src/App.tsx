@@ -55,6 +55,7 @@ function App() {
   const setUserProfile = useAppStore((state) => state.setUserProfile);
   const hasCompletedOnboarding = useAppStore((state) => state.hasCompletedOnboarding);
   const completeOnboarding = useAppStore((state) => state.completeOnboarding);
+  const dismissOnboarding = useAppStore((state) => state.dismissOnboarding);
   const [subtypeSelectorOpen, setSubtypeSelectorOpen] = useState(false);
   const [typeCardOpen, setTypeCardOpen] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -282,6 +283,7 @@ function App() {
       <OnboardingModal
         isOpen={!hasCompletedOnboarding}
         onComplete={completeOnboarding}
+        onClose={dismissOnboarding}
       />
     </Layout>
   );

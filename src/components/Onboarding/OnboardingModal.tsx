@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface OnboardingModalProps {
   isOpen: boolean;
   onComplete: (experienceLevel: 'new' | 'familiar') => void;
+  onClose?: () => void;
 }
 
-export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
+export function OnboardingModal({ isOpen, onComplete, onClose }: OnboardingModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -15,6 +16,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
           />
 
@@ -26,7 +28,19 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-cream-50 dark:bg-gray-800 rounded-2xl shadow-warm-lg max-w-lg w-full overflow-hidden">
+            <div className="bg-cream-50 dark:bg-gray-800 rounded-2xl shadow-warm-lg max-w-lg w-full overflow-hidden relative">
+              {/* Close Button */}
+              {onClose && (
+                <button
+                  onClick={onClose}
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                  aria-label="Close"
+                >
+                  <svg className="w-5 h-5 text-charcoal dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
               {/* Header */}
               <div className="bg-warm-gradient p-8 text-center border-b border-warm-border">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-terracotta-500 flex items-center justify-center shadow-warm">
