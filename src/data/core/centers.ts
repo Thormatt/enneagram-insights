@@ -55,9 +55,9 @@ export const getCenterByType = (typeNumber: number): Center | undefined => {
 
 export const getCenterColor = (center: 'gut' | 'heart' | 'head'): string => {
   const colors = {
-    gut: '#dc2626',    // Red
-    heart: '#22c55e',  // Green
-    head: '#3b82f6'    // Blue
+    gut: '#c87068',    // Dusty rose
+    heart: '#548c75',  // Sage teal
+    head: '#6b8eb3'    // Slate indigo
   };
   return colors[center];
 };

@@ -17,18 +17,18 @@ interface EnneagramCircleProps {
 }
 
 const GROUP_COLORS: Record<string, string> = {
-  // Harmonic groups
-  positive_outlook: '#22c55e',
-  competency: '#3b82f6',
-  reactive: '#ef4444',
-  // Hornevian groups
-  assertive: '#f59e0b',
-  compliant: '#8b5cf6',
-  withdrawn: '#06b6d4',
-  // Object relations
-  frustration: '#ec4899',
-  rejection: '#84cc16',
-  attachment: '#6366f1'
+  // Harmonic groups - softer palette
+  positive_outlook: '#548c75',  // sage teal (heart)
+  competency: '#6b8eb3',        // slate indigo (head)
+  reactive: '#c87068',          // dusty rose (gut)
+  // Hornevian groups - muted tones
+  assertive: '#d9a75a',         // muted gold
+  compliant: '#9b8bb3',         // muted purple
+  withdrawn: '#6ba3a3',         // muted teal
+  // Object relations - softer tones
+  frustration: '#c78da3',       // muted pink
+  rejection: '#8fb36b',         // muted lime
+  attachment: '#8b8fc7'         // muted indigo
 };
 
 // Static data - defined outside component to avoid recreation
@@ -203,7 +203,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('orient', 'auto')
         .append('path')
         .attr('d', 'M0,-5L10,0L0,5')
-        .attr('fill', '#22c55e');
+        .attr('fill', '#548c75');
 
       defs.append('marker')
         .attr('id', 'arrow-red')
@@ -215,7 +215,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('orient', 'auto')
         .append('path')
         .attr('d', 'M0,-5L10,0L0,5')
-        .attr('fill', '#ef4444');
+        .attr('fill', '#c87068');
 
       // Integration lines (solid green with arrows)
       integrationLines.forEach(({ from, to }) => {
@@ -239,7 +239,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('y1', startY)
           .attr('x2', endX)
           .attr('y2', endY)
-          .attr('stroke', '#22c55e')
+          .attr('stroke', '#548c75')
           .attr('stroke-width', 2)
           .attr('marker-end', 'url(#arrow-green)')
           .attr('class', 'integration-line');
@@ -266,7 +266,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('y1', startY)
           .attr('x2', endX)
           .attr('y2', endY)
-          .attr('stroke', '#ef4444')
+          .attr('stroke', '#c87068')
           .attr('stroke-width', 2)
           .attr('stroke-dasharray', '6,4')
           .attr('marker-end', 'url(#arrow-red)')
@@ -406,7 +406,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       legend.append('line')
         .attr('x1', 0).attr('y1', 0)
         .attr('x2', 30).attr('y2', 0)
-        .attr('stroke', '#22c55e')
+        .attr('stroke', '#548c75')
         .attr('stroke-width', 2);
       legend.append('text')
         .attr('x', 38).attr('y', 4)
@@ -418,7 +418,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       legend.append('line')
         .attr('x1', 0).attr('y1', 22)
         .attr('x2', 30).attr('y2', 22)
-        .attr('stroke', '#ef4444')
+        .attr('stroke', '#c87068')
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', '6,4');
       legend.append('text')

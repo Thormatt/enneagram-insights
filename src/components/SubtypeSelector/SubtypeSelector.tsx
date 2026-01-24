@@ -16,9 +16,9 @@ interface SubtypeSelectorProps {
 }
 
 const instinctColors: Record<InstinctType, string> = {
-  sp: '#059669', // emerald-600
-  so: '#7c3aed', // violet-600
-  sx: '#dc2626'  // red-600
+  sp: '#548c75', // sage teal
+  so: '#6b8eb3', // slate indigo
+  sx: '#c87068'  // dusty rose
 };
 
 const instinctIcons: Record<InstinctType, React.ReactNode> = {

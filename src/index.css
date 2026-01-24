@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    /* Center colors */
-    --color-gut: #dc2626;
-    --color-heart: #22c55e;
-    --color-head: #3b82f6;
+    /* Center colors - softer palette */
+    --color-gut: #c87068;
+    --color-heart: #548c75;
+    --color-head: #6b8eb3;
 
     /* Warm Editorial palette */
     --color-cream: #FAFAF5;

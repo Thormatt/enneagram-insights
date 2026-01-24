@@ -287,7 +287,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                     description={harmonic.description}
                     detail={`Response to Problems: ${harmonic.responseToProblems}`}
                     types={harmonic.types}
-                    accentColor="#3b82f6"
+                    accentColor="#6b8eb3"
                   />
                 )}
                 {hornevian && (
