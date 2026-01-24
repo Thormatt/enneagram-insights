@@ -33,10 +33,10 @@ export function OnboardingModal({ isOpen, onComplete, onClose }: OnboardingModal
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-terracotta-100/60 hover:bg-terracotta-200 dark:bg-terracotta-900/40 dark:hover:bg-terracotta-800/60 transition-colors"
                   aria-label="Close"
                 >
-                  <svg className="w-5 h-5 text-charcoal dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 text-terracotta-700 dark:text-terracotta-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
