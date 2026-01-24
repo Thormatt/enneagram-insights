@@ -117,13 +117,13 @@ export function QuizResults({
             {/* Dominant */}
             {dominantInstinct && (
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-sage-500 flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs font-bold">1st</span>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900 dark:text-white">
                     {dominantInstinct.fullName}
-                    <span className="ml-2 text-xs font-normal text-emerald-600 dark:text-emerald-400 uppercase">Dominant</span>
+                    <span className="ml-2 text-xs font-normal text-sage-600 dark:text-sage-400 uppercase">Dominant</span>
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{dominantInstinct.focus}</p>
                 </div>
@@ -133,13 +133,13 @@ export function QuizResults({
             {/* Secondary */}
             {secondaryInstinct && (
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs font-bold">2nd</span>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900 dark:text-white">
                     {secondaryInstinct.fullName}
-                    <span className="ml-2 text-xs font-normal text-blue-600 dark:text-blue-400 uppercase">Secondary</span>
+                    <span className="ml-2 text-xs font-normal text-gold-600 dark:text-gold-400 uppercase">Secondary</span>
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{secondaryInstinct.focus}</p>
                 </div>
@@ -166,20 +166,20 @@ export function QuizResults({
       </div>
 
       {/* Summary Card */}
-      <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white mb-8">
-        <h3 className="font-semibold mb-4">Your Complete Profile</h3>
+      <div className="bg-charcoal rounded-2xl shadow-warm-lg p-6 text-white mb-8">
+        <h3 className="font-serif font-semibold mb-4">Your Complete Profile</h3>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <div className="text-3xl font-bold mb-1">{type}</div>
-            <div className="text-white/70 text-sm">Core Type</div>
+            <div className="text-3xl font-serif font-bold mb-1">{type}</div>
+            <div className="text-cream-300 text-sm">Core Type</div>
           </div>
           <div>
-            <div className="text-3xl font-bold mb-1">{wing.slice(-1)}</div>
-            <div className="text-white/70 text-sm">Wing</div>
+            <div className="text-3xl font-serif font-bold mb-1">{wing.slice(-1)}</div>
+            <div className="text-cream-300 text-sm">Wing</div>
           </div>
           <div>
             <div className="text-xl font-bold mb-1">{instincts[0].toUpperCase()}/{instincts[1].toUpperCase()}</div>
-            <div className="text-white/70 text-sm">Instinct Stack</div>
+            <div className="text-cream-300 text-sm">Instinct Stack</div>
           </div>
         </div>
       </div>
@@ -189,7 +189,7 @@ export function QuizResults({
         {onSave && (
           <button
             onClick={onSave}
-            className="flex-1 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            className="flex-1 py-4 bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold rounded-xl shadow-warm hover:shadow-warm-lg transition-all"
           >
             Save to Profile
           </button>

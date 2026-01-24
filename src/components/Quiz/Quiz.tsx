@@ -165,17 +165,18 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+      <div className="bg-charcoal dark:bg-gray-900 border-b border-charcoal-light/20 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Enneagram Assessment</h1>
+          <h1 className="text-xl font-serif font-bold text-white">Enneagram Assessment</h1>
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
+              aria-label="Close quiz"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -186,14 +187,14 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
         {state.stage !== 'intro' && state.stage !== 'results' && (
           <div className="max-w-3xl mx-auto px-4 pb-4">
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{getStageLabel()}</span>
-              <span className="text-sm text-gray-400 dark:text-gray-500">
+              <span className="text-sm font-medium text-cream-200">{getStageLabel()}</span>
+              <span className="text-sm text-cream-300">
                 Question {state.currentQuestionIndex + 1} of {currentQuestions.length}
               </span>
             </div>
-            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div className="h-2 bg-charcoal-light/30 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                className="h-full bg-terracotta-500"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.15 }}
@@ -215,52 +216,61 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
               exit={{ opacity: 0, y: -20 }}
               className="text-center py-12"
             >
-              <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-terracotta-500 flex items-center justify-center shadow-warm">
+                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Discover Your Enneagram Type
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-charcoal dark:text-white mb-4">
+                Explore Your Enneagram Type
               </h2>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">
-                This assessment will help you identify your core Enneagram type, wing preference,
-                and instinctual stack through a series of carefully crafted questions.
+              <p className="text-base sm:text-lg text-charcoal-light dark:text-gray-400 mb-6 max-w-xl mx-auto">
+                This assessment offers a starting point for exploring your Enneagram type, wing,
+                and instinctual stack through a series of reflective questions.
               </p>
+
+              {/* Disclaimer */}
+              <div className="bg-sage-50 dark:bg-sage-900/30 border border-sage-200 dark:border-sage-800 rounded-xl p-4 mb-8 max-w-xl mx-auto">
+                <p className="text-sm text-sage-800 dark:text-sage-200 leading-relaxed">
+                  <strong className="font-semibold">A note on typing:</strong> No quiz can definitively determine your type.
+                  The Enneagram is a tool for self-discovery, and only you can truly know your type through honest
+                  self-reflection. Use these results as a guide to explore further, not as a final answer.
+                </p>
+              </div>
 
               <div className="grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto mb-10">
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400">1</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-sage-100 dark:bg-sage-900/50 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-sage-600 dark:text-sage-400">1</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Core Type</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">36 questions</p>
+                  <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Core Type</p>
+                  <p className="text-xs text-charcoal-muted dark:text-gray-500">36 questions</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-purple-600 dark:text-purple-400">2</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-terracotta-100 dark:bg-terracotta-900/50 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-terracotta-600 dark:text-terracotta-400">2</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Wing</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">3 questions</p>
+                  <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Wing</p>
+                  <p className="text-xs text-charcoal-muted dark:text-gray-500">3 questions</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-pink-600 dark:text-pink-400">3</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-gold-100 dark:bg-gold-900/50 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-gold-600 dark:text-gold-400">3</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Instincts</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">15 questions</p>
+                  <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Instincts</p>
+                  <p className="text-xs text-charcoal-muted dark:text-gray-500">15 questions</p>
                 </div>
               </div>
 
               <button
                 onClick={handleStartQuiz}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+                className="px-8 py-4 bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold rounded-xl shadow-warm hover:shadow-warm-lg transition-all"
               >
                 Begin Assessment
               </button>
 
-              <p className="mt-6 text-sm text-gray-400 dark:text-gray-500">
+              <p className="mt-6 text-sm text-charcoal-muted dark:text-gray-500">
                 Takes approximately 10-15 minutes
               </p>
             </motion.div>
@@ -275,8 +285,8 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
               exit={{ opacity: 0, x: -50 }}
               className="py-4 sm:py-8"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-8">
-                <p className="text-lg sm:text-xl text-gray-800 dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-4 sm:p-8 border border-warm-border dark:border-gray-700">
+                <p className="text-lg sm:text-xl text-charcoal dark:text-gray-200 mb-6 sm:mb-8 leading-relaxed">
                   {currentQuestion.text}
                 </p>
 
@@ -291,13 +301,13 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
                     <button
                       key={option.value}
                       onClick={() => handleAnswer(option.value)}
-                      className="w-full py-3 sm:py-4 px-4 sm:px-6 text-left border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all group"
+                      className="w-full py-3 sm:py-4 px-4 sm:px-6 text-left border-2 border-warm-border dark:border-gray-600 rounded-xl hover:border-terracotta-400 dark:hover:border-terracotta-500 hover:bg-terracotta-50 dark:hover:bg-terracotta-900/30 transition-all group"
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 dark:border-gray-500 group-hover:border-indigo-500 flex items-center justify-center text-gray-400 dark:text-gray-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 font-semibold text-sm sm:text-base">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-charcoal-muted/30 dark:border-gray-500 group-hover:border-terracotta-500 flex items-center justify-center text-charcoal-muted dark:text-gray-500 group-hover:text-terracotta-600 dark:group-hover:text-terracotta-400 font-semibold text-sm sm:text-base">
                           {option.value}
                         </div>
-                        <span className="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white text-sm sm:text-base">
+                        <span className="text-charcoal-light dark:text-gray-300 group-hover:text-charcoal dark:group-hover:text-white text-sm sm:text-base">
                           {option.label}
                         </span>
                       </div>

@@ -54,10 +54,11 @@ export const getCenterByType = (typeNumber: number): Center | undefined => {
 };
 
 export const getCenterColor = (center: 'gut' | 'heart' | 'head'): string => {
+  // Warm Editorial palette - muted, earthy tones
   const colors = {
-    gut: '#dc2626',    // Red
-    heart: '#22c55e',  // Green
-    head: '#3b82f6'    // Blue
+    gut: '#8C3A2B',    // Iron Oxide - earthy, grounded
+    heart: '#2D5A52',  // Deep Verdigris - emotional depth
+    head: '#364C63'    // Storm Slate - clarity, wisdom
   };
   return colors[center];
 };

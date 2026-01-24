@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    /* Center colors */
-    --color-gut: #dc2626;
-    --color-heart: #22c55e;
-    --color-head: #3b82f6;
+    /* Center colors - Warm Editorial palette */
+    --color-gut: #8C3A2B;    /* Iron Oxide */
+    --color-heart: #2D5A52;  /* Deep Verdigris */
+    --color-head: #364C63;   /* Storm Slate */
 
     /* Warm Editorial palette */
     --color-cream: #FAFAF5;

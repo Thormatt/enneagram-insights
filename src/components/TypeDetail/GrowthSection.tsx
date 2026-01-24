@@ -280,10 +280,10 @@ function ShadowContent({ defense, shadow, color }: ShadowContentProps) {
       {shadow && (
         <>
           <Card label="Shadow Projection" title="What You Project Onto Others" color="#8b5cf6">
-            <blockquote
-              className="text-xl font-serif italic text-charcoal dark:text-gray-200 pl-5 border-l-4 border-purple-400"
-            >
-              "{shadow.projectsOntoOthers}"
+            <blockquote className="bg-cream-100 dark:bg-gray-700 rounded-lg py-4 px-5 border-l-4 border-purple-400">
+              <p className="text-xl font-serif italic text-charcoal dark:text-gray-200">
+                "{shadow.projectsOntoOthers}"
+              </p>
             </blockquote>
           </Card>
 

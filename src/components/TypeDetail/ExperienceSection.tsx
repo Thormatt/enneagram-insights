@@ -124,10 +124,12 @@ export function ExperienceSection({
               {/* Hidden Logic */}
               <Card label="The Hidden Logic" color={instinctColor}>
                 <blockquote
-                  className="text-xl font-serif italic text-charcoal dark:text-gray-200 pl-5 border-l-4"
+                  className="bg-cream-100 dark:bg-gray-700 rounded-lg py-4 px-5 border-l-4"
                   style={{ borderColor: instinctColor }}
                 >
-                  "{currentStory.hiddenLogic}"
+                  <p className="text-xl font-serif italic text-charcoal dark:text-gray-200">
+                    "{currentStory.hiddenLogic}"
+                  </p>
                 </blockquote>
               </Card>
 

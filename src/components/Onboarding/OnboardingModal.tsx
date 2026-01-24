@@ -16,6 +16,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            onClick={() => onComplete('familiar')}
           />
 
           {/* Modal */}
@@ -26,7 +27,18 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-cream-50 dark:bg-gray-800 rounded-2xl shadow-warm-lg max-w-lg w-full overflow-hidden">
+            <div className="bg-cream-50 dark:bg-gray-800 rounded-2xl shadow-warm-lg max-w-lg w-full overflow-hidden relative">
+              {/* Skip button */}
+              <button
+                onClick={() => onComplete('familiar')}
+                className="absolute top-4 right-4 p-2 text-charcoal-muted hover:text-charcoal dark:text-gray-400 dark:hover:text-white hover:bg-cream-200 dark:hover:bg-gray-700 rounded-xl transition-colors z-10"
+                aria-label="Skip onboarding"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
               {/* Header */}
               <div className="bg-warm-gradient p-8 text-center border-b border-warm-border">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-terracotta-500 flex items-center justify-center shadow-warm">

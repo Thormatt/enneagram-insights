@@ -287,7 +287,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                     description={harmonic.description}
                     detail={`Response to Problems: ${harmonic.responseToProblems}`}
                     types={harmonic.types}
-                    accentColor="#3b82f6"
+                    accentColor="#364C63" // Storm Slate
                   />
                 )}
                 {hornevian && (
@@ -297,7 +297,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                     description={hornevian.description}
                     detail={`Social Movement: ${hornevian.socialMovement}`}
                     types={hornevian.types}
-                    accentColor="#8b5cf6"
+                    accentColor="#7D9B84" // Sage
                   />
                 )}
                 {objectRelations && (
@@ -307,7 +307,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                     description={objectRelations.description}
                     detail={`Early Pattern: ${objectRelations.earlyPattern}`}
                     types={objectRelations.types}
-                    accentColor="#C4785C"
+                    accentColor="#C4785C" // Terracotta
                   />
                 )}
               </div>

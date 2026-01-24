@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Layout } from './components/Layout';
 import { EnneagramCircle } from './components/Circle';
 import { TypeCard } from './components/TypeCard';
-import { OnboardingModal } from './components/Onboarding';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAppStore, createUserProfile } from './stores';
 import type { TypeNumber, WingVariant, InstinctStack } from './types';
 import './index.css';
@@ -53,8 +53,6 @@ function App() {
   const selectType = useAppStore((state) => state.selectType);
   const setViewMode = useAppStore((state) => state.setViewMode);
   const setUserProfile = useAppStore((state) => state.setUserProfile);
-  const hasCompletedOnboarding = useAppStore((state) => state.hasCompletedOnboarding);
-  const completeOnboarding = useAppStore((state) => state.completeOnboarding);
   const [subtypeSelectorOpen, setSubtypeSelectorOpen] = useState(false);
   const [typeCardOpen, setTypeCardOpen] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -162,7 +160,7 @@ function App() {
       {/* Skip link for keyboard users */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-lg focus:outline-none"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-terracotta-600 focus:text-white focus:rounded-lg focus:outline-none"
       >
         Skip to main content
       </a>
@@ -278,13 +276,16 @@ function App() {
         </Suspense>
       )}
 
-      {/* Onboarding Modal */}
-      <OnboardingModal
-        isOpen={!hasCompletedOnboarding}
-        onComplete={completeOnboarding}
-      />
     </Layout>
   );
 }
 
-export default App;
+function AppWithErrorBoundary() {
+  return (
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+}
+
+export default AppWithErrorBoundary;

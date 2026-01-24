@@ -150,8 +150,10 @@ export function CoreSection({
               {/* Fixation */}
               {fixation && (
                 <Card label="Fixation" title={fixation.name} color={color}>
-                  <blockquote className="text-xl font-serif italic text-charcoal dark:text-gray-200 mb-6 pl-5 border-l-4 border-terracotta-500">
-                    "{fixation.innerVoice}"
+                  <blockquote className="bg-cream-100 dark:bg-gray-700 rounded-lg py-4 px-5 border-l-4 border-terracotta-500 mb-6">
+                    <p className="text-xl font-serif italic text-charcoal dark:text-gray-200">
+                      "{fixation.innerVoice}"
+                    </p>
                   </blockquote>
                   <p className="text-charcoal-light dark:text-gray-300 leading-relaxed">
                     {fixation.description}

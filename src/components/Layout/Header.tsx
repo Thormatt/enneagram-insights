@@ -34,15 +34,18 @@ export function Header({ onMenuClick }: HeaderProps) {
     { value: 'relationships', label: 'Relationships' }
   ];
 
+  const showSecondaryNav = viewMode === 'circle' || viewMode === 'diagrams';
+
   return (
-    <header className="bg-cream-50 dark:bg-gray-900 border-b border-warm-border dark:border-gray-700 px-4 lg:px-6 py-4 transition-colors">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <header className="bg-charcoal dark:bg-gray-950 border-b border-charcoal-light/20 transition-colors">
+      {/* Primary Navigation Row */}
+      <div className="flex items-center justify-between px-4 lg:px-6 py-3">
+        <div className="flex items-center gap-3 flex-shrink-0">
           {/* Mobile menu button */}
           {onMenuClick && (
             <button
               onClick={onMenuClick}
-              className="lg:hidden p-2 -ml-2 text-charcoal-light dark:text-gray-400 hover:text-charcoal dark:hover:text-white hover:bg-cream-200 dark:hover:bg-gray-800 rounded-xl transition-colors"
+              className="lg:hidden p-2 -ml-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
               aria-label="Open navigation menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,16 +53,16 @@ export function Header({ onMenuClick }: HeaderProps) {
               </svg>
             </button>
           )}
-          <h1 className="font-serif text-xl lg:text-2xl font-bold text-charcoal dark:text-white">Enneagram Insights</h1>
-          <span className="hidden sm:inline text-sm text-charcoal-muted dark:text-gray-400">A map of consciousness</span>
+          <h1 className="font-serif text-xl lg:text-2xl font-bold text-white whitespace-nowrap">Enneagram Insights</h1>
+          <span className="hidden xl:inline text-sm text-cream-300 whitespace-nowrap">A map of consciousness</span>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-6">
+        <div className="flex items-center gap-2 lg:gap-4">
           {/* View Mode Toggle */}
           <div className="hidden md:flex items-center gap-2">
-            <span id="view-mode-label" className="text-sm text-charcoal-light dark:text-gray-400">View:</span>
+            <span id="view-mode-label" className="text-sm text-cream-300">View:</span>
             <div
-              className="flex bg-cream-200 dark:bg-gray-800 rounded-full p-1"
+              className="flex bg-charcoal-light/30 rounded-full p-1"
               role="group"
               aria-labelledby="view-mode-label"
             >
@@ -68,10 +71,10 @@ export function Header({ onMenuClick }: HeaderProps) {
                   key={value}
                   onClick={() => setViewMode(value)}
                   aria-pressed={viewMode === value}
-                  className={`px-3 py-2 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-1 min-h-[36px] ${
+                  className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
                     viewMode === value
-                      ? 'bg-charcoal dark:bg-white text-white dark:text-charcoal shadow-warm'
-                      : 'text-charcoal-light dark:text-gray-400 hover:text-charcoal dark:hover:text-white'
+                      ? 'bg-cream-100 text-charcoal shadow-warm'
+                      : 'text-cream-200 hover:text-white'
                   }`}
                 >
                   {label}
@@ -80,80 +83,26 @@ export function Header({ onMenuClick }: HeaderProps) {
             </div>
           </div>
 
-          {/* Layer Toggle (only for circle view) */}
-          {viewMode === 'circle' && (
-            <div className="hidden lg:flex items-center gap-2">
-              <span id="layer-mode-label" className="text-sm text-charcoal-light dark:text-gray-400">Layer:</span>
-              <div
-                className="flex bg-cream-200 dark:bg-gray-800 rounded-full p-1"
-                role="group"
-                aria-labelledby="layer-mode-label"
-              >
-                {circleLayers.map(({ value, label }) => (
-                  <button
-                    key={value}
-                    onClick={() => setCircleLayer(value)}
-                    aria-pressed={circleLayer === value}
-                    className={`px-3 py-2 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-1 min-h-[36px] ${
-                      circleLayer === value
-                        ? 'bg-charcoal dark:bg-white text-white dark:text-charcoal shadow-warm'
-                        : 'text-charcoal-light dark:text-gray-400 hover:text-charcoal dark:hover:text-white'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Diagram Type Toggle (only for diagrams view) */}
-          {viewMode === 'diagrams' && (
-            <div className="hidden lg:flex items-center gap-2">
-              <span id="diagram-type-label" className="text-sm text-charcoal-light dark:text-gray-400">Diagram:</span>
-              <div
-                className="flex bg-cream-200 dark:bg-gray-800 rounded-full p-1"
-                role="group"
-                aria-labelledby="diagram-type-label"
-              >
-                {diagramTypes.map(({ value, label }) => (
-                  <button
-                    key={value}
-                    onClick={() => setDiagramType(value)}
-                    aria-pressed={diagramType === value}
-                    className={`px-3 py-2 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-1 min-h-[36px] ${
-                      diagramType === value
-                        ? 'bg-charcoal dark:bg-white text-white dark:text-charcoal shadow-warm'
-                        : 'text-charcoal-light dark:text-gray-400 hover:text-charcoal dark:hover:text-white'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Beyond Type / Transcendence Button */}
           <button
             onClick={() => setViewMode('transcendence')}
-            className="p-2 lg:px-4 lg:py-2 border border-purple-300 dark:border-purple-400/50 text-purple-700 dark:text-purple-300 text-sm font-medium rounded-full hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="px-3 py-1.5 text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="Explore Beyond Type"
           >
-            <span className="text-lg lg:text-base font-serif font-bold" aria-hidden="true">0</span>
+            <span className="font-serif font-bold" aria-hidden="true">0</span>
             <span className="hidden lg:inline">Beyond Type</span>
           </button>
 
           {/* Quiz Button */}
           <button
             onClick={() => setViewMode('quiz')}
-            className="p-2 lg:px-4 lg:py-2 bg-terracotta-500 hover:bg-terracotta-600 text-white text-sm font-medium rounded-full transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2 shadow-warm"
+            className="px-3 py-1.5 bg-terracotta-500/20 text-terracotta-300 text-sm font-medium rounded-full hover:bg-terracotta-500/30 hover:text-terracotta-200 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="Take Enneagram Quiz"
           >
-            <svg className="w-5 h-5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-            <span className="hidden lg:inline">Take Quiz</span>
+            <span className="hidden lg:inline">Quiz</span>
           </button>
 
           {/* Theme Toggle */}
@@ -162,7 +111,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {/* Profile Button */}
           <button
             onClick={() => setViewMode('profile')}
-            className="p-2 text-charcoal-light dark:text-gray-400 hover:text-charcoal dark:hover:text-white hover:bg-cream-200 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-offset-2"
+            className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="View my profile"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -171,6 +120,65 @@ export function Header({ onMenuClick }: HeaderProps) {
           </button>
         </div>
       </div>
+
+      {/* Secondary Navigation Row - Contextual */}
+      {showSecondaryNav && (
+        <div className="hidden md:flex items-center gap-4 px-4 lg:px-6 py-2 bg-charcoal-light/20 dark:bg-gray-900/50 border-t border-charcoal-light/10">
+          {/* Layer Toggle (only for circle view) */}
+          {viewMode === 'circle' && (
+            <>
+              <span id="layer-mode-label" className="text-sm text-cream-300">Layer:</span>
+              <div
+                className="flex bg-charcoal-light/30 rounded-full p-1"
+                role="group"
+                aria-labelledby="layer-mode-label"
+              >
+                {circleLayers.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setCircleLayer(value)}
+                    aria-pressed={circleLayer === value}
+                    className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
+                      circleLayer === value
+                        ? 'bg-cream-100 text-charcoal shadow-warm'
+                        : 'text-cream-200 hover:text-white'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Diagram Type Toggle (only for diagrams view) */}
+          {viewMode === 'diagrams' && (
+            <>
+              <span id="diagram-type-label" className="text-sm text-cream-300">Diagram:</span>
+              <div
+                className="flex bg-charcoal-light/30 rounded-full p-1"
+                role="group"
+                aria-labelledby="diagram-type-label"
+              >
+                {diagramTypes.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setDiagramType(value)}
+                    aria-pressed={diagramType === value}
+                    className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
+                      diagramType === value
+                        ? 'bg-cream-100 text-charcoal shadow-warm'
+                        : 'text-cream-200 hover:text-white'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }

@@ -31,23 +31,42 @@ export function Profile() {
 
   if (!userProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-            <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+      <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800 flex flex-col">
+        {/* Header with close button */}
+        <header className="bg-charcoal dark:bg-gray-900 px-4 py-4">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <h1 className="font-serif text-xl font-bold text-white">Profile</h1>
+            <button
+              onClick={() => setViewMode('circle')}
+              className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
+              aria-label="Go back"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">No Profile Yet</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Take the Enneagram assessment to discover your type and create your personal profile.
-          </p>
-          <button
-            onClick={() => setViewMode('quiz')}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-          >
-            Take the Quiz
-          </button>
+        </header>
+
+        {/* Content */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-4">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-terracotta-500 flex items-center justify-center">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-serif font-bold text-charcoal dark:text-white mb-4">No Profile Yet</h2>
+            <p className="text-charcoal-light dark:text-gray-400 mb-8">
+              Take the Enneagram assessment to discover your type and create your personal profile.
+            </p>
+            <button
+              onClick={() => setViewMode('quiz')}
+              className="px-6 py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold rounded-xl shadow-warm hover:shadow-warm-lg transition-all"
+            >
+              Take the Quiz
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -111,29 +130,29 @@ export function Profile() {
   if (!type) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-charcoal dark:bg-gray-900 border-b border-charcoal-light/20 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center gap-4 sm:gap-6">
             <div
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold flex-shrink-0"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-serif font-bold flex-shrink-0"
               style={{ backgroundColor: color }}
             >
               {userProfile.coreType}
             </div>
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
+              <h1 className="text-xl sm:text-2xl font-serif font-bold text-white truncate">
                 Type {userProfile.coreType}: {type.name}
               </h1>
-              <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-gray-600 dark:text-gray-400">
-                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{userProfile.wing}</span>
-                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded uppercase">{userProfile.instinctStack}</span>
+              <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-cream-300">
+                <span className="px-2 py-1 bg-charcoal-light/30 rounded">{userProfile.wing}</span>
+                <span className="px-2 py-1 bg-charcoal-light/30 rounded uppercase">{userProfile.instinctStack}</span>
               </div>
             </div>
             <button
               onClick={() => setViewMode('circle')}
-              className="ml-auto p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex-shrink-0"
+              className="ml-auto p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl flex-shrink-0 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -151,8 +170,8 @@ export function Profile() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-3 sm:px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'border-current text-gray-900 dark:text-white'
-                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                    ? 'border-current text-white'
+                    : 'border-transparent text-cream-300 hover:text-white'
                 }`}
                 style={{ borderColor: activeTab === tab.id ? color : 'transparent' }}
               >

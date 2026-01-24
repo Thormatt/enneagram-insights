@@ -97,7 +97,7 @@ export function TypeCard({ typeNumber, onOpenSubtypes }: TypeCardProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode('compare')}
-              className="px-3 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px]"
+              className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
               aria-label="Compare this type with another"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export function TypeCard({ typeNumber, onOpenSubtypes }: TypeCardProps) {
             </button>
             <button
               onClick={() => setViewMode('detail')}
-              className="px-3 py-2 bg-white/30 hover:bg-white/40 rounded-xl text-sm font-medium transition-colors flex items-center gap-2 min-h-[44px] shadow-warm"
+              className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
               aria-label="View full details"
             >
               <span className="hidden sm:inline">Deep Dive</span>

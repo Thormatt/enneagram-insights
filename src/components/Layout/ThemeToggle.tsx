@@ -81,7 +81,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={cycleTheme}
-      className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
       aria-label={`Current theme: ${getLabel()}. Click to change.`}
     >
       <span aria-hidden="true">{getIcon()}</span>

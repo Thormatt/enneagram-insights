@@ -248,14 +248,14 @@ function TriadsDiagram({
       groups: [
         { name: 'Assertive', types: [3, 7, 8] as TypeNumber[], color: '#C4785C', description: 'Move against others' },
         { name: 'Compliant', types: [1, 2, 6] as TypeNumber[], color: '#7D9B84', description: 'Move toward others' },
-        { name: 'Withdrawn', types: [4, 5, 9] as TypeNumber[], color: '#6B7BA8', description: 'Move away from others' },
+        { name: 'Withdrawn', types: [4, 5, 9] as TypeNumber[], color: '#6B7B8A', description: 'Move away from others' },
       ]
     },
     object: {
       groups: [
         { name: 'Attachment', types: [3, 6, 9] as TypeNumber[], color: '#C9A962', description: 'Issues with attachment figures' },
         { name: 'Frustration', types: [1, 4, 7] as TypeNumber[], color: '#C4785C', description: 'Frustrated by environment' },
-        { name: 'Rejection', types: [2, 5, 8] as TypeNumber[], color: '#6B7BA8', description: 'Rejected nurturing figure' },
+        { name: 'Rejection', types: [2, 5, 8] as TypeNumber[], color: '#6B7B8A', description: 'Rejected nurturing figure' },
       ]
     }
   };

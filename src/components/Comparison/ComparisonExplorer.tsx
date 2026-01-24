@@ -69,15 +69,15 @@ export function ComparisonExplorer({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm overflow-hidden border border-warm-border dark:border-gray-700">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 sm:p-6 text-white">
+      <div className="bg-charcoal dark:bg-gray-900 p-4 sm:p-6 text-white">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-bold">Type Compatibility Explorer</h2>
+          <h2 className="text-xl sm:text-2xl font-serif font-bold">Compare Types</h2>
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-2 hover:bg-charcoal-light/30 rounded-xl transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -85,7 +85,7 @@ export function ComparisonExplorer({
             </button>
           )}
         </div>
-        <p className="text-white/80 mt-1 text-sm sm:text-base">Compare two types to understand their dynamics</p>
+        <p className="text-cream-300 mt-1 text-sm sm:text-base">Understand the dynamics between two types</p>
       </div>
 
       {/* Type Selectors */}
@@ -143,8 +143,8 @@ export function ComparisonExplorer({
             </div>
 
             {/* Group Comparison */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Group Analysis</h3>
+            <div className="bg-cream-200 dark:bg-gray-700/50 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+              <h3 className="text-lg font-serif font-semibold text-charcoal dark:text-white mb-4">Group Analysis</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <GroupComparisonRow
                   label="Harmonic"
@@ -171,8 +171,8 @@ export function ComparisonExplorer({
             {pairingData && (
               <div className="space-y-4 sm:space-y-6">
                 {/* Strengths */}
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-green-800 dark:text-green-400 mb-3 flex items-center gap-2">
+                <div className="bg-sage-50 dark:bg-sage-900/20 rounded-xl p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-serif font-semibold text-sage-700 dark:text-sage-300 mb-3 flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
@@ -180,8 +180,8 @@ export function ComparisonExplorer({
                   </h3>
                   <ul className="space-y-2">
                     {pairingData.strengths.map((point: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-green-700 dark:text-green-300 text-sm sm:text-base">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 mt-2 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-sage-700 dark:text-sage-300 text-sm sm:text-base">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sage-500 dark:bg-sage-400 mt-2 flex-shrink-0" />
                         {point}
                       </li>
                     ))}
@@ -189,17 +189,17 @@ export function ComparisonExplorer({
                 </div>
 
                 {/* Challenges */}
-                <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-orange-800 dark:text-orange-400 mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-terracotta-50 dark:bg-terracotta-900/20 rounded-xl p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-serif font-semibold text-terracotta-700 dark:text-terracotta-300 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     Potential Challenges
                   </h3>
                   <ul className="space-y-2">
                     {pairingData.challenges.map((point: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-orange-700 dark:text-orange-300 text-sm sm:text-base">
-                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 dark:bg-orange-400 mt-2 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-terracotta-700 dark:text-terracotta-300 text-sm sm:text-base">
+                        <span className="w-1.5 h-1.5 rounded-full bg-terracotta-500 dark:bg-terracotta-400 mt-2 flex-shrink-0" />
                         {point}
                       </li>
                     ))}
@@ -207,17 +207,17 @@ export function ComparisonExplorer({
                 </div>
 
                 {/* Growth Opportunities */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-blue-800 dark:text-blue-400 mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-gold-50 dark:bg-gold-900/20 rounded-xl p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-serif font-semibold text-gold-700 dark:text-gold-300 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     Growth Opportunities
                   </h3>
                   <ul className="space-y-2">
                     {pairingData.growthOpportunities.map((point: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-blue-700 dark:text-blue-300 text-sm sm:text-base">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mt-2 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-gold-700 dark:text-gold-300 text-sm sm:text-base">
+                        <span className="w-1.5 h-1.5 rounded-full bg-gold-500 dark:bg-gold-400 mt-2 flex-shrink-0" />
                         {point}
                       </li>
                     ))}
@@ -225,17 +225,17 @@ export function ComparisonExplorer({
                 </div>
 
                 {/* Communication Tips */}
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-purple-800 dark:text-purple-400 mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-charcoal-light/10 dark:bg-charcoal-light/20 rounded-xl p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-serif font-semibold text-charcoal dark:text-cream-200 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                     Communication Tips
                   </h3>
                   <ul className="space-y-2">
                     {pairingData.communicationTips.map((tip: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-purple-700 dark:text-purple-300 text-sm sm:text-base">
-                        <span className="text-purple-500 dark:text-purple-400 mt-1">{i + 1}.</span>
+                      <li key={i} className="flex items-start gap-2 text-charcoal-light dark:text-cream-300 text-sm sm:text-base">
+                        <span className="text-charcoal-muted dark:text-cream-400 mt-1">{i + 1}.</span>
                         {tip}
                       </li>
                     ))}

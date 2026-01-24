@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useEffect, useCallback, useMemo, useState } from 'react';
 import * as d3 from 'd3';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../stores';
@@ -11,24 +11,49 @@ import {
 } from '../../data';
 import type { TypeNumber, HarmonicGroup } from '../../types';
 
+// Dark mode detection hook
+function useDarkMode() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsDark(document.documentElement.classList.contains('dark'));
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  return isDark;
+}
+
 interface EnneagramCircleProps {
   width?: number;
   height?: number;
 }
 
 const GROUP_COLORS: Record<string, string> = {
-  // Harmonic groups
-  positive_outlook: '#22c55e',
-  competency: '#3b82f6',
-  reactive: '#ef4444',
+  // Harmonic groups - Warm Editorial palette
+  positive_outlook: '#2D5A52', // Deep Verdigris (Heart-like)
+  competency: '#364C63',      // Storm Slate (Head-like)
+  reactive: '#8C3A2B',        // Iron Oxide (Gut-like)
   // Hornevian groups
-  assertive: '#f59e0b',
-  compliant: '#8b5cf6',
-  withdrawn: '#06b6d4',
+  assertive: '#C9A962',       // Gold
+  compliant: '#7D9B84',       // Sage
+  withdrawn: '#5C584E',       // Charcoal light
   // Object relations
-  frustration: '#ec4899',
-  rejection: '#84cc16',
-  attachment: '#6366f1'
+  frustration: '#C4785C',     // Terracotta
+  rejection: '#7D9B84',       // Sage
+  attachment: '#364C63'       // Storm Slate
 };
 
 // Static data - defined outside component to avoid recreation
@@ -52,6 +77,18 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
   const selectedType = useAppStore((state) => state.selectedType);
   const selectType = useAppStore((state) => state.selectType);
   const circleLayer = useAppStore((state) => state.circleLayer);
+  const isDark = useDarkMode();
+
+  // Theme-aware colors
+  const themeColors = useMemo(() => ({
+    // Strokes for circle and lines
+    circleStroke: isDark ? '#4b5563' : '#e5e7eb',  // gray-600 / gray-200
+    innerLines: isDark ? '#6b7280' : '#d1d5db',     // gray-500 / gray-300
+    // Text colors
+    legendText: isDark ? '#9ca3af' : '#6b7280',     // gray-400 / gray-500
+    dynamicsLegendText: isDark ? '#d1d5db' : '#5C584E', // gray-300 / charcoal-light
+    centerLabel: isDark ? '#6b7280' : '#9ca3af',    // gray-500 / gray-400
+  }), [isDark]);
 
   // Memoize derived dimensions
   const dimensions = useMemo(() => ({
@@ -148,7 +185,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       .attr('cy', centerY)
       .attr('r', radius)
       .attr('fill', 'none')
-      .attr('stroke', '#e5e7eb')
+      .attr('stroke', themeColors.circleStroke)
       .attr('stroke-width', 2);
 
     // Draw inner enneagram symbol (triangle + hexagon)
@@ -158,7 +195,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       linesGroup.append('path')
         .attr('d', `M ${triangle[0].x} ${triangle[0].y} L ${triangle[1].x} ${triangle[1].y} L ${triangle[2].x} ${triangle[2].y} Z`)
         .attr('fill', 'none')
-        .attr('stroke', '#d1d5db')
+        .attr('stroke', themeColors.innerLines)
         .attr('stroke-width', 1);
 
       // Hexad (1-4-2-8-5-7-1)
@@ -170,7 +207,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       linesGroup.append('path')
         .attr('d', hexadPath)
         .attr('fill', 'none')
-        .attr('stroke', '#d1d5db')
+        .attr('stroke', themeColors.innerLines)
         .attr('stroke-width', 1);
     }
 
@@ -185,7 +222,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('y1', fromPos.y)
           .attr('x2', toPos.x)
           .attr('y2', toPos.y)
-          .attr('stroke', '#d1d5db')
+          .attr('stroke', themeColors.innerLines)
           .attr('stroke-width', 1);
       });
     }
@@ -203,7 +240,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('orient', 'auto')
         .append('path')
         .attr('d', 'M0,-5L10,0L0,5')
-        .attr('fill', '#22c55e');
+        .attr('fill', '#7D9B84'); // Sage - integration
 
       defs.append('marker')
         .attr('id', 'arrow-red')
@@ -215,7 +252,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('orient', 'auto')
         .append('path')
         .attr('d', 'M0,-5L10,0L0,5')
-        .attr('fill', '#ef4444');
+        .attr('fill', '#C4785C'); // Terracotta - stress
 
       // Integration lines (solid green with arrows)
       integrationLines.forEach(({ from, to }) => {
@@ -239,13 +276,13 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('y1', startY)
           .attr('x2', endX)
           .attr('y2', endY)
-          .attr('stroke', '#22c55e')
+          .attr('stroke', '#7D9B84') // Sage - integration
           .attr('stroke-width', 2)
           .attr('marker-end', 'url(#arrow-green)')
           .attr('class', 'integration-line');
       });
 
-      // Stress lines (dashed red with arrows)
+      // Stress lines (dashed with arrows)
       stressLines.forEach(({ from, to }) => {
         const fromPos = getTypePosition(from);
         const toPos = getTypePosition(to);
@@ -266,7 +303,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('y1', startY)
           .attr('x2', endX)
           .attr('y2', endY)
-          .attr('stroke', '#ef4444')
+          .attr('stroke', '#C4785C') // Terracotta - stress
           .attr('stroke-width', 2)
           .attr('stroke-dasharray', '6,4')
           .attr('marker-end', 'url(#arrow-red)')
@@ -364,7 +401,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('x', 14)
           .attr('y', 4)
           .attr('font-size', '11px')
-          .attr('fill', '#6b7280')
+          .attr('fill', themeColors.legendText)
           .text(item.label);
       });
     }
@@ -392,7 +429,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('x', 14)
           .attr('y', 4)
           .attr('font-size', '11px')
-          .attr('fill', '#6b7280')
+          .attr('fill', themeColors.legendText)
           .text(item.label);
       });
     }
@@ -406,25 +443,25 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       legend.append('line')
         .attr('x1', 0).attr('y1', 0)
         .attr('x2', 30).attr('y2', 0)
-        .attr('stroke', '#22c55e')
+        .attr('stroke', '#7D9B84') // Sage
         .attr('stroke-width', 2);
       legend.append('text')
         .attr('x', 38).attr('y', 4)
         .attr('font-size', '11px')
-        .attr('fill', '#6b7280')
+        .attr('fill', themeColors.dynamicsLegendText)
         .text('Integration (Growth)');
 
       // Stress
       legend.append('line')
         .attr('x1', 0).attr('y1', 22)
         .attr('x2', 30).attr('y2', 22)
-        .attr('stroke', '#ef4444')
+        .attr('stroke', '#C4785C') // Terracotta
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', '6,4');
       legend.append('text')
         .attr('x', 38).attr('y', 26)
         .attr('font-size', '11px')
-        .attr('fill', '#6b7280')
+        .attr('fill', themeColors.dynamicsLegendText)
         .text('Disintegration (Stress)');
     }
 
@@ -435,13 +472,13 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('y', centerY)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
-        .attr('fill', '#9ca3af')
+        .attr('fill', themeColors.centerLabel)
         .attr('font-size', '12px')
         .text('Click a type to explore');
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- selectType is stable from Zustand
-  }, [centerX, centerY, radius, nodeRadius, selectedType, circleLayer, getTypePosition, integrationLines, stressLines, height]);
+  }, [centerX, centerY, radius, nodeRadius, selectedType, circleLayer, getTypePosition, integrationLines, stressLines, height, themeColors]);
 
   return (
     <motion.div

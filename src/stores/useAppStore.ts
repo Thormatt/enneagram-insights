@@ -66,7 +66,7 @@ export const useAppStore = create<AppState>()(
       selectedSubtype: null,
       selectedWing: null,
       userProfile: null,
-      hasCompletedOnboarding: false,
+      hasCompletedOnboarding: true,
       userExperienceLevel: null,
 
       // Actions

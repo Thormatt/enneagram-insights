@@ -15,25 +15,26 @@ interface SubtypeSelectorProps {
   onClose: () => void;
 }
 
+// Warm Editorial instinct colors
 const instinctColors: Record<InstinctType, string> = {
-  sp: '#059669', // emerald-600
-  so: '#7c3aed', // violet-600
-  sx: '#dc2626'  // red-600
+  sp: '#C9A962', // Gold - self-preservation
+  so: '#7D9B84', // Sage - social
+  sx: '#C4785C'  // Terracotta - sexual/one-to-one
 };
 
 const instinctIcons: Record<InstinctType, React.ReactNode> = {
   sp: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
     </svg>
   ),
   so: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
   ),
   sx: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
     </svg>
   )
@@ -93,8 +94,9 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                 <button
                   onClick={onClose}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                  aria-label="Close subtype selector"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -112,8 +114,10 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                   <button
                     key={instinct}
                     onClick={() => handleInstinctSelect(instinct)}
+                    aria-label={`Select ${info?.fullName || instinct.toUpperCase()} instinct`}
+                    aria-pressed={isSelected}
                     className={`flex-1 py-4 px-4 flex flex-col items-center gap-2 transition-all ${
-                      isSelected ? 'bg-gray-50' : 'hover:bg-gray-50'
+                      isSelected ? 'bg-gray-50 dark:bg-gray-700' : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                     style={{
                       borderBottom: isSelected ? `3px solid ${color}` : '3px solid transparent'
@@ -121,17 +125,22 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                   >
                     <div
                       className={`p-2 rounded-full transition-colors ${
-                        isSelected ? 'text-white' : 'text-gray-600'
+                        isSelected ? 'text-white' : 'text-gray-600 dark:text-gray-400'
                       }`}
                       style={{ backgroundColor: isSelected ? color : 'transparent' }}
                     >
                       {instinctIcons[instinct]}
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-sm" style={{ color: isSelected ? color : '#374151' }}>
-                        {info?.fullName || instinct.toUpperCase()}
+                      <div
+                        className="font-semibold text-sm"
+                        style={{ color: isSelected ? color : undefined }}
+                      >
+                        <span className={isSelected ? '' : 'text-gray-700 dark:text-gray-200'}>
+                          {info?.fullName || instinct.toUpperCase()}
+                        </span>
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         {instinct.toUpperCase()}
                       </div>
                     </div>
@@ -159,31 +168,31 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                       >
                         {selectedInstinct.toUpperCase()}
                       </span>
-                      <h3 className="text-xl font-bold text-gray-900">{selectedSubtype.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{selectedSubtype.name}</h3>
                     </div>
-                    <p className="text-gray-600 italic text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 italic text-sm">
                       Ichazo Title: {selectedSubtype.ichazoTitle}
                     </p>
                   </div>
 
                   {/* Description */}
                   <div className="mb-6">
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                       {selectedSubtype.description}
                     </p>
                   </div>
 
                   {/* Characteristics */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       Key Characteristics
                     </h4>
                     <ul className="space-y-2">
                       {selectedSubtype.characteristics.map((char, i) => (
-                        <li key={i} className="flex items-start gap-3 text-gray-700">
+                        <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
                           <span
                             className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
                             style={{ backgroundColor: instinctColors[selectedInstinct] }}
@@ -196,15 +205,15 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
 
                   {/* Blind Spots */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                       Blind Spots
                     </h4>
                     <ul className="space-y-2">
                       {selectedSubtype.blindSpots.map((spot, i) => (
-                        <li key={i} className="flex items-start gap-3 text-gray-700">
+                        <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
                           <span className="w-2 h-2 rounded-full mt-2 flex-shrink-0 bg-amber-500" />
                           {spot}
                         </li>
@@ -213,14 +222,14 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                   </div>
 
                   {/* Growth Path */}
-                  <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                    <h4 className="font-semibold text-emerald-800 mb-2 flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="p-4 bg-sage-50 dark:bg-sage-900/30 rounded-lg border border-sage-200 dark:border-sage-700">
+                    <h4 className="font-semibold text-sage-800 dark:text-sage-300 mb-2 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
                       Growth Path
                     </h4>
-                    <p className="text-emerald-700">{selectedSubtype.growthPath}</p>
+                    <p className="text-sage-700 dark:text-sage-400">{selectedSubtype.growthPath}</p>
                   </div>
                 </motion.div>
               )}

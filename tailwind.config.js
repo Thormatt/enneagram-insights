@@ -63,42 +63,48 @@ export default {
           800: '#71592B',
           900: '#5E4A26',
         },
-        // Center colors (preserved)
+        // Center colors - Warm Editorial palette
+        // Gut/Body Center (Types 8, 9, 1) - "Iron Oxide" - earthy, grounded
         gut: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
+          50: '#FAF5F4',
+          100: '#F5EAE7',
+          200: '#E8CFC8',
+          300: '#D9AFA4',
+          400: '#C4877A',
+          500: '#8C3A2B', // Primary - Iron Oxide
+          600: '#7A3226',
+          700: '#662A20',
+          800: '#52221A',
+          900: '#3D1913',
+          light: '#E28A7D', // For dark mode
         },
+        // Heart Center (Types 2, 3, 4) - "Deep Verdigris" - emotional depth
         heart: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          50: '#F4F7F6',
+          100: '#E6EDEB',
+          200: '#C5D6D2',
+          300: '#9BBAB3',
+          400: '#6A9A90',
+          500: '#2D5A52', // Primary - Deep Verdigris
+          600: '#274E47',
+          700: '#21413B',
+          800: '#1B352F',
+          900: '#152924',
+          light: '#8FB3AC', // For dark mode
         },
+        // Head Center (Types 5, 6, 7) - "Storm Slate" - clarity, wisdom
         head: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#F5F7F9',
+          100: '#E8ECF0',
+          200: '#CDD5DE',
+          300: '#A9B8C7',
+          400: '#7C92A8',
+          500: '#364C63', // Primary - Storm Slate
+          600: '#2F4256',
+          700: '#283848',
+          800: '#212D3A',
+          900: '#19232D',
+          light: '#A3B5CC', // For dark mode
         },
       },
       fontFamily: {
