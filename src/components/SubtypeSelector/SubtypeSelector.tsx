@@ -75,11 +75,11 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed inset-x-4 top-4 bottom-4 max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div
-              className="p-6 text-white"
+              className="p-6 text-white flex-shrink-0"
               style={{ backgroundColor: centerColor }}
             >
               <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
             </div>
 
             {/* Instinct Tabs */}
-            <div className="flex border-b border-gray-200">
+            <div className="flex border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               {instincts.map(instinct => {
                 const info = getInstinctByCode(instinct);
                 const isSelected = selectedInstinct === instinct;
@@ -148,7 +148,7 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="p-6 max-h-[50vh] overflow-y-auto"
+                  className="p-6 flex-1 overflow-y-auto"
                 >
                   {/* Subtype Title */}
                   <div className="mb-6">
