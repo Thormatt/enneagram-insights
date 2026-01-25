@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getTypeZeroData, getUniversalPractices, getTeachings } from '../../data';
 import type { TranscendenceTeaching } from '../../data/essence/transcendence';
+import { DaoPath } from './DaoPath';
 
 interface TranscendencePageProps {
   onClose?: () => void;
 }
 
-type SectionId = 'overview' | 'teachings' | 'practices' | 'essence-personality' | 'inner-symbol' | 'return';
+type SectionId = 'overview' | 'teachings' | 'practices' | 'essence-personality' | 'inner-symbol' | 'dao-path' | 'return';
 
 interface Section {
   id: SectionId;
@@ -21,6 +22,7 @@ const sections: Section[] = [
   { id: 'practices', label: 'Practices', icon: 'P' },
   { id: 'essence-personality', label: 'Essence vs Personality', icon: 'E' },
   { id: 'inner-symbol', label: 'The Symbol', icon: 'S' },
+  { id: 'dao-path', label: 'The Dao Path', icon: '道' },
   { id: 'return', label: 'Begin', icon: '∞' },
 ];
 
@@ -297,6 +299,28 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <span className="absolute bottom-4 left-4 text-purple-300 font-bold">6</span>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {activeSection === 'dao-path' && (
+              <div className="space-y-6">
+                {/* Dao Path Header */}
+                <div className="p-6 bg-gradient-to-r from-emerald-900/30 to-teal-900/30 rounded-xl border border-emerald-700/50 mb-8">
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-4xl">道</span>
+                    <div>
+                      <h2 className="text-2xl font-bold text-emerald-200">The Dao Path</h2>
+                      <p className="text-emerald-400/70">Taoist wisdom for the Enneagram journey</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 leading-relaxed">
+                    The Tao Te Ching and the Enneagram share a profound insight: our suffering comes from
+                    forgetting our true nature and acting against the natural flow of life. Explore how
+                    Wu Wei—effortless action—can transform your relationship to your type pattern.
+                  </p>
+                </div>
+
+                <DaoPath />
               </div>
             )}
 

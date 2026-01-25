@@ -27,3 +27,6 @@ export * from './essence';
 
 // Subtype stories
 export * from './stories';
+
+// Wisdom traditions (Dao, future: Gurdjieff, Sufi, etc.)
+export * from './traditions';
