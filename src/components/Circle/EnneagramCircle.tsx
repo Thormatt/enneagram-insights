@@ -77,6 +77,8 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
   const selectedType = useAppStore((state) => state.selectedType);
   const selectType = useAppStore((state) => state.selectType);
   const circleLayer = useAppStore((state) => state.circleLayer);
+  const userProfile = useAppStore((state) => state.userProfile);
+  const setViewMode = useAppStore((state) => state.setViewMode);
   const isDark = useDarkMode();
 
   // Theme-aware colors
@@ -480,12 +482,15 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
   // eslint-disable-next-line react-hooks/exhaustive-deps -- selectType is stable from Zustand
   }, [centerX, centerY, radius, nodeRadius, selectedType, circleLayer, getTypePosition, integrationLines, stressLines, height, themeColors]);
 
+  // Show CTA when user hasn't taken the quiz and no type is selected
+  const showDiscoverCta = !userProfile && !selectedType;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.15 }}
-      className="flex justify-center items-center"
+      className="flex flex-col justify-center items-center gap-4"
     >
       <svg
         ref={svgRef}
@@ -493,6 +498,20 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         height={height}
         className="overflow-visible"
       />
+      {showDiscoverCta && (
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
+          onClick={() => setViewMode('quiz')}
+          className="px-6 py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium rounded-xl shadow-warm transition-all hover:scale-105 flex items-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          Discover Your Type
+        </motion.button>
+      )}
     </motion.div>
   );
 }

@@ -166,7 +166,14 @@ function App() {
       </a>
       <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 h-full" role="main" id="main-content">
         {/* Main visualization area */}
-        <div className="flex-1 flex items-center justify-center min-h-0" aria-live="polite">
+        <div
+          className={`flex-1 flex min-h-0 ${
+            viewMode === 'compare'
+              ? 'items-start overflow-y-auto'
+              : 'items-center justify-center'
+          }`}
+          aria-live="polite"
+        >
           {viewMode === 'circle' && (
             <EnneagramCircle
               width={visualizationSize.circle}
@@ -183,23 +190,29 @@ function App() {
           )}
           {viewMode === 'compare' && (
             <Suspense fallback={<LoadingFallback message="Loading comparison..." />}>
-              <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 overflow-y-auto">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.15 }}
+                className="w-full max-w-4xl mx-auto p-2 sm:p-4 pb-8"
+              >
                 <ComparisonExplorer
                   initialType1={compareTypes?.[0] ?? selectedType ?? undefined}
                   initialType2={compareTypes?.[1]}
                 />
-              </div>
+              </motion.div>
             </Suspense>
           )}
         </div>
 
         {/* Type detail panel - desktop only (xl+), hidden in compare mode */}
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {selectedType && viewMode !== 'compare' && isLargeScreen && (
             <motion.aside
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.15 }}
               className="w-[480px] flex-shrink-0 overflow-y-auto"
               aria-label={`Details for Type ${selectedType}`}
             >

@@ -86,36 +86,34 @@ export function TypeCard({ typeNumber, onOpenSubtypes }: TypeCardProps) {
         className="p-6 text-white"
         style={{ backgroundColor: color }}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-5xl font-serif font-bold opacity-90">{typeNumber}</span>
-            <div>
-              <h2 className="font-serif text-2xl font-bold">{type.name}</h2>
-              <p className="text-white/80 text-sm mt-1">{type.briefDescription}</p>
-            </div>
+        <div className="flex items-start gap-4 mb-4">
+          <span className="text-5xl font-serif font-bold opacity-90">{typeNumber}</span>
+          <div>
+            <h2 className="font-serif text-2xl font-bold">{type.name}</h2>
+            <p className="text-white/80 text-sm mt-1">{type.briefDescription}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode('compare')}
-              className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-              aria-label="Compare this type with another"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
-              <span className="hidden sm:inline">Compare</span>
-            </button>
-            <button
-              onClick={() => setViewMode('detail')}
-              className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-              aria-label="View full details"
-            >
-              <span className="hidden sm:inline">Deep Dive</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setViewMode('compare')}
+            className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
+            aria-label="Compare this type with another"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            Compare
+          </button>
+          <button
+            onClick={() => setViewMode('detail')}
+            className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
+            aria-label="View full details"
+          >
+            Deep Dive
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
 

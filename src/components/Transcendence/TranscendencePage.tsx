@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getTypeZeroData, getUniversalPractices, getTeachings } from '../../data';
 import type { TranscendenceTeaching } from '../../data/essence/transcendence';
@@ -7,7 +7,7 @@ interface TranscendencePageProps {
   onClose?: () => void;
 }
 
-type SectionId = 'overview' | 'teachings' | 'practices' | 'essence-personality' | 'inner-symbol';
+type SectionId = 'overview' | 'teachings' | 'practices' | 'essence-personality' | 'inner-symbol' | 'return';
 
 interface Section {
   id: SectionId;
@@ -21,6 +21,7 @@ const sections: Section[] = [
   { id: 'practices', label: 'Practices', icon: 'P' },
   { id: 'essence-personality', label: 'Essence vs Personality', icon: 'E' },
   { id: 'inner-symbol', label: 'The Symbol', icon: 'S' },
+  { id: 'return', label: 'Begin', icon: '∞' },
 ];
 
 export function TranscendencePage({ onClose }: TranscendencePageProps) {
@@ -28,6 +29,11 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
   const typeZero = getTypeZeroData();
   const practices = getUniversalPractices();
   const teachings = getTeachings();
+
+  // Scroll to top when switching sections
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeSection]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-950 to-gray-900">
@@ -291,6 +297,45 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <span className="absolute bottom-4 left-4 text-purple-300 font-bold">6</span>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {activeSection === 'return' && (
+              <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+                {/* The Sacred Pause */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.3 }}
+                  className="max-w-xl space-y-12"
+                >
+                  {/* Poetic Insight */}
+                  <p className="text-2xl md:text-3xl font-light text-purple-100 leading-relaxed">
+                    Beyond all types, beneath every thought, there is presence.
+                  </p>
+
+                  {/* Somatic Bridge */}
+                  <div className="space-y-6 text-lg text-gray-300">
+                    <p>Close this page. Look up from the screen.</p>
+                    <p>Feel your feet on the ground. Soften your jaw.</p>
+                    <p>Let the exhale be longer than the inhale.</p>
+                  </div>
+
+                  {/* Forward Integration */}
+                  <p className="text-purple-300/70 text-base">
+                    When you return to explore the types, carry this quiet space with you.
+                  </p>
+
+                  {/* Return Button */}
+                  <div className="pt-8">
+                    <button
+                      onClick={onClose}
+                      className="px-8 py-4 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/50 rounded-xl text-purple-200 font-medium transition-all hover:scale-105"
+                    >
+                      Return to Center
+                    </button>
+                  </div>
+                </motion.div>
               </div>
             )}
           </motion.div>

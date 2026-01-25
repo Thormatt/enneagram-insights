@@ -18,6 +18,13 @@ export {
   getStoriesForType as getRelationshipStoriesForType,
   type RelationshipStory
 } from './relationship-stories';
+export {
+  subtypeRelationshipStories,
+  getSubtypeRelationshipStory,
+  getStoriesForSubtype,
+  getSubtypeStoryKey,
+  type SubtypeRelationshipStory
+} from './subtype-relationship-stories';
 
 type StoryCollection = { sp: SubtypeStory; so: SubtypeStory; sx: SubtypeStory };
 

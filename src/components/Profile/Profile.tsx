@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   getTypeByNumber,
@@ -22,12 +22,73 @@ interface JournalEntry {
   mood: 'growth' | 'neutral' | 'struggle';
 }
 
+const JOURNAL_STORAGE_KEY = 'enneagram-journal-entries';
+const NOTES_STORAGE_KEY = 'enneagram-user-notes';
+
+// Load journal entries from localStorage
+const loadJournalEntries = (): JournalEntry[] => {
+  try {
+    const stored = localStorage.getItem(JOURNAL_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Convert date strings back to Date objects
+      return parsed.map((entry: JournalEntry & { date: string }) => ({
+        ...entry,
+        date: new Date(entry.date)
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to load journal entries:', e);
+  }
+  return [];
+};
+
+// Save journal entries to localStorage
+const saveJournalEntries = (entries: JournalEntry[]) => {
+  try {
+    localStorage.setItem(JOURNAL_STORAGE_KEY, JSON.stringify(entries));
+  } catch (e) {
+    console.error('Failed to save journal entries:', e);
+  }
+};
+
+// Load user notes from localStorage
+const loadUserNotes = (): string => {
+  try {
+    return localStorage.getItem(NOTES_STORAGE_KEY) || '';
+  } catch (e) {
+    console.error('Failed to load user notes:', e);
+    return '';
+  }
+};
+
+// Save user notes to localStorage
+const saveUserNotes = (notes: string) => {
+  try {
+    localStorage.setItem(NOTES_STORAGE_KEY, notes);
+  } catch (e) {
+    console.error('Failed to save user notes:', e);
+  }
+};
+
 export function Profile() {
   const { userProfile, setViewMode } = useAppStore();
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>(loadJournalEntries);
   const [newEntry, setNewEntry] = useState('');
   const [newMood, setNewMood] = useState<'growth' | 'neutral' | 'struggle'>('neutral');
+  const [userNotes, setUserNotes] = useState(loadUserNotes);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+
+  // Save journal entries to localStorage whenever they change
+  useEffect(() => {
+    saveJournalEntries(journalEntries);
+  }, [journalEntries]);
+
+  // Save user notes to localStorage whenever they change
+  useEffect(() => {
+    saveUserNotes(userNotes);
+  }, [userNotes]);
 
   if (!userProfile) {
     return (
@@ -241,6 +302,38 @@ export function Profile() {
                   </div>
                 </div>
               )}
+
+              {/* Personal Notes */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Personal Notes</h2>
+                  <button
+                    onClick={() => setIsEditingNotes(!isEditingNotes)}
+                    className="text-sm text-terracotta-600 hover:text-terracotta-700 dark:text-terracotta-400 dark:hover:text-terracotta-300 font-medium"
+                  >
+                    {isEditingNotes ? 'Done' : 'Edit'}
+                  </button>
+                </div>
+                {isEditingNotes ? (
+                  <textarea
+                    value={userNotes}
+                    onChange={(e) => setUserNotes(e.target.value)}
+                    placeholder="Write your personal insights, observations about your type, growth goals, or anything else you want to remember..."
+                    className="w-full h-40 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-terracotta-500 resize-none"
+                  />
+                ) : userNotes ? (
+                  <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+                    {userNotes}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-400 dark:text-gray-500">
+                    <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <p className="text-sm">Click "Edit" to add personal notes about your type journey</p>
+                  </div>
+                )}
+              </div>
             </motion.div>
           )}
 
