@@ -11,7 +11,8 @@ import {
   calculateCompatibilityScore,
   compatibilityData
 } from '../../data';
-import type { TypeNumber } from '../../types';
+import { getRelationshipStory } from '../../data/stories';
+import type { TypeNumber, InstinctType } from '../../types';
 
 interface ComparisonExplorerProps {
   initialType1?: TypeNumber;
@@ -26,6 +27,7 @@ export function ComparisonExplorer({
 }: ComparisonExplorerProps) {
   const [type1, setType1] = useState<TypeNumber | null>(initialType1 || null);
   const [type2, setType2] = useState<TypeNumber | null>(initialType2 || null);
+  const [selectedInstinct, setSelectedInstinct] = useState<InstinctType>('sp');
 
   const allTypes = getAllTypes();
   const typeData1 = type1 ? getTypeByNumber(type1) : null;
@@ -37,6 +39,7 @@ export function ComparisonExplorer({
         c => (c.type1 === type1 && c.type2 === type2) || (c.type1 === type2 && c.type2 === type1)
       )
     : null;
+  const relationshipStory = type1 && type2 ? getRelationshipStory(type1, type2) : null;
 
   // Get group information
   const harmonic1 = type1 ? getHarmonicGroupByType(type1) : null;
@@ -135,6 +138,108 @@ export function ComparisonExplorer({
                 </div>
               )}
             </div>
+
+            {/* Relationship Story */}
+            {relationshipStory && (
+              <div className="mb-8 bg-cream-100 dark:bg-gray-750 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600">
+                {/* Story Header */}
+                <div className="p-6 bg-gradient-to-r from-charcoal to-charcoal-light text-white">
+                  <h3 className="text-2xl font-serif font-bold">{relationshipStory.title}</h3>
+                  <p className="text-cream-300 italic mt-1">{relationshipStory.subtitle}</p>
+                </div>
+
+                {/* Story Narrative */}
+                <div className="p-6">
+                  <div className="prose prose-warm dark:prose-invert max-w-none">
+                    {relationshipStory.narrative.split('\n\n').map((paragraph, i) => (
+                      <p key={i} className="text-charcoal-light dark:text-cream-200 leading-relaxed mb-4 last:mb-0">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subtype Variations */}
+                <div className="p-6 border-t border-warm-border dark:border-gray-600">
+                  <h4 className="text-lg font-serif font-semibold text-charcoal dark:text-cream-100 mb-4 flex items-center gap-2">
+                    <span>How Instincts Shape This Dynamic</span>
+                  </h4>
+
+                  {/* Instinct Selector */}
+                  <div className="flex gap-2 mb-4">
+                    {(['sp', 'so', 'sx'] as InstinctType[]).map((instinct) => {
+                      const colors = {
+                        sp: { bg: 'bg-amber-500', light: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300' },
+                        so: { bg: 'bg-violet-500', light: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-700 dark:text-violet-300' },
+                        sx: { bg: 'bg-pink-500', light: 'bg-pink-100 dark:bg-pink-900/30', text: 'text-pink-700 dark:text-pink-300' }
+                      };
+                      const labels = { sp: 'Self-Preservation', so: 'Social', sx: 'Sexual' };
+                      const isSelected = selectedInstinct === instinct;
+
+                      return (
+                        <button
+                          key={instinct}
+                          onClick={() => setSelectedInstinct(instinct)}
+                          className={`
+                            px-4 py-2 rounded-lg font-medium text-sm transition-all
+                            ${isSelected
+                              ? `${colors[instinct].bg} text-white shadow-md`
+                              : `${colors[instinct].light} ${colors[instinct].text} hover:shadow`
+                            }
+                          `}
+                        >
+                          {labels[instinct]}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Selected Subtype Content */}
+                  {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white dark:bg-gray-700 rounded-xl p-4 shadow-sm">
+                        <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                          Type {type1}
+                        </div>
+                        <p className="text-sm text-charcoal-light dark:text-cream-200">
+                          {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct)?.forType1}
+                        </p>
+                      </div>
+                      <div className="bg-white dark:bg-gray-700 rounded-xl p-4 shadow-sm">
+                        <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">
+                          Type {type2}
+                        </div>
+                        <p className="text-sm text-charcoal-light dark:text-cream-200">
+                          {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct)?.forType2}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Growth Moment */}
+                <div className="p-6 bg-sage-50 dark:bg-sage-900/20 border-t border-warm-border dark:border-gray-600">
+                  <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-sage-300 mb-2 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    The Growth Moment
+                  </h4>
+                  <p className="text-sage-700 dark:text-sage-300">{relationshipStory.growthMoment}</p>
+                </div>
+
+                {/* Reflection */}
+                <div className="p-6 bg-gold-50 dark:bg-gold-900/20 border-t border-warm-border dark:border-gray-600">
+                  <h4 className="text-lg font-serif font-semibold text-gold-700 dark:text-gold-300 mb-2 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Reflection
+                  </h4>
+                  <p className="text-gold-700 dark:text-gold-300 italic">{relationshipStory.reflection}</p>
+                </div>
+              </div>
+            )}
 
             {/* Type Cards Side by Side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">

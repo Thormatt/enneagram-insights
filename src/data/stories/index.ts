@@ -12,6 +12,12 @@ import { type8Stories } from './type8-stories';
 import { type9Stories } from './type9-stories';
 
 export type { SubtypeStory } from './types';
+export {
+  relationshipStories,
+  getRelationshipStory,
+  getStoriesForType as getRelationshipStoriesForType,
+  type RelationshipStory
+} from './relationship-stories';
 
 type StoryCollection = { sp: SubtypeStory; so: SubtypeStory; sx: SubtypeStory };
 
