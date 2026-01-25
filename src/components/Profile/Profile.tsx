@@ -8,7 +8,8 @@ import {
   getIntegrationPath,
   getViceVirtueByType,
   getShadowByType,
-  getSubtypesByType
+  getSubtypesByType,
+  getWuWeiPractice
 } from '../../data';
 import { useAppStore } from '../../stores';
 import type { InstinctType } from '../../types';
@@ -140,6 +141,7 @@ export function Profile() {
   const integration = getIntegrationPath(userProfile.coreType);
   const viceVirtue = getViceVirtueByType(userProfile.coreType);
   const shadow = getShadowByType(userProfile.coreType);
+  const wuWeiPractice = getWuWeiPractice(userProfile.coreType);
 
   // Parse instinct stack
   const instincts = userProfile.instinctStack.split('/') as InstinctType[];
@@ -390,6 +392,42 @@ export function Profile() {
                     <div className="p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg border-l-4 border-emerald-400">
                       <h3 className="font-medium text-emerald-800 dark:text-emerald-400 mb-1">Virtue: {viceVirtue.virtue}</h3>
                       <p className="text-sm text-emerald-700 dark:text-emerald-300">{viceVirtue.virtueDescription}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Wu Wei Practice Teaser */}
+              {wuWeiPractice && (
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl shadow-sm p-6 border border-emerald-200/50 dark:border-emerald-700/30">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xl">道</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100 mb-1">
+                        The Way of Wu Wei
+                      </h2>
+                      <p className="text-sm text-emerald-700 dark:text-emerald-300 mb-3">
+                        {wuWeiPractice.corePractice}
+                      </p>
+                      <div className="p-3 bg-white/60 dark:bg-gray-800/60 rounded-lg mb-4">
+                        <p className="text-xs font-medium text-emerald-800 dark:text-emerald-200 uppercase tracking-wide mb-1">
+                          Daily Practice
+                        </p>
+                        <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                          {wuWeiPractice.dailyPractice}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setViewMode('transcendence')}
+                        className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors"
+                      >
+                        Explore the Dao Path
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
