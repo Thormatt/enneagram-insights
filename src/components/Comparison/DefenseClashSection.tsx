@@ -121,8 +121,8 @@ export function DefenseClashSection({
               </div>
             </div>
             <div className="p-4">
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                {defense1.description.split('\n')[0]}
+              <p className="text-sm text-gray-700 dark:text-gray-200 mb-3">
+                {defense1.description}
               </p>
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                 <h5 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
@@ -146,8 +146,8 @@ export function DefenseClashSection({
               </div>
             </div>
             <div className="p-4">
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                {defense2.description.split('\n')[0]}
+              <p className="text-sm text-gray-700 dark:text-gray-200 mb-3">
+                {defense2.description}
               </p>
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                 <h5 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1">
