@@ -58,7 +58,46 @@ export function Header({ onMenuClick }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 lg:gap-4">
-          {/* View Mode Toggle */}
+          {/* View Mode Toggle - Mobile (compact icons) */}
+          <div className="flex md:hidden items-center">
+            <div
+              className="flex bg-charcoal-light/30 rounded-full p-1"
+              role="group"
+              aria-label="View mode selector"
+            >
+              {viewModes.map(({ value, label }) => (
+                <button
+                  key={value}
+                  onClick={() => setViewMode(value)}
+                  aria-pressed={viewMode === value}
+                  aria-label={label}
+                  className={`p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 ${
+                    viewMode === value
+                      ? 'bg-cream-100 text-charcoal shadow-warm'
+                      : 'text-cream-200 hover:text-white'
+                  }`}
+                >
+                  {value === 'circle' && (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" strokeWidth={2} />
+                    </svg>
+                  )}
+                  {value === 'diagrams' && (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                    </svg>
+                  )}
+                  {value === 'compare' && (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* View Mode Toggle - Desktop (labels) */}
           <div className="hidden md:flex items-center gap-2">
             <span id="view-mode-label" className="text-sm text-cream-300">View:</span>
             <div

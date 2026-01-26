@@ -527,7 +527,7 @@ export function Profile() {
                       <button
                         key={mood}
                         onClick={() => setNewMood(mood)}
-                        className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                        className={`px-4 py-2.5 min-h-[44px] text-sm rounded-full transition-colors ${
                           newMood === mood
                             ? mood === 'growth' ? 'bg-emerald-500 text-white'
                               : mood === 'struggle' ? 'bg-red-500 text-white'

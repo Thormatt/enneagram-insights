@@ -417,7 +417,7 @@ export function ComparisonExplorer({
                               <button
                                 key={instinct}
                                 onClick={() => setSelectedInstinct(instinct)}
-                                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${isSelected
+                                className={`px-4 py-2.5 min-h-[44px] rounded-lg font-medium text-sm transition-all ${isSelected
                                   ? `${colors[instinct].bg} text-white shadow-md`
                                   : `${colors[instinct].light} ${colors[instinct].text} hover:shadow`
                                 }`}
@@ -1164,7 +1164,7 @@ function SubtypeSelector({ label, value, onChange, typeNumber }: SubtypeSelector
               key={instinct.id}
               onClick={() => onChange(isSelected ? null : instinct.id)}
               className={`
-                flex-1 px-3 py-2 rounded-lg font-medium text-sm transition-all
+                flex-1 px-3 py-2.5 min-h-[44px] rounded-lg font-medium text-sm transition-all
                 ${isSelected
                   ? `${instinct.color} text-white shadow-md`
                   : `${instinct.bgLight} ${instinct.textColor} hover:shadow`

@@ -402,7 +402,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         row.append('text')
           .attr('x', 14)
           .attr('y', 4)
-          .attr('font-size', '11px')
+          .attr('font-size', '12px')
           .attr('fill', themeColors.legendText)
           .text(item.label);
       });
@@ -430,7 +430,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         row.append('text')
           .attr('x', 14)
           .attr('y', 4)
-          .attr('font-size', '11px')
+          .attr('font-size', '12px')
           .attr('fill', themeColors.legendText)
           .text(item.label);
       });
@@ -449,7 +449,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('stroke-width', 2);
       legend.append('text')
         .attr('x', 38).attr('y', 4)
-        .attr('font-size', '11px')
+        .attr('font-size', '12px')
         .attr('fill', themeColors.dynamicsLegendText)
         .text('Integration (Growth)');
 
@@ -462,7 +462,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('stroke-dasharray', '6,4');
       legend.append('text')
         .attr('x', 38).attr('y', 26)
-        .attr('font-size', '11px')
+        .attr('font-size', '12px')
         .attr('fill', themeColors.dynamicsLegendText)
         .text('Disintegration (Stress)');
     }

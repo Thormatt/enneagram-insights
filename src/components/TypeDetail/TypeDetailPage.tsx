@@ -117,13 +117,13 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                 </svg>
               </button>
 
-              {/* Type selector pills */}
+              {/* Type selector pills - 44px min touch target for mobile */}
               <div className="flex items-center gap-0.5 bg-black/20 rounded-full p-1">
                 {TYPE_ORDER.map(num => (
                   <button
                     key={num}
                     onClick={() => onNavigate?.(num)}
-                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-sm font-semibold transition-all ${
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-semibold transition-all ${
                       num === typeNumber
                         ? 'bg-white text-charcoal shadow-md'
                         : 'text-white/70 hover:text-white hover:bg-white/20'

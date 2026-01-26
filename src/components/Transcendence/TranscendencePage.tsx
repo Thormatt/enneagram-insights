@@ -274,7 +274,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                 </Card>
 
                 <div className="flex justify-center py-8">
-                  <div className="relative w-64 h-64">
+                  <div className="relative w-48 h-48 sm:w-64 sm:h-64">
                     {/* Outer circle */}
                     <div className="absolute inset-0 rounded-full border-2 border-purple-500/50" />
                     {/* Inner triangle */}
@@ -298,9 +298,9 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-purple-500/50 blur-sm" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white" />
                     {/* Number labels */}
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 text-purple-300 font-bold">9</span>
-                    <span className="absolute bottom-4 right-4 text-purple-300 font-bold">3</span>
-                    <span className="absolute bottom-4 left-4 text-purple-300 font-bold">6</span>
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 text-purple-300 font-bold text-sm sm:text-base">9</span>
+                    <span className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-purple-300 font-bold text-sm sm:text-base">3</span>
+                    <span className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-purple-300 font-bold text-sm sm:text-base">6</span>
                   </div>
                 </div>
               </div>
