@@ -161,6 +161,46 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
     merge.append('feMergeNode');
     merge.append('feMergeNode').attr('in', 'SourceGraphic');
 
+    // Glow filter for selected node - intense radiant effect
+    const glowFilter = defs.append('filter')
+      .attr('id', 'selected-glow')
+      .attr('x', '-100%')
+      .attr('y', '-100%')
+      .attr('width', '300%')
+      .attr('height', '300%');
+
+    // Multiple blur layers for a rich glow
+    glowFilter.append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', 12)
+      .attr('result', 'blur1');
+    glowFilter.append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', 6)
+      .attr('result', 'blur2');
+    glowFilter.append('feGaussianBlur')
+      .attr('in', 'SourceGraphic')
+      .attr('stdDeviation', 3)
+      .attr('result', 'blur3');
+
+    // Brighten the glow
+    glowFilter.append('feColorMatrix')
+      .attr('in', 'blur1')
+      .attr('type', 'matrix')
+      .attr('values', '1 0 0 0 0.1  0 1 0 0 0.1  0 0 1 0 0.1  0 0 0 1.5 0')
+      .attr('result', 'glow1');
+    glowFilter.append('feColorMatrix')
+      .attr('in', 'blur2')
+      .attr('type', 'matrix')
+      .attr('values', '1 0 0 0 0.2  0 1 0 0 0.2  0 0 1 0 0.2  0 0 0 1.2 0')
+      .attr('result', 'glow2');
+
+    const glowMerge = glowFilter.append('feMerge');
+    glowMerge.append('feMergeNode').attr('in', 'glow1');
+    glowMerge.append('feMergeNode').attr('in', 'glow2');
+    glowMerge.append('feMergeNode').attr('in', 'blur3');
+    glowMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
     // Create groups for layers
     const bgGroup = svg.append('g').attr('class', 'background');
     const linesGroup = svg.append('g').attr('class', 'lines');
@@ -441,27 +481,43 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       const isIntegrationTarget = selectedType && integrationMap[selectedType] === type.number;
       const isDisintegrationTarget = selectedType && disintegrationMap[selectedType] === type.number;
 
+      // Check if this node is "related" to the selected type
+      const isRelated = isSelected || isWing || isIntegrationTarget || isDisintegrationTarget;
+      // Dim unrelated nodes when something is selected
+      const shouldDim = selectedType && !isRelated;
+
+      // For selected node, apply larger scale and glow
+      const baseScale = isSelected ? 1.15 : 1;
+
       const nodeGroup = nodesGroup.append('g')
-        .attr('transform', `translate(${pos.x}, ${pos.y})`)
+        .attr('transform', `translate(${pos.x}, ${pos.y}) scale(${baseScale})`)
+        .attr('opacity', shouldDim ? 0.25 : 1)
         .attr('class', 'cursor-pointer')
         .style('transition', 'transform 0.2s ease')
         .on('click', () => selectType(type.number as TypeNumber))
         .on('mouseenter', function() {
-          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(1.1)`);
+          const hoverScale = isSelected ? 1.2 : 1.1;
+          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(${hoverScale})`);
         })
         .on('mouseleave', function() {
-          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(1)`);
+          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(${baseScale})`);
         });
 
-      // Selection ring
+      // Selection indicator - subtle glow
       if (isSelected) {
+        // Soft outer glow
         nodeGroup.append('circle')
-          .attr('r', nodeRadius + 8)
+          .attr('r', nodeRadius + 12)
+          .attr('fill', color)
+          .attr('fill-opacity', 0.15);
+
+        // Selection ring
+        nodeGroup.append('circle')
+          .attr('r', nodeRadius + 6)
           .attr('fill', 'none')
           .attr('stroke', color)
-          .attr('stroke-width', 3)
-          .attr('stroke-opacity', 0.6)
-          .attr('stroke-dasharray', '4,2');
+          .attr('stroke-width', 2)
+          .attr('stroke-opacity', 0.6);
       }
 
       // Wing highlight ring (golden glow)
@@ -495,13 +551,13 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('stroke-dasharray', '4,2');
       }
 
-      // Node circle with shadow
+      // Node circle with shadow (or glow for selected)
       nodeGroup.append('circle')
         .attr('r', nodeRadius)
         .attr('fill', color)
         .attr('stroke', 'white')
-        .attr('stroke-width', 3)
-        .attr('filter', 'url(#drop-shadow)');
+        .attr('stroke-width', isSelected ? 4 : 3)
+        .attr('filter', isSelected ? 'url(#selected-glow)' : 'url(#drop-shadow)');
 
       // Type number
       nodeGroup.append('text')
@@ -628,6 +684,50 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('fill', themeColors.centerLabel)
         .attr('font-size', '12px')
         .text('Click a type to explore');
+    }
+
+    // Legend for selected type (shows what wings and arrows mean)
+    if (selectedType && circleLayer !== 'dynamics') {
+      const legend = svg.append('g')
+        .attr('transform', `translate(20, ${height - 100})`);
+
+      // Wings
+      legend.append('line')
+        .attr('x1', 0).attr('y1', 0)
+        .attr('x2', 24).attr('y2', 0)
+        .attr('stroke', '#C9A962') // Gold
+        .attr('stroke-width', 4)
+        .attr('opacity', 0.7);
+      legend.append('text')
+        .attr('x', 32).attr('y', 4)
+        .attr('font-size', '11px')
+        .attr('fill', themeColors.dynamicsLegendText)
+        .text('Wings (adjacent influences)');
+
+      // Integration
+      legend.append('line')
+        .attr('x1', 0).attr('y1', 26)
+        .attr('x2', 24).attr('y2', 26)
+        .attr('stroke', '#7D9B84') // Sage
+        .attr('stroke-width', 2);
+      legend.append('text')
+        .attr('x', 32).attr('y', 30)
+        .attr('font-size', '11px')
+        .attr('fill', themeColors.dynamicsLegendText)
+        .text('Growth direction');
+
+      // Disintegration
+      legend.append('line')
+        .attr('x1', 0).attr('y1', 52)
+        .attr('x2', 24).attr('y2', 52)
+        .attr('stroke', '#C4785C') // Terracotta
+        .attr('stroke-width', 2)
+        .attr('stroke-dasharray', '6,4');
+      legend.append('text')
+        .attr('x', 32).attr('y', 56)
+        .attr('font-size', '11px')
+        .attr('fill', themeColors.dynamicsLegendText)
+        .text('Stress direction');
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- selectType is stable from Zustand

@@ -175,13 +175,60 @@ interface LevelsContentProps {
   levels: LevelOfDevelopment[] | undefined;
 }
 
-const LEVEL_COLORS: Record<string, { accent: string; bg: string; border: string }> = {
-  healthy: { accent: '#7D9B84', bg: 'bg-sage-50 dark:bg-sage-900/20', border: 'border-sage-200 dark:border-sage-800' },
-  average: { accent: '#C9A962', bg: 'bg-gold-50 dark:bg-gold-900/20', border: 'border-gold-200 dark:border-gold-800' },
-  unhealthy: { accent: '#C4785C', bg: 'bg-terracotta-50 dark:bg-terracotta-900/20', border: 'border-terracotta-200 dark:border-terracotta-800' }
+type HealthState = 'healthy' | 'average' | 'unhealthy';
+
+const LEVEL_COLORS: Record<HealthState, { accent: string; bg: string; border: string; buttonBg: string }> = {
+  healthy: {
+    accent: '#7D9B84',
+    bg: 'bg-sage-50 dark:bg-sage-900/20',
+    border: 'border-sage-200 dark:border-sage-800',
+    buttonBg: 'bg-green-500'
+  },
+  average: {
+    accent: '#C9A962',
+    bg: 'bg-gold-50 dark:bg-gold-900/20',
+    border: 'border-gold-200 dark:border-gold-800',
+    buttonBg: 'bg-amber-500'
+  },
+  unhealthy: {
+    accent: '#C4785C',
+    bg: 'bg-terracotta-50 dark:bg-terracotta-900/20',
+    border: 'border-terracotta-200 dark:border-terracotta-800',
+    buttonBg: 'bg-red-500'
+  }
 };
 
+const HEALTH_STATE_CONFIG: { id: HealthState; label: string; description: string }[] = [
+  { id: 'healthy', label: 'At Their Best', description: 'Levels 1-3' },
+  { id: 'average', label: 'Average Day', description: 'Levels 4-6' },
+  { id: 'unhealthy', label: 'Under Pressure', description: 'Levels 7-9' }
+];
+
+function HealthStateIcon({ state }: { state: HealthState }) {
+  if (state === 'healthy') {
+    return (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    );
+  }
+  if (state === 'average') {
+    return (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+  );
+}
+
 function LevelsContent({ levels }: LevelsContentProps) {
+  const [selectedState, setSelectedState] = useState<HealthState>('healthy');
+
   if (!levels) {
     return (
       <div className="text-center py-16 text-charcoal-muted dark:text-gray-500">
@@ -190,17 +237,48 @@ function LevelsContent({ levels }: LevelsContentProps) {
     );
   }
 
+  const stateLevels = levels.filter(l => l.state === selectedState);
+  const colors = LEVEL_COLORS[selectedState];
+
   return (
     <div className="space-y-6">
-      {(['healthy', 'average', 'unhealthy'] as const).map(state => {
-        const stateLevels = levels.filter(l => l.state === state);
-        const colors = LEVEL_COLORS[state];
-        const stateLabel = state.charAt(0).toUpperCase() + state.slice(1);
+      {/* Health State Toggle */}
+      <div className="flex flex-wrap gap-2 justify-center">
+        {HEALTH_STATE_CONFIG.map((config) => {
+          const isSelected = selectedState === config.id;
+          const stateColors = LEVEL_COLORS[config.id];
+          return (
+            <button
+              key={config.id}
+              onClick={() => setSelectedState(config.id)}
+              title={config.description}
+              className={`
+                flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
+                transition-all duration-200
+                ${isSelected
+                  ? `${stateColors.buttonBg} text-white shadow-md`
+                  : 'bg-cream-200 dark:bg-gray-700 text-charcoal-light dark:text-gray-300 hover:bg-cream-300 dark:hover:bg-gray-600'
+                }
+              `}
+            >
+              <HealthStateIcon state={config.id} />
+              <span>{config.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-        return (
+      {/* Levels for Selected State */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={selectedState}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.15 }}
+        >
           <Card
-            key={state}
-            label={`${stateLabel} Levels`}
+            label={`${selectedState.charAt(0).toUpperCase() + selectedState.slice(1)} Levels`}
             title={`Levels ${stateLevels.map(l => l.level).join(', ')}`}
             color={colors.accent}
           >
@@ -221,25 +299,33 @@ function LevelsContent({ levels }: LevelsContentProps) {
                       <h5 className="font-serif font-semibold text-charcoal dark:text-white mb-2">
                         {level.title}
                       </h5>
+                      <p className="text-sm text-charcoal-light dark:text-gray-300 mb-3">
+                        {level.description}
+                      </p>
                       <p className="text-charcoal-muted dark:text-gray-400 italic text-sm mb-3">
                         "{level.innerExperience}"
                       </p>
-                      <ul className="space-y-1">
-                        {level.characteristics.slice(0, 3).map((c, i) => (
-                          <li key={i} className="text-sm text-charcoal-light dark:text-gray-400 flex items-start gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: colors.accent }} />
-                            {c}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="mb-3">
+                        <h6 className="text-xs font-semibold text-charcoal-muted dark:text-gray-500 uppercase mb-2">
+                          Key Characteristics
+                        </h6>
+                        <ul className="space-y-1">
+                          {level.characteristics.map((c, i) => (
+                            <li key={i} className="text-sm text-charcoal-light dark:text-gray-400 flex items-start gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: colors.accent }} />
+                              {c}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </Card>
-        );
-      })}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -340,11 +426,11 @@ function BodyContent({ bodyPattern }: BodyContentProps) {
   return (
     <div className="space-y-6">
       {/* Body Signature - Hero */}
-      <div className="bg-warm-gradient rounded-2xl p-8 border border-warm-border">
-        <p className="text-xs font-medium uppercase tracking-wider text-charcoal-muted dark:text-gray-500 mb-2">
+      <div className="bg-cream-200 dark:bg-gray-800 rounded-2xl p-8 border border-warm-border dark:border-gray-700">
+        <p className="text-xs font-medium uppercase tracking-wider text-charcoal-muted dark:text-gray-400 mb-2">
           Body Signature
         </p>
-        <p className="text-2xl font-serif text-charcoal dark:text-white leading-relaxed">
+        <p className="text-2xl font-serif text-charcoal dark:text-gray-100 leading-relaxed">
           {bodyPattern.signature}
         </p>
       </div>

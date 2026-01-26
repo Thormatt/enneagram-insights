@@ -31,3 +31,32 @@ export {
   calculateExpandedWingScores,
   type WingQuestion,
 } from './expandedWingQuestions';
+
+export {
+  attentionCheckQuestions,
+  checkAttentionAnswer,
+  getAttentionCheckForPosition,
+  evaluateAttentionChecks,
+  ATTENTION_CHECK_POSITIONS,
+  type AttentionCheckQuestion,
+} from './attentionCheckQuestions';
+
+export {
+  integrationLevelQuestions,
+  calculateIntegrationLevel,
+  getIntegrationQuestionsForInstinctStage,
+  type IntegrationLevelQuestion,
+  type IntegrationLevel,
+  type HealthLevel,
+} from './integrationLevelQuestions';
+
+export {
+  forcedChoiceQuestions,
+  getForcedChoiceForPair,
+  isConfusedPair,
+  shouldTriggerForcedChoice,
+  applyForcedChoiceScore,
+  CONFUSED_PAIRS,
+  FORCED_CHOICE_SCORE_DELTA,
+  type ForcedChoicePair,
+} from './forcedChoiceQuestions';

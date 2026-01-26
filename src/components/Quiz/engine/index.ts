@@ -17,6 +17,7 @@ export {
   getTopTypes,
   getLeadingType,
   getInstinctStack,
+  getTypeResonanceDistribution,
   calculateEntropy,
   getViableCandidates,
   areTypesConfused,

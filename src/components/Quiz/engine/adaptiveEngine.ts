@@ -7,6 +7,7 @@ import {
   getTopTypes,
   getLeadingType,
   getInstinctStack,
+  getTypeResonanceDistribution,
   calculateEntropy as _calculateEntropy,
   type TypeProbabilities,
   type InstinctProbabilities,
@@ -35,6 +36,27 @@ import {
   type WingQuestion,
 } from '../questionPool/expandedWingQuestions';
 import { coreTypeQuestions as _coreTypeQuestions, instinctQuestions, type TypeQuestion, type InstinctQuestion } from '../quizData';
+import { getIntegrationPath } from '../../../data/dynamics/integration';
+import { getDisintegrationPath } from '../../../data/dynamics/disintegration';
+import {
+  getAttentionCheckForPosition,
+  evaluateAttentionChecks,
+  type AttentionCheckQuestion,
+} from '../questionPool/attentionCheckQuestions';
+import {
+  calculateIntegrationLevel,
+  getIntegrationQuestionsForInstinctStage,
+  type IntegrationLevelQuestion,
+  type IntegrationLevel,
+  type HealthLevel,
+} from '../questionPool/integrationLevelQuestions';
+import {
+  getForcedChoiceForPair,
+  shouldTriggerForcedChoice,
+  applyForcedChoiceScore,
+  type ForcedChoicePair,
+} from '../questionPool/forcedChoiceQuestions';
+import { getLevel as getLevelData } from '../../../data/development/levels';
 
 /**
  * Adaptive Engine
@@ -43,9 +65,9 @@ import { coreTypeQuestions as _coreTypeQuestions, instinctQuestions, type TypeQu
  * Manages state, question selection, and convergence detection.
  */
 
-export type AdaptiveQuizStage = 'intro' | 'type' | 'wing' | 'instinct' | 'results';
+export type AdaptiveQuizStage = 'intro' | 'type' | 'forcedChoice' | 'wing' | 'instinct' | 'results';
 
-export type AnyQuestion = ScreeningQuestion | TypeQuestion | DifferentiatorQuestion | WingQuestion | InstinctQuestion;
+export type AnyQuestion = ScreeningQuestion | TypeQuestion | DifferentiatorQuestion | WingQuestion | InstinctQuestion | AttentionCheckQuestion | IntegrationLevelQuestion | ForcedChoicePair;
 
 export interface AdaptiveQuizState {
   stage: AdaptiveQuizStage;
@@ -68,6 +90,18 @@ export interface AdaptiveQuizState {
   instinctProbabilities: InstinctProbabilities;
   instinctConverged: boolean;
 
+  // Attention checks
+  attentionCheckAnswers: Record<string, number>;
+  pendingAttentionCheck: AttentionCheckQuestion | null;
+
+  // Integration level
+  integrationLevelAnswers: Record<string, number>;
+
+  // Forced choice disambiguation
+  forcedChoiceAnswers: Record<string, TypeNumber>; // questionId -> chosen type
+  confusedPairs: [TypeNumber, TypeNumber][];
+  currentForcedChoicePairIndex: number;
+
   // Progress tracking
   currentQuestion: AnyQuestion | null;
   answeredQuestions: Set<string>;
@@ -89,11 +123,53 @@ export interface AdaptiveQuizResults {
     probability: number;
     score: number;
   }>;
+  // All 9 types with percentages
+  allTypeScores: Array<{
+    type: TypeNumber;
+    probability: number;
+    percentage: number;
+  }>;
+  // Tritype: top type from each center
+  tritype: {
+    gut: TypeNumber; // 8, 9, or 1
+    heart: TypeNumber; // 2, 3, or 4
+    head: TypeNumber; // 5, 6, or 7
+    code: string; // e.g., "479" or "925"
+  };
   wing: WingVariant;
   wingBalance: number;
   instinctStack: [InstinctType, InstinctType, InstinctType];
   questionsAnswered: number;
   convergenceReason: string | null;
+  // Growth/Stress Arrows
+  growthArrow: {
+    targetType: TypeNumber;
+    gains: string[];
+    practices: string[];
+    description: string;
+  };
+  stressArrow: {
+    targetType: TypeNumber;
+    exhibits: string[];
+    warningSigns: string[];
+    description: string;
+  };
+  // Attention check results
+  attentionChecksPassed: boolean;
+  attentionChecksScore: {
+    passed: number;
+    failed: string[];
+    total: number;
+    passRate: number;
+  };
+  // Integration level results
+  integrationLevel: {
+    level: IntegrationLevel;
+    healthLevel: HealthLevel;
+    normalized: number;
+    levelTitle: string;
+    levelDescription: string;
+  };
 }
 
 /**
@@ -110,6 +186,12 @@ export function createInitialState(): AdaptiveQuizState {
     wingResult: null,
     instinctProbabilities: initializeInstinctProbabilities(),
     instinctConverged: false,
+    attentionCheckAnswers: {},
+    pendingAttentionCheck: null,
+    integrationLevelAnswers: {},
+    forcedChoiceAnswers: {},
+    confusedPairs: [],
+    currentForcedChoicePairIndex: 0,
     currentQuestion: null,
     answeredQuestions: new Set(),
     questionHistory: [],
@@ -135,6 +217,27 @@ export function startQuiz(state: AdaptiveQuizState): AdaptiveQuizState {
 }
 
 /**
+ * Check if question is an attention check
+ */
+function isAttentionCheck(question: AnyQuestion): question is AttentionCheckQuestion {
+  return 'expectedAnswer' in question && 'tolerance' in question;
+}
+
+/**
+ * Check if question is an integration level question
+ */
+function isIntegrationLevelQuestion(question: AnyQuestion): question is IntegrationLevelQuestion {
+  return 'direction' in question && ('healthy' === (question as IntegrationLevelQuestion).direction || 'unhealthy' === (question as IntegrationLevelQuestion).direction) && 'weight' in question;
+}
+
+/**
+ * Check if question is a forced choice pair
+ */
+function isForcedChoicePair(question: AnyQuestion): question is ForcedChoicePair {
+  return 'pair' in question && 'optionA' in question && 'optionB' in question;
+}
+
+/**
  * Process an answer and return updated state
  */
 export function processAnswer(
@@ -153,10 +256,80 @@ export function processAnswer(
     { question, answer, timestamp: Date.now() },
   ];
 
+  // Handle attention check questions
+  if (isAttentionCheck(question)) {
+    const newAttentionCheckAnswers = {
+      ...state.attentionCheckAnswers,
+      [question.id]: answer,
+    };
+
+    // Get next regular question (attention checks don't affect type probabilities)
+    const nextQuestion = selectNextQuestion(
+      state.typeProbabilities,
+      newAnsweredQuestions,
+      state.phase
+    );
+
+    return {
+      ...state,
+      attentionCheckAnswers: newAttentionCheckAnswers,
+      pendingAttentionCheck: null,
+      answeredQuestions: newAnsweredQuestions,
+      questionHistory: newHistory,
+      currentQuestion: nextQuestion?.question || null,
+    };
+  }
+
+  // Handle integration level questions
+  if (isIntegrationLevelQuestion(question)) {
+    const newIntegrationLevelAnswers = {
+      ...state.integrationLevelAnswers,
+      [question.id]: answer,
+    };
+
+    // Get next instinct question
+    const nextInstinctQuestion = instinctQuestions.find(q => !newAnsweredQuestions.has(q.id));
+
+    // If no more instinct questions, calculate final results
+    const answeredInstinctCount = instinctQuestions.filter(q =>
+      newAnsweredQuestions.has(q.id)
+    ).length;
+    const instinctComplete = answeredInstinctCount >= instinctQuestions.length ||
+      (state.instinctConverged && answeredInstinctCount >= 10);
+
+    if (instinctComplete) {
+      const results = calculateFinalResults(
+        { ...state, integrationLevelAnswers: newIntegrationLevelAnswers },
+        state.instinctProbabilities
+      );
+
+      return {
+        ...state,
+        integrationLevelAnswers: newIntegrationLevelAnswers,
+        answeredQuestions: newAnsweredQuestions,
+        questionHistory: newHistory,
+        stage: 'results',
+        currentQuestion: null,
+        results,
+      };
+    }
+
+    return {
+      ...state,
+      integrationLevelAnswers: newIntegrationLevelAnswers,
+      answeredQuestions: newAnsweredQuestions,
+      questionHistory: newHistory,
+      currentQuestion: nextInstinctQuestion || null,
+    };
+  }
+
   // Process based on current stage
   switch (state.stage) {
     case 'type':
       return processTypeAnswer(state, question, answer, newAnsweredQuestions, newHistory, config);
+
+    case 'forcedChoice':
+      return processForcedChoiceAnswer(state, question, answer, newAnsweredQuestions, newHistory);
 
     case 'wing':
       return processWingAnswer(state, question, answer, newAnsweredQuestions, newHistory);
@@ -205,11 +378,59 @@ function processTypeAnswer(
   const convergence = checkConvergence(newTypeProbabilities, config);
   const phase = determinePhase(newTypeProbabilities);
 
-  // If converged, move to wing stage
+  // If converged, check for forced-choice or move to wing stage
   if (convergence.hasConverged) {
+    const topTypes = getTopTypes(newTypeProbabilities, 3);
+
+    // Check if we should trigger forced-choice disambiguation
+    const forcedChoiceCheck = shouldTriggerForcedChoice(topTypes);
+
+    if (forcedChoiceCheck.trigger && forcedChoiceCheck.pairs.length > 0) {
+      // Enter forced-choice stage
+      const firstPair = forcedChoiceCheck.pairs[0];
+      const forcedChoiceQuestions = getForcedChoiceForPair(firstPair[0], firstPair[1]);
+
+      if (forcedChoiceQuestions.length > 0) {
+        return {
+          ...state,
+          typeProbabilities: newTypeProbabilities,
+          typeConvergence: convergence,
+          answeredQuestions,
+          questionHistory: history,
+          stage: 'forcedChoice',
+          phase,
+          currentQuestion: forcedChoiceQuestions[0],
+          confusedPairs: forcedChoiceCheck.pairs,
+          currentForcedChoicePairIndex: 0,
+        };
+      }
+    }
+
+    // No forced-choice needed, proceed to wing stage
     const determinedType = getLeadingType(newTypeProbabilities).type;
-    const wingQuestions = expandedWingQuestions[determinedType];
-    const firstWingQuestion = wingQuestions?.[0] || null;
+    const wingQuestions = expandedWingQuestions[determinedType] || [];
+    const firstWingQuestion = wingQuestions[0];
+
+    // If no wing questions available (shouldn't happen), skip to instinct
+    if (!firstWingQuestion) {
+      const firstInstinctQuestion = instinctQuestions[0];
+      return {
+        ...state,
+        typeProbabilities: newTypeProbabilities,
+        typeConvergence: convergence,
+        answeredQuestions,
+        questionHistory: history,
+        stage: 'instinct',
+        phase,
+        currentQuestion: firstInstinctQuestion || null,
+        wingResult: {
+          variant: `${determinedType}w${determinedType === 9 ? 1 : determinedType + 1}` as WingVariant,
+          balance: 0,
+          wingAScore: 0,
+          wingBScore: 0,
+        },
+      };
+    }
 
     return {
       ...state,
@@ -220,6 +441,25 @@ function processTypeAnswer(
       stage: 'wing',
       phase,
       currentQuestion: firstWingQuestion,
+    };
+  }
+
+  // Check if we should insert an attention check
+  // Count only type questions answered (not attention checks)
+  const typeQuestionsAnswered = history.filter(h => !isAttentionCheck(h.question)).length;
+  const usedAttentionChecks = new Set(Object.keys(state.attentionCheckAnswers));
+  const pendingCheck = getAttentionCheckForPosition(typeQuestionsAnswered, usedAttentionChecks);
+
+  if (pendingCheck) {
+    return {
+      ...state,
+      typeProbabilities: newTypeProbabilities,
+      typeConvergence: convergence,
+      answeredQuestions,
+      questionHistory: history,
+      phase,
+      currentQuestion: pendingCheck,
+      pendingAttentionCheck: pendingCheck,
     };
   }
 
@@ -298,6 +538,135 @@ function processWingAnswer(
 }
 
 /**
+ * Process a forced-choice disambiguation answer
+ */
+function processForcedChoiceAnswer(
+  state: AdaptiveQuizState,
+  question: AnyQuestion,
+  answer: number,
+  answeredQuestions: Set<string>,
+  history: AdaptiveQuizState['questionHistory']
+): AdaptiveQuizState {
+  if (!isForcedChoicePair(question)) {
+    return state;
+  }
+
+  // Determine which type was chosen (1 = optionA, 2 = optionB)
+  const chosenType = answer === 1 ? question.optionA.type : question.optionB.type;
+  const unchosenType = answer === 1 ? question.optionB.type : question.optionA.type;
+
+  // Apply score adjustment to raw scores
+  const rawScores: Record<TypeNumber, number> = {} as Record<TypeNumber, number>;
+  for (let i = 1; i <= 9; i++) {
+    rawScores[i as TypeNumber] = state.typeProbabilities.rawScores[i as TypeNumber] || 0;
+  }
+  const adjustedScores = applyForcedChoiceScore(rawScores, chosenType, unchosenType);
+
+  // Recalculate probabilities using softmax on adjusted scores
+  const newTypeProbabilities = {
+    ...state.typeProbabilities,
+    rawScores: adjustedScores,
+  };
+
+  // Reapply softmax to get new probabilities
+  const maxScore = Math.max(...Object.values(adjustedScores));
+  const expScores: Record<TypeNumber, number> = {} as Record<TypeNumber, number>;
+  let expSum = 0;
+
+  for (let i = 1; i <= 9; i++) {
+    const typeNum = i as TypeNumber;
+    expScores[typeNum] = Math.exp(adjustedScores[typeNum] - maxScore);
+    expSum += expScores[typeNum];
+  }
+
+  for (let i = 1; i <= 9; i++) {
+    const typeNum = i as TypeNumber;
+    newTypeProbabilities.probabilities[typeNum] = expScores[typeNum] / expSum;
+  }
+
+  // Track the answer
+  const newForcedChoiceAnswers = {
+    ...state.forcedChoiceAnswers,
+    [question.id]: chosenType,
+  };
+
+  // Get all questions for the current confused pair
+  const currentPair = state.confusedPairs[state.currentForcedChoicePairIndex];
+  const currentPairQuestions = getForcedChoiceForPair(currentPair[0], currentPair[1]);
+
+  // Find the next unanswered question in this pair
+  const nextQuestionInPair = currentPairQuestions.find(q => !newForcedChoiceAnswers[q.id]);
+
+  if (nextQuestionInPair) {
+    // More questions in this pair
+    return {
+      ...state,
+      typeProbabilities: newTypeProbabilities,
+      forcedChoiceAnswers: newForcedChoiceAnswers,
+      answeredQuestions,
+      questionHistory: history,
+      currentQuestion: nextQuestionInPair,
+    };
+  }
+
+  // Check if there are more confused pairs to process
+  const nextPairIndex = state.currentForcedChoicePairIndex + 1;
+
+  if (nextPairIndex < state.confusedPairs.length) {
+    const nextPair = state.confusedPairs[nextPairIndex];
+    const nextPairQuestions = getForcedChoiceForPair(nextPair[0], nextPair[1]);
+    const firstQuestion = nextPairQuestions[0];
+
+    if (firstQuestion) {
+      return {
+        ...state,
+        typeProbabilities: newTypeProbabilities,
+        forcedChoiceAnswers: newForcedChoiceAnswers,
+        answeredQuestions,
+        questionHistory: history,
+        currentQuestion: firstQuestion,
+        currentForcedChoicePairIndex: nextPairIndex,
+      };
+    }
+  }
+
+  // All forced-choice pairs complete, move to wing stage
+  const determinedType = getLeadingType(newTypeProbabilities).type;
+  const wingQuestions = expandedWingQuestions[determinedType] || [];
+  const firstWingQuestion = wingQuestions[0];
+
+  if (!firstWingQuestion) {
+    // No wing questions, skip to instinct
+    const firstInstinctQuestion = instinctQuestions[0];
+    return {
+      ...state,
+      typeProbabilities: newTypeProbabilities,
+      forcedChoiceAnswers: newForcedChoiceAnswers,
+      answeredQuestions,
+      questionHistory: history,
+      stage: 'instinct',
+      currentQuestion: firstInstinctQuestion || null,
+      wingResult: {
+        variant: `${determinedType}w${determinedType === 9 ? 1 : determinedType + 1}` as WingVariant,
+        balance: 0,
+        wingAScore: 0,
+        wingBScore: 0,
+      },
+    };
+  }
+
+  return {
+    ...state,
+    typeProbabilities: newTypeProbabilities,
+    forcedChoiceAnswers: newForcedChoiceAnswers,
+    answeredQuestions,
+    questionHistory: history,
+    stage: 'wing',
+    currentQuestion: firstWingQuestion,
+  };
+}
+
+/**
  * Process an instinct-determination answer
  */
 function processInstinctAnswer(
@@ -347,6 +716,24 @@ function processInstinctAnswer(
     };
   }
 
+  // Check if we should insert an integration level question
+  const answeredIntegrationIds = new Set(Object.keys(state.integrationLevelAnswers));
+  const pendingIntegrationQuestion = getIntegrationQuestionsForInstinctStage(
+    answeredInstinctCount,
+    answeredIntegrationIds
+  );
+
+  if (pendingIntegrationQuestion) {
+    return {
+      ...state,
+      instinctProbabilities: newInstinctProbabilities,
+      instinctConverged,
+      answeredQuestions,
+      questionHistory: history,
+      currentQuestion: pendingIntegrationQuestion,
+    };
+  }
+
   // Find next instinct question
   const nextInstinctQuestion = instinctQuestions.find(q => !answeredQuestions.has(q.id));
 
@@ -369,18 +756,112 @@ function calculateFinalResults(
 ): AdaptiveQuizResults {
   const { type, probability, confidence: _confidence } = getLeadingType(state.typeProbabilities);
   const topThree = getTopTypes(state.typeProbabilities, 3);
+  const allTypes = getTopTypes(state.typeProbabilities, 9);
   const instinctStack = getInstinctStack(instinctProbabilities);
+
+  // Calculate tritype (top type from each center)
+  const tritype = calculateTritype(allTypes);
+
+  // Use resonance distribution for display (spreads percentages more meaningfully)
+  const resonance = getTypeResonanceDistribution(state.typeProbabilities);
+  const allTypeScores = resonance.map(r => ({
+    type: r.type,
+    probability: allTypes.find(t => t.type === r.type)?.probability || 0,
+    percentage: r.percentage,
+  }));
+
+  // Get growth/stress arrow data
+  const integrationPath = getIntegrationPath(type);
+  const disintegrationPath = getDisintegrationPath(type);
+
+  const growthArrow = {
+    targetType: integrationPath?.movesTo || ((type % 9) + 1) as TypeNumber,
+    gains: integrationPath?.gains || [],
+    practices: integrationPath?.practices || [],
+    description: integrationPath?.description || '',
+  };
+
+  const stressArrow = {
+    targetType: disintegrationPath?.movesTo || ((type % 9) + 1) as TypeNumber,
+    exhibits: disintegrationPath?.exhibits || [],
+    warningSigns: disintegrationPath?.warningSigns || [],
+    description: disintegrationPath?.description || '',
+  };
+
+  // Evaluate attention checks
+  const attentionChecksScore = evaluateAttentionChecks(state.attentionCheckAnswers);
+  const attentionChecksPassed = attentionChecksScore.passRate >= 0.5; // Pass if at least half correct
+
+  // Calculate integration level
+  const integrationCalc = calculateIntegrationLevel(state.integrationLevelAnswers);
+  const levelData = getLevelData(type, integrationCalc.healthLevel);
+  const integrationLevel = {
+    level: integrationCalc.level,
+    healthLevel: integrationCalc.healthLevel,
+    normalized: integrationCalc.normalized,
+    levelTitle: levelData?.title || `Level ${integrationCalc.healthLevel}`,
+    levelDescription: levelData?.description || '',
+  };
 
   return {
     primaryType: type,
     typeConfidence: Math.round(probability * 100),
     topThreeTypes: topThree,
+    allTypeScores,
+    tritype,
     wing: state.wingResult?.variant || `${type}w${type === 9 ? 8 : type + 1}` as WingVariant,
     wingBalance: state.wingResult?.balance || 0,
     instinctStack,
     questionsAnswered: state.questionHistory.length,
     convergenceReason: state.typeConvergence.reason,
+    growthArrow,
+    stressArrow,
+    attentionChecksPassed,
+    attentionChecksScore,
+    integrationLevel,
   };
+}
+
+/**
+ * Calculate tritype from all type scores
+ * Tritype = top scoring type from each center (Gut/Heart/Head)
+ */
+function calculateTritype(allTypes: Array<{ type: TypeNumber; probability: number; score: number }>): {
+  gut: TypeNumber;
+  heart: TypeNumber;
+  head: TypeNumber;
+  code: string;
+} {
+  const GUT_TYPES: TypeNumber[] = [8, 9, 1];
+  const HEART_TYPES: TypeNumber[] = [2, 3, 4];
+  const HEAD_TYPES: TypeNumber[] = [5, 6, 7];
+
+  // Find highest scoring type in each center
+  const gut = allTypes
+    .filter(t => GUT_TYPES.includes(t.type))
+    .sort((a, b) => b.probability - a.probability)[0].type;
+
+  const heart = allTypes
+    .filter(t => HEART_TYPES.includes(t.type))
+    .sort((a, b) => b.probability - a.probability)[0].type;
+
+  const head = allTypes
+    .filter(t => HEAD_TYPES.includes(t.type))
+    .sort((a, b) => b.probability - a.probability)[0].type;
+
+  // Determine tritype code order (primary type's center first)
+  const primaryType = allTypes[0].type;
+  let code: string;
+
+  if (GUT_TYPES.includes(primaryType)) {
+    code = `${gut}${heart}${head}`;
+  } else if (HEART_TYPES.includes(primaryType)) {
+    code = `${heart}${gut}${head}`;
+  } else {
+    code = `${head}${gut}${heart}`;
+  }
+
+  return { gut, heart, head, code };
 }
 
 /**

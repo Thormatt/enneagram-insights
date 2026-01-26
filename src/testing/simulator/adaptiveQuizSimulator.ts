@@ -1,9 +1,6 @@
 import type { TypeNumber, InstinctType, WingVariant } from '../../types';
+import type { AgentPersona, WingAgent, SubtypeAgent } from '../agents/typeAgents';
 import {
-  AgentPersona,
-  WingAgent,
-  SubtypeAgent,
-  typeAgents,
   getAllBaseAgents,
   getAllWingAgents,
   getCounterTypeAgents,
@@ -12,7 +9,6 @@ import {
   createInitialState,
   startQuiz,
   processAnswer,
-  type AdaptiveQuizState,
   type AdaptiveQuizResults,
 } from '../../components/Quiz/engine/adaptiveEngine';
 
@@ -270,11 +266,9 @@ export function simulateAdaptiveQuiz(
 
       answer = simulateAgentAnswer(agent, typeScores);
     } else if (state.stage === 'wing') {
-      // Wing question
-      const primaryType = state.typeProbabilities.scores ?
-        Object.entries(state.typeProbabilities.scores)
-          .sort((a, b) => b[1] - a[1])[0][0] as unknown as TypeNumber :
-        agent.type;
+      // Wing question - get primary type from probabilities
+      const primaryType = Object.entries(state.typeProbabilities.probabilities)
+        .sort((a, b) => b[1] - a[1])[0][0] as unknown as TypeNumber || agent.type;
 
       const wingPairs: Record<TypeNumber, [TypeNumber, TypeNumber]> = {
         1: [9, 2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4, 6],
@@ -314,19 +308,79 @@ export function simulateAdaptiveQuiz(
       .sort((a, b) => b[1] - a[1])
       .map(([inst]) => inst as InstinctType) as [InstinctType, InstinctType, InstinctType];
 
+    // Calculate all type scores
+    const allTypeScores = Object.entries(state.typeProbabilities.probabilities)
+      .map(([type, prob]) => ({
+        type: Number(type) as TypeNumber,
+        probability: prob,
+        percentage: Math.round(prob * 100),
+      }))
+      .sort((a, b) => b.probability - a.probability);
+
+    // Calculate tritype
+    const GUT_TYPES = [8, 9, 1] as TypeNumber[];
+    const HEART_TYPES = [2, 3, 4] as TypeNumber[];
+    const HEAD_TYPES = [5, 6, 7] as TypeNumber[];
+
+    const gutType = allTypeScores.find(t => GUT_TYPES.includes(t.type))!.type;
+    const heartType = allTypeScores.find(t => HEART_TYPES.includes(t.type))!.type;
+    const headType = allTypeScores.find(t => HEAD_TYPES.includes(t.type))!.type;
+
+    const primaryType = topTypes[0].type;
+    let tritypeCode: string;
+    if (GUT_TYPES.includes(primaryType)) {
+      tritypeCode = `${gutType}${heartType}${headType}`;
+    } else if (HEART_TYPES.includes(primaryType)) {
+      tritypeCode = `${heartType}${gutType}${headType}`;
+    } else {
+      tritypeCode = `${headType}${gutType}${heartType}`;
+    }
+
     state.results = {
       primaryType: topTypes[0].type,
       typeConfidence: Math.round(topTypes[0].probability * 100),
       topThreeTypes: topTypes,
+      allTypeScores,
+      tritype: {
+        gut: gutType,
+        heart: heartType,
+        head: headType,
+        code: tritypeCode,
+      },
       wing: state.wingResult?.variant || `${topTypes[0].type}w${topTypes[0].type === 9 ? 8 : (topTypes[0].type % 9) + 1}` as WingVariant,
       wingBalance: state.wingResult?.balance || 0,
       instinctStack,
       questionsAnswered: state.questionHistory.length,
       convergenceReason: 'fallback',
+      // Simulator stub values for new fields
+      growthArrow: {
+        targetType: ((topTypes[0].type % 9) + 1) as TypeNumber,
+        gains: [],
+        practices: [],
+        description: '',
+      },
+      stressArrow: {
+        targetType: ((topTypes[0].type % 9) + 1) as TypeNumber,
+        exhibits: [],
+        warningSigns: [],
+        description: '',
+      },
+      attentionChecksPassed: true,
+      attentionChecksScore: { passed: 0, failed: [], total: 0, passRate: 1 },
+      integrationLevel: {
+        level: 'average',
+        healthLevel: 5 as const,
+        normalized: 0,
+        levelTitle: 'Average',
+        levelDescription: '',
+      },
     };
   }
 
   const results = state.results;
+  if (!results) {
+    throw new Error('Results should not be null after simulation');
+  }
 
   // Check correctness
   const correctType = results.primaryType === agent.type;

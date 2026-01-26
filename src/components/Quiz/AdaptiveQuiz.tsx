@@ -7,11 +7,9 @@ import {
   getProgress,
   getCurrentRankings,
   type AdaptiveQuizState,
-  type AdaptiveQuizResults,
 } from './engine';
 import { TypeRankingCard } from './components/TypeRankingCard';
 import { ConfidenceDisplay } from './components/ConfidenceDisplay';
-import { WingStrengthIndicator } from './components/WingStrengthIndicator';
 import { AdaptiveResults } from './components/AdaptiveResults';
 import type { TypeNumber, WingVariant, InstinctStack } from '../../types';
 
@@ -62,6 +60,8 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
     switch (state.stage) {
       case 'type':
         return `Core Type (${progress.phase})`;
+      case 'forcedChoice':
+        return 'Type Clarification';
       case 'wing':
         return 'Wing Determination';
       case 'instinct':
@@ -74,7 +74,12 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
   // Calculate progress percentage
   const progressPercent = useMemo(() => {
     if (state.stage === 'type') {
-      return progress.convergenceProgress * 60; // Type is 60% of quiz
+      return progress.convergenceProgress * 55; // Type is 55% of quiz
+    } else if (state.stage === 'forcedChoice') {
+      // Forced choice is 5% of quiz
+      const fcAnswered = Object.keys(state.forcedChoiceAnswers).length;
+      const totalFc = state.confusedPairs.length * 2; // ~2 questions per pair
+      return 55 + (fcAnswered / Math.max(totalFc, 1)) * 5;
     } else if (state.stage === 'wing') {
       const wingQuestionCount = Object.keys(state.wingAnswers).length;
       return 60 + (wingQuestionCount / 8) * 20; // Wing is 20%
@@ -165,7 +170,7 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
                 </svg>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-charcoal dark:text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-800 dark:text-white mb-4">
                 Adaptive Enneagram Assessment
               </h2>
               <p className="text-base sm:text-lg text-charcoal-light dark:text-gray-400 mb-6 max-w-xl mx-auto">
@@ -175,33 +180,33 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
 
               {/* Features */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
-                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-sage-100 dark:bg-sage-900/50 flex items-center justify-center">
-                    <span className="text-lg font-bold text-sage-600">15-25</span>
+                <div className="bg-cream-200 dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
+                  <div className="w-14 h-14 mx-auto mb-2 rounded-full bg-sage-200 dark:bg-sage-900/50 flex items-center justify-center">
+                    <span className="text-base font-bold text-sage-700 dark:text-sage-400 whitespace-nowrap">15-25</span>
                   </div>
                   <p className="text-sm font-medium text-charcoal dark:text-gray-200">Questions</p>
-                  <p className="text-xs text-charcoal-muted dark:text-gray-500">Adaptive length</p>
+                  <p className="text-xs text-charcoal-light dark:text-gray-400">Adaptive length</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-terracotta-100 dark:bg-terracotta-900/50 flex items-center justify-center">
-                    <span className="text-lg font-bold text-terracotta-600">Top 3</span>
+                <div className="bg-cream-200 dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
+                  <div className="w-14 h-14 mx-auto mb-2 rounded-full bg-terracotta-200 dark:bg-terracotta-900/50 flex items-center justify-center">
+                    <span className="text-base font-bold text-terracotta-700 dark:text-terracotta-400 whitespace-nowrap">Top 3</span>
                   </div>
                   <p className="text-sm font-medium text-charcoal dark:text-gray-200">Types</p>
-                  <p className="text-xs text-charcoal-muted dark:text-gray-500">With confidence</p>
+                  <p className="text-xs text-charcoal-light dark:text-gray-400">With confidence</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-gold-100 dark:bg-gold-900/50 flex items-center justify-center">
-                    <span className="text-lg font-bold text-gold-600">Live</span>
+                <div className="bg-cream-200 dark:bg-gray-800 rounded-xl p-4 border border-warm-border dark:border-gray-700">
+                  <div className="w-14 h-14 mx-auto mb-2 rounded-full bg-gold-200 dark:bg-gold-900/50 flex items-center justify-center">
+                    <span className="text-base font-bold text-gold-700 dark:text-gold-400 whitespace-nowrap">Live</span>
                   </div>
                   <p className="text-sm font-medium text-charcoal dark:text-gray-200">Progress</p>
-                  <p className="text-xs text-charcoal-muted dark:text-gray-500">Real-time tracking</p>
+                  <p className="text-xs text-charcoal-light dark:text-gray-400">Real-time tracking</p>
                 </div>
               </div>
 
               {/* Disclaimer */}
-              <div className="bg-sage-50 dark:bg-sage-900/30 border border-sage-200 dark:border-sage-800 rounded-xl p-4 mb-8 max-w-xl mx-auto">
-                <p className="text-sm text-sage-800 dark:text-sage-200 leading-relaxed">
-                  <strong className="font-semibold">Note:</strong> This assessment uses Bayesian inference
+              <div className="bg-cream-300 dark:bg-charcoal/50 border border-warm-border dark:border-gray-700 rounded-xl p-4 mb-8 max-w-xl mx-auto">
+                <p className="text-sm text-charcoal dark:text-cream-200 leading-relaxed">
+                  <strong className="font-semibold text-terracotta-600 dark:text-terracotta-400">Note:</strong> This assessment uses Bayesian inference
                   to adapt questions based on your responses. While more accurate than fixed quizzes,
                   only you can truly determine your type through self-reflection.
                 </p>
@@ -221,7 +226,7 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
           )}
 
           {/* Question Stage */}
-          {(state.stage === 'type' || state.stage === 'wing' || state.stage === 'instinct') && currentQuestion && (
+          {(state.stage === 'type' || state.stage === 'wing' || state.stage === 'instinct') && currentQuestion && 'text' in currentQuestion && (
             <motion.div
               key={currentQuestion.id}
               initial={{ opacity: 0, x: 50 }}
@@ -286,6 +291,81 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
                   />
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {/* Forced Choice Stage */}
+          {state.stage === 'forcedChoice' && currentQuestion && 'optionA' in currentQuestion && 'optionB' in currentQuestion && (
+            <motion.div
+              key={currentQuestion.id}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              className="py-4 sm:py-8"
+            >
+              {/* Explanation card */}
+              <div className="bg-terracotta-50 dark:bg-terracotta-900/20 border border-terracotta-200 dark:border-terracotta-800 rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg className="w-5 h-5 text-terracotta-600 dark:text-terracotta-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium text-terracotta-700 dark:text-terracotta-300">Type Clarification</span>
+                </div>
+                <p className="text-sm text-terracotta-600 dark:text-terracotta-400">
+                  Your top types are close. Choose which statement resonates more strongly with you.
+                </p>
+              </div>
+
+              {/* Forced choice question card */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-4 sm:p-8 border border-warm-border dark:border-gray-700">
+                <p className="text-center text-charcoal-light dark:text-gray-400 mb-6 text-sm">
+                  Which describes you better?
+                </p>
+
+                <div className="space-y-4">
+                  {/* Option A */}
+                  <button
+                    onClick={() => handleAnswer(1)}
+                    className="w-full p-4 sm:p-6 text-left border-2 border-warm-border dark:border-gray-600 rounded-xl hover:border-sage-500 dark:hover:border-sage-400 hover:bg-sage-50 dark:hover:bg-sage-900/30 transition-all group"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 shrink-0 rounded-full bg-sage-100 dark:bg-sage-900/50 flex items-center justify-center text-sage-700 dark:text-sage-400 font-bold text-lg group-hover:bg-sage-200 dark:group-hover:bg-sage-800/50 transition-colors">
+                        A
+                      </div>
+                      <span className="text-charcoal dark:text-gray-200 group-hover:text-charcoal-dark dark:group-hover:text-white leading-relaxed">
+                        {currentQuestion.optionA.text}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* VS divider */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 h-px bg-warm-border dark:bg-gray-600"></div>
+                    <span className="text-sm font-medium text-charcoal-muted dark:text-gray-500">or</span>
+                    <div className="flex-1 h-px bg-warm-border dark:bg-gray-600"></div>
+                  </div>
+
+                  {/* Option B */}
+                  <button
+                    onClick={() => handleAnswer(2)}
+                    className="w-full p-4 sm:p-6 text-left border-2 border-warm-border dark:border-gray-600 rounded-xl hover:border-terracotta-500 dark:hover:border-terracotta-400 hover:bg-terracotta-50 dark:hover:bg-terracotta-900/30 transition-all group"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 shrink-0 rounded-full bg-terracotta-100 dark:bg-terracotta-900/50 flex items-center justify-center text-terracotta-700 dark:text-terracotta-400 font-bold text-lg group-hover:bg-terracotta-200 dark:group-hover:bg-terracotta-800/50 transition-colors">
+                        B
+                      </div>
+                      <span className="text-charcoal dark:text-gray-200 group-hover:text-charcoal-dark dark:group-hover:text-white leading-relaxed">
+                        {currentQuestion.optionB.text}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Progress indicator */}
+                <div className="mt-6 text-center text-sm text-charcoal-muted dark:text-gray-500">
+                  Clarification {Object.keys(state.forcedChoiceAnswers).length + 1} of ~{state.confusedPairs.length * 2}
+                </div>
+              </div>
             </motion.div>
           )}
 
