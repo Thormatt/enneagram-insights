@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { TabNavigation, type ComparisonTab } from './TabNavigation';
 import { HealthLevelToggle, HealthLevelCard, type HealthView } from './HealthLevelToggle';
+// import { HealthMatrixGrid } from './HealthMatrixGrid';
 import { LineConnectionDisplay } from './LineConnectionDisplay';
 import { DefenseClashSection } from './DefenseClashSection';
 import { TriggerCycleCard } from './TriggerCycleCard';
@@ -44,7 +45,6 @@ export function ComparisonExplorer({
 }: ComparisonExplorerProps) {
   const [type1, setType1] = useState<TypeNumber | null>(initialType1 || null);
   const [type2, setType2] = useState<TypeNumber | null>(initialType2 || null);
-  const [selectedInstinct, setSelectedInstinct] = useState<InstinctType>('sp');
   const [subtype1, setSubtype1] = useState<InstinctType | null>(null);
   const [subtype2, setSubtype2] = useState<InstinctType | null>(null);
   const [activeTab, setActiveTab] = useState<ComparisonTab>('overview');
@@ -264,9 +264,6 @@ export function ComparisonExplorer({
             <TabNavigation
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              hasDynamicsContent={true}
-              hasGrowthContent={true}
-              hasStressContent={true}
             />
 
             {/* Tab Content */}
@@ -304,46 +301,6 @@ export function ComparisonExplorer({
                             </p>
                           ))}
                         </div>
-                      </div>
-                      <div className="p-6 bg-cream-50 dark:bg-gray-800 border-t border-warm-border dark:border-gray-700">
-                        <h4 className="text-lg font-serif font-semibold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2">
-                          <span>How Instincts Shape This Dynamic</span>
-                        </h4>
-                        <div className="flex gap-2 mb-4">
-                          {(['sp', 'so', 'sx'] as InstinctType[]).map((instinct) => {
-                            const colors = {
-                              sp: { bg: 'bg-amber-500', light: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300' },
-                              so: { bg: 'bg-violet-500', light: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-700 dark:text-violet-300' },
-                              sx: { bg: 'bg-pink-500', light: 'bg-pink-100 dark:bg-pink-900/30', text: 'text-pink-700 dark:text-pink-300' }
-                            };
-                            const labels = { sp: 'Self-Preservation', so: 'Social', sx: 'Sexual' };
-                            const isSelected = selectedInstinct === instinct;
-                            return (
-                              <button
-                                key={instinct}
-                                onClick={() => setSelectedInstinct(instinct)}
-                                className={`px-4 py-2.5 min-h-[44px] rounded-lg font-medium text-sm transition-all ${isSelected
-                                  ? `${colors[instinct].bg} text-white shadow-md`
-                                  : `${colors[instinct].light} ${colors[instinct].text} hover:shadow`
-                                }`}
-                              >
-                                {labels[instinct]}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct) && (
-                          <div className="bg-white dark:bg-gray-700 rounded-xl p-4 shadow-sm">
-                            <p className="text-sm text-charcoal-light dark:text-cream-200">
-                              {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct)?.forType1}
-                            </p>
-                            {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct)?.forType2 && (
-                              <p className="text-sm text-charcoal-muted dark:text-cream-400 mt-2 italic">
-                                {relationshipStory.subtypeVariations.find(v => v.instinct === selectedInstinct)?.forType2}
-                              </p>
-                            )}
-                          </div>
-                        )}
                       </div>
                       <div className="p-6 bg-sage-50 dark:bg-emerald-900/20 border-t border-warm-border dark:border-gray-700">
                         <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-emerald-300 mb-2 flex items-center gap-2">
@@ -557,7 +514,7 @@ export function ComparisonExplorer({
                         <ul className="space-y-2">
                           {pairingData.communicationTips.map((tip: string, i: number) => (
                             <li key={i} className="flex items-start gap-2 text-charcoal-light dark:text-cream-300 text-sm sm:text-base">
-                              <span className="text-charcoal-muted dark:text-cream-400 mt-1">{i + 1}.</span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-charcoal-muted dark:bg-cream-400 mt-2 flex-shrink-0" />
                               {tip}
                             </li>
                           ))}
@@ -991,9 +948,12 @@ function GroupLabel({ label, explanation }: { label: string; explanation: string
       <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-gray-100 text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all w-48 text-center z-50 pointer-events-none shadow-lg">
-        {explanation}
-        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+      {/* Tooltip with hover bridge */}
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+        <div className="px-3 py-2 bg-gray-900 text-gray-100 text-xs rounded-lg w-48 text-center shadow-lg">
+          {explanation}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+        </div>
       </div>
     </div>
   );

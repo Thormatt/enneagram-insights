@@ -6,23 +6,16 @@ interface TabInfo {
   id: ComparisonTab;
   label: string;
   icon: React.ReactNode;
-  hasNewContent?: boolean;
 }
 
 interface TabNavigationProps {
   activeTab: ComparisonTab;
   onTabChange: (tab: ComparisonTab) => void;
-  hasDynamicsContent?: boolean;
-  hasGrowthContent?: boolean;
-  hasStressContent?: boolean;
 }
 
 export function TabNavigation({
   activeTab,
-  onTabChange,
-  hasDynamicsContent = true,
-  hasGrowthContent = true,
-  hasStressContent = true
+  onTabChange
 }: TabNavigationProps) {
   const tabs: TabInfo[] = [
     {
@@ -42,8 +35,7 @@ export function TabNavigation({
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-      ),
-      hasNewContent: hasDynamicsContent
+      )
     },
     {
       id: 'growth',
@@ -52,8 +44,7 @@ export function TabNavigation({
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
-      ),
-      hasNewContent: hasGrowthContent
+      )
     },
     {
       id: 'stress',
@@ -62,8 +53,7 @@ export function TabNavigation({
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
-      ),
-      hasNewContent: hasStressContent
+      )
     }
   ];
 
@@ -90,9 +80,6 @@ export function TabNavigation({
                 {tab.icon}
               </span>
               <span>{tab.label}</span>
-              {tab.hasNewContent && !isActive && (
-                <span className="w-2 h-2 rounded-full bg-terracotta-500 absolute top-2 right-2" />
-              )}
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
