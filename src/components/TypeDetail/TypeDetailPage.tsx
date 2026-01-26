@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeToggle } from '../Layout/ThemeToggle';
 import {
   getTypeByNumber,
   getCenterColor,
@@ -99,34 +100,34 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
 
   return (
     <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-cream-200 dark:bg-gray-800 border-b border-warm-border dark:border-gray-700">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
+      {/* Combined Header */}
+      <header className="sticky top-0 z-10 border-b border-warm-border dark:border-gray-700" style={{ backgroundColor: color }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          {/* Top row: navigation and actions */}
+          <div className="flex items-center justify-between h-14">
             {/* Navigation */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => onNavigate?.(prevType)}
-                className="p-2 hover:bg-cream-300 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
                 aria-label={`Go to Type ${prevType}`}
               >
-                <svg className="w-5 h-5 text-charcoal-light dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
               {/* Type selector pills */}
-              <div className="flex items-center gap-1 bg-cream-100 dark:bg-gray-900 rounded-full p-1">
+              <div className="flex items-center gap-0.5 bg-black/20 rounded-full p-1">
                 {TYPE_ORDER.map(num => (
                   <button
                     key={num}
                     onClick={() => onNavigate?.(num)}
-                    className={`w-8 h-8 rounded-full text-sm font-semibold transition-all ${
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-sm font-semibold transition-all ${
                       num === typeNumber
-                        ? 'text-white shadow-md'
-                        : 'text-charcoal-muted dark:text-gray-500 hover:text-charcoal dark:hover:text-gray-300 hover:bg-cream-200 dark:hover:bg-gray-800'
+                        ? 'bg-white text-charcoal shadow-md'
+                        : 'text-white/70 hover:text-white hover:bg-white/20'
                     }`}
-                    style={{ backgroundColor: num === typeNumber ? color : undefined }}
                   >
                     {num}
                   </button>
@@ -135,83 +136,68 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
 
               <button
                 onClick={() => onNavigate?.(nextType)}
-                className="p-2 hover:bg-cream-300 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
                 aria-label={`Go to Type ${nextType}`}
               >
-                <svg className="w-5 h-5 text-charcoal-light dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
 
-            {/* Close button */}
-            {onClose && (
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-cream-300 dark:hover:bg-gray-700 rounded-xl transition-colors"
-                aria-label="Close"
-              >
-                <svg className="w-5 h-5 text-charcoal-light dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
+            {/* Theme toggle and close button */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              {onClose && (
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                  aria-label="Close"
+                >
+                  <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </header>
 
-      {/* Hero Section */}
-      <section className="bg-warm-gradient dark:bg-gray-800 border-b border-warm-border dark:border-gray-700">
-        <div className="max-w-5xl mx-auto px-6 py-12">
+          {/* Bottom row: type info */}
           <motion.div
             key={typeNumber}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-start gap-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="pb-4 pt-1"
           >
-            {/* Type number */}
-            <div
-              className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-warm-lg flex-shrink-0"
-              style={{ backgroundColor: color }}
-            >
-              <span className="text-5xl font-serif font-bold text-white">{typeNumber}</span>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-white/70 text-sm font-medium">{CENTER_LABELS[type.center]}</span>
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white">
+                  Type {typeNumber}: {type.name}
+                </h1>
+                <p className="text-white/80 text-sm sm:text-base mt-1 line-clamp-2">
+                  {type.briefDescription}
+                </p>
+              </div>
             </div>
-
-            {/* Type info */}
-            <div className="flex-1 min-w-0">
-              {/* Center badge */}
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium text-white mb-3"
-                style={{ backgroundColor: color }}
-              >
-                {CENTER_LABELS[type.center]}
-              </div>
-
-              <h1 className="text-4xl font-serif font-bold text-charcoal dark:text-white mb-3">
-                {type.name}
-              </h1>
-
-              <p className="text-lg text-charcoal-light dark:text-gray-300 leading-relaxed max-w-2xl">
-                {type.briefDescription}
-              </p>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {harmonic && (
-                  <span className="px-3 py-1 bg-cream-300 dark:bg-gray-700 rounded-full text-sm text-charcoal-light dark:text-gray-300">
-                    {harmonic.displayName}
-                  </span>
-                )}
-                {hornevian && (
-                  <span className="px-3 py-1 bg-cream-300 dark:bg-gray-700 rounded-full text-sm text-charcoal-light dark:text-gray-300">
-                    {hornevian.displayName}
-                  </span>
-                )}
-              </div>
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {harmonic && (
+                <span className="px-2.5 py-0.5 bg-white/20 rounded-full text-xs text-white">
+                  {harmonic.displayName}
+                </span>
+              )}
+              {hornevian && (
+                <span className="px-2.5 py-0.5 bg-white/20 rounded-full text-xs text-white">
+                  {hornevian.displayName}
+                </span>
+              )}
             </div>
           </motion.div>
         </div>
-      </section>
+      </header>
 
       {/* Section Navigation */}
       <nav className="sticky top-16 z-10 bg-cream-100 dark:bg-gray-900 border-b border-warm-border dark:border-gray-700">

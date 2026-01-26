@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeToggle } from '../Layout/ThemeToggle';
 import {
   getTypeByNumber,
   getCenterColor,
@@ -98,15 +99,18 @@ export function Profile() {
         <header className="bg-charcoal dark:bg-gray-900 px-4 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <h1 className="font-serif text-xl font-bold text-white">Profile</h1>
-            <button
-              onClick={() => setViewMode('circle')}
-              className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
-              aria-label="Go back"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setViewMode('circle')}
+                className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
+                aria-label="Go back"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </header>
 
@@ -213,14 +217,17 @@ export function Profile() {
                 <span className="px-2 py-1 bg-charcoal-light/30 rounded uppercase">{userProfile.instinctStack}</span>
               </div>
             </div>
-            <button
-              onClick={() => setViewMode('circle')}
-              className="ml-auto p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl flex-shrink-0 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="ml-auto flex items-center gap-2 flex-shrink-0">
+              <ThemeToggle />
+              <button
+                onClick={() => setViewMode('circle')}
+                className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 

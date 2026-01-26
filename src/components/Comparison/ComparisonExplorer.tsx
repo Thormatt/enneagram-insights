@@ -235,9 +235,8 @@ export function ComparisonExplorer({
                   <div className="text-charcoal-light dark:text-cream-300 italic mb-3">
                     {archetype.tagline}
                   </div>
-                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${getScoreBadgeColor(compatibility)}`}>
+                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getScoreBadgeColor(compatibility)}`}>
                     <span>{getScoreLabel(compatibility)}</span>
-                    <span className="opacity-70">({compatibility}/10)</span>
                   </div>
                 </>
               ) : (
