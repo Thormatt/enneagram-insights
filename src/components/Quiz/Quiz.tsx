@@ -222,7 +222,7 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
                 </svg>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-charcoal dark:text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-800 dark:text-white mb-4">
                 Explore Your Enneagram Type
               </h2>
               <p className="text-base sm:text-lg text-charcoal-light dark:text-gray-400 mb-6 max-w-xl mx-auto">
@@ -231,9 +231,9 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
               </p>
 
               {/* Disclaimer */}
-              <div className="bg-sage-50 dark:bg-sage-900/30 border border-sage-200 dark:border-sage-800 rounded-xl p-4 mb-8 max-w-xl mx-auto">
-                <p className="text-sm text-sage-800 dark:text-sage-200 leading-relaxed">
-                  <strong className="font-semibold">A note on typing:</strong> No quiz can definitively determine your type.
+              <div className="bg-cream-200 dark:bg-charcoal-light/20 border border-cream-400 dark:border-charcoal-light/30 rounded-xl p-4 mb-8 max-w-xl mx-auto">
+                <p className="text-sm text-charcoal dark:text-cream-200 leading-relaxed">
+                  <strong className="font-semibold text-terracotta-600 dark:text-terracotta-400">A note on typing:</strong> No quiz can definitively determine your type.
                   The Enneagram is a tool for self-discovery, and only you can truly know your type through honest
                   self-reflection. Use these results as a guide to explore further, not as a final answer.
                 </p>
@@ -241,22 +241,22 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
 
               <div className="grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto mb-10">
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-sage-100 dark:bg-sage-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-sage-600 dark:text-sage-400">1</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-sage-400 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-white">1</span>
                   </div>
                   <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Core Type</p>
                   <p className="text-xs text-charcoal-muted dark:text-gray-500">36 questions</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-terracotta-100 dark:bg-terracotta-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-terracotta-600 dark:text-terracotta-400">2</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-terracotta-500 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-white">2</span>
                   </div>
                   <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Wing</p>
                   <p className="text-xs text-charcoal-muted dark:text-gray-500">3 questions</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-gold-100 dark:bg-gold-900/50 flex items-center justify-center">
-                    <span className="text-lg sm:text-xl font-bold text-gold-600 dark:text-gold-400">3</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 rounded-full bg-gold-500 flex items-center justify-center">
+                    <span className="text-lg sm:text-xl font-bold text-white">3</span>
                   </div>
                   <p className="text-xs sm:text-sm text-charcoal-light dark:text-gray-400">Instincts</p>
                   <p className="text-xs text-charcoal-muted dark:text-gray-500">15 questions</p>

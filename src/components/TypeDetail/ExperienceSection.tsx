@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useMemo } from 'react';
 import type { InstinctType, Subtype } from '../../types';
 import type { SubtypeStory } from '../../data/stories/types';
 
@@ -21,6 +22,28 @@ const INSTINCT_DESCRIPTIONS: Record<InstinctType, string> = {
   sx: 'Focus on intensity, chemistry, and deep connection'
 };
 
+const formatNarrativeParagraph = (paragraph: string) => {
+  if (paragraph.startsWith('*') && paragraph.endsWith('*')) {
+    return (
+      <em className="text-charcoal-muted dark:text-gray-400">{paragraph.slice(1, -1)}</em>
+    );
+  }
+
+  if (!paragraph.includes('*')) {
+    return paragraph;
+  }
+
+  return paragraph.split(/(\*[^*]+\*)/).map((part, index) =>
+    part.startsWith('*') && part.endsWith('*') ? (
+      <em key={`em-${index}`} className="text-charcoal-muted dark:text-gray-400">
+        {part.slice(1, -1)}
+      </em>
+    ) : (
+      <span key={`text-${index}`}>{part}</span>
+    )
+  );
+};
+
 interface ExperienceSectionProps {
   selectedInstinct: InstinctType;
   onInstinctChange: (instinct: InstinctType) => void;
@@ -39,8 +62,18 @@ export function ExperienceSection({
   subtypes
 }: ExperienceSectionProps) {
   const instinctColor = INSTINCT_COLORS[selectedInstinct];
-  const currentSubtype = subtypes.find(s => s.instinct === selectedInstinct);
-  const currentStory = stories?.[selectedInstinct];
+  const currentSubtype = useMemo(
+    () => subtypes.find(s => s.instinct === selectedInstinct),
+    [subtypes, selectedInstinct]
+  );
+  const currentStory = useMemo(
+    () => stories?.[selectedInstinct],
+    [stories, selectedInstinct]
+  );
+  const narrativeParagraphs = useMemo(
+    () => (currentStory?.narrative ? currentStory.narrative.split('\n\n').map(formatNarrativeParagraph) : []),
+    [currentStory?.narrative]
+  );
 
   return (
     <div className="space-y-8">
@@ -54,7 +87,7 @@ export function ExperienceSection({
             <button
               key={instinct}
               onClick={() => onInstinctChange(instinct)}
-              className={`p-5 rounded-xl text-left transition-all border-2 ${
+              className={`p-5 rounded-xl text-left transition-[color,background-color,border-color,box-shadow] border-2 ${
                 selectedInstinct === instinct
                   ? 'text-white border-transparent shadow-warm-lg'
                   : 'bg-cream-100 dark:bg-gray-700 text-charcoal dark:text-gray-300 border-warm-border dark:border-gray-600 hover:border-charcoal-muted dark:hover:border-gray-500'
@@ -92,18 +125,15 @@ export function ExperienceSection({
                 {INSTINCT_LABELS[selectedInstinct]} Subtype
               </p>
               <h2 className="font-serif text-3xl font-bold mb-2">{currentSubtype.name}</h2>
-              <p className="text-white/90 italic text-lg">{currentSubtype.ichazoTitle}</p>
+              {currentSubtype.ichazoTitle !== currentSubtype.name && (
+                <p className="text-white/90 italic text-lg">{currentSubtype.ichazoTitle}</p>
+              )}
             </div>
           )}
 
           {/* Story Section - Experiential */}
           {currentStory && (
             <section className="space-y-6">
-              <SectionHeader
-                title="The Experience"
-                subtitle="What it feels like from the inside"
-              />
-
               {/* Story Header */}
               <div className="text-center py-6">
                 <h3 className="font-serif text-3xl font-bold text-charcoal dark:text-white mb-3">
@@ -136,28 +166,16 @@ export function ExperienceSection({
               {/* Main Narrative */}
               <Card label="The Story" color={instinctColor}>
                 <div className="prose-warm">
-                  {currentStory.narrative.split('\n\n').map((paragraph, i) => (
+                  {narrativeParagraphs.map((paragraph, i) => (
                     <p key={i} className="text-charcoal-light dark:text-gray-300 leading-relaxed mb-5 last:mb-0">
-                      {paragraph.startsWith('*') && paragraph.endsWith('*') ? (
-                        <em className="text-charcoal-muted dark:text-gray-400">{paragraph.slice(1, -1)}</em>
-                      ) : paragraph.includes('*') ? (
-                        paragraph.split(/(\*[^*]+\*)/).map((part, j) =>
-                          part.startsWith('*') && part.endsWith('*') ? (
-                            <em key={j} className="text-charcoal-muted dark:text-gray-400">{part.slice(1, -1)}</em>
-                          ) : (
-                            <span key={j}>{part}</span>
-                          )
-                        )
-                      ) : (
-                        paragraph
-                      )}
+                      {paragraph}
                     </p>
                   ))}
                 </div>
               </Card>
 
               {/* Reflection Question */}
-              <div className="bg-warm-gradient rounded-2xl p-8 border border-warm-border">
+              <div className="bg-warm-gradient dark:bg-gray-800/80 rounded-2xl p-8 border border-warm-border dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-terracotta-100 dark:bg-terracotta-900/30 flex items-center justify-center">
                     <span className="text-terracotta-600 dark:text-terracotta-400 text-xl">?</span>

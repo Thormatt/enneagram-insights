@@ -40,9 +40,9 @@ export function ConfidenceDisplay({
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+    <div className="bg-cream-200 dark:bg-gray-800/50 rounded-xl p-4 border border-warm-border dark:border-gray-700">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-charcoal-light dark:text-gray-400">
+        <span className="text-sm font-medium text-terracotta-600 dark:text-terracotta-400">
           Current Analysis
         </span>
         <span className={`text-sm font-semibold ${color}`}>
@@ -51,19 +51,25 @@ export function ConfidenceDisplay({
       </div>
 
       <div className="flex items-center gap-4 mb-3">
-        {topType && (
+        {topType && marginPercent > 0 ? (
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold text-charcoal dark:text-gray-200">
               Type {topType}
             </span>
-            <span className="text-lg text-charcoal-light dark:text-gray-400">
+            <span className="text-lg text-charcoal-light dark:text-gray-300">
               at {confidencePercent}%
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-xl text-charcoal-light dark:text-gray-300">
+              Gathering initial data...
             </span>
           </div>
         )}
 
         {marginPercent > 0 && (
-          <div className="flex items-center gap-1 text-sm text-charcoal-muted dark:text-gray-500">
+          <div className="flex items-center gap-1 text-sm text-charcoal-light dark:text-gray-400">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
@@ -73,14 +79,14 @@ export function ConfidenceDisplay({
       </div>
 
       {/* Confidence bar */}
-      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
+      <div className="h-2 bg-cream-300 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
         <motion.div
           className={`h-full rounded-full ${
             level === 'high'
-              ? 'bg-green-500'
+              ? 'bg-sage-500'
               : level === 'moderate'
-              ? 'bg-amber-500'
-              : 'bg-gray-400'
+              ? 'bg-gold-500'
+              : 'bg-charcoal-muted'
           }`}
           initial={{ width: 0 }}
           animate={{ width: `${confidencePercent}%` }}
@@ -88,7 +94,7 @@ export function ConfidenceDisplay({
         />
       </div>
 
-      <p className="text-xs text-charcoal-muted dark:text-gray-500">
+      <p className="text-xs text-charcoal-light dark:text-gray-400">
         {getPhaseDescription()}
       </p>
     </div>
@@ -114,9 +120,9 @@ export function ConfidenceBadge({
   };
 
   const getColor = () => {
-    if (percent >= 70) return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-    if (percent >= 40) return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-    return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+    if (percent >= 70) return 'bg-sage-100 text-sage-700 dark:bg-sage-900/30 dark:text-sage-400';
+    if (percent >= 40) return 'bg-gold-100 text-gold-700 dark:bg-gold-900/30 dark:text-gold-400';
+    return 'bg-cream-200 text-charcoal-light dark:bg-gray-800 dark:text-gray-400';
   };
 
   return (

@@ -53,3 +53,25 @@ export {
   type AdaptiveSimulationResult,
   type AdaptiveSimulationMetrics,
 } from './simulator/adaptiveQuizSimulator';
+
+// Hybrid simulator exports
+export {
+  simulateHybridQuiz,
+  runHybridSimulationBatch,
+  calculateHybridMetrics,
+  formatHybridMetricsReport,
+  runHybridValidation,
+  type HybridSimulationResult,
+  type HybridSimulationMetrics,
+} from './simulator/hybridQuizSimulator';
+
+// Merged simulator exports
+export {
+  simulateMergedQuiz,
+  runMergedSimulationBatch,
+  calculateMergedMetrics,
+  formatMergedMetricsReport,
+  runMergedValidation,
+  type MergedSimulationResult,
+  type MergedSimulationMetrics,
+} from './simulator/mergedQuizSimulator';

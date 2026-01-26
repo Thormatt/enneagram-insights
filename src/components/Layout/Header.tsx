@@ -34,7 +34,7 @@ export function Header({ onMenuClick }: HeaderProps) {
     { value: 'relationships', label: 'Relationships' }
   ];
 
-  const showSecondaryNav = viewMode === 'circle' || viewMode === 'diagrams';
+  const showSecondaryNav = viewMode === 'circle' || viewMode === 'diagrams' || viewMode === 'compare';
 
   return (
     <header className="bg-charcoal dark:bg-gray-950 border-b border-charcoal-light/20 transition-colors">
@@ -160,9 +160,9 @@ export function Header({ onMenuClick }: HeaderProps) {
         </div>
       </div>
 
-      {/* Secondary Navigation Row - Contextual */}
+      {/* Secondary Navigation Row - Contextual (fixed height to prevent layout shift) */}
       {showSecondaryNav && (
-        <div className="hidden md:flex items-center gap-4 px-4 lg:px-6 py-2 bg-charcoal-light/20 dark:bg-gray-900/50 border-t border-charcoal-light/10">
+        <div className="hidden md:flex items-center gap-4 px-4 lg:px-6 h-[44px] bg-charcoal-light/20 dark:bg-gray-900/50 border-t border-charcoal-light/10">
           {/* Layer Toggle (only for circle view) */}
           {viewMode === 'circle' && (
             <>
@@ -215,6 +215,16 @@ export function Header({ onMenuClick }: HeaderProps) {
                 ))}
               </div>
             </>
+          )}
+
+          {/* Compare view context */}
+          {viewMode === 'compare' && (
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-cream-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              <span className="text-sm text-cream-300">Deep Dive: Compare relationship dynamics between any two types</span>
+            </div>
           )}
         </div>
       )}

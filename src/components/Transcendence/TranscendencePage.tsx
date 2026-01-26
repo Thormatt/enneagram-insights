@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeToggle } from '../Layout/ThemeToggle';
 import { getTypeZeroData, getUniversalPractices, getTeachings } from '../../data';
 import type { TranscendenceTeaching } from '../../data/essence/transcendence';
@@ -33,9 +32,9 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
   const practices = getUniversalPractices();
   const teachings = getTeachings();
 
-  // Scroll to top when switching sections
+  // Scroll to top when switching sections (instant to avoid animation lag)
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0 });
   }, [activeSection]);
 
   return (
@@ -70,10 +69,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
       {/* Hero Section */}
       <div className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div>
             <div className="w-32 h-32 mx-auto mb-8 relative">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 opacity-20" />
               <div className="relative w-full h-full rounded-full border-2 border-purple-400/50 flex items-center justify-center bg-gray-900">
@@ -87,7 +83,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
               Your type is not who you ARE—it's your pattern of forgetting who you are.
               The Enneagram is a map of return to wholeness.
             </p>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -115,14 +111,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.1 }}
-          >
+        <div>
             {activeSection === 'overview' && (
               <div className="space-y-8">
                 <Card title="What is Type Zero?">
@@ -331,12 +320,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
             {activeSection === 'return' && (
               <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
                 {/* The Sacred Pause */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1, delay: 0.3 }}
-                  className="max-w-xl space-y-12"
-                >
+                <div className="max-w-xl space-y-12">
                   {/* Poetic Insight */}
                   <p className="text-2xl md:text-3xl font-light text-purple-100 leading-relaxed">
                     Beyond all types, beneath every thought, there is presence.
@@ -358,16 +342,15 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                   <div className="pt-8">
                     <button
                       onClick={onClose}
-                      className="px-8 py-4 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/50 rounded-xl text-purple-200 font-medium transition-all hover:scale-105"
+                      className="px-8 py-4 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/50 rounded-xl text-purple-200 font-medium transition-colors"
                     >
                       Return to Center
                     </button>
                   </div>
-                </motion.div>
+                </div>
               </div>
             )}
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
 
       {/* Footer */}

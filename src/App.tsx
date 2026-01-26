@@ -13,12 +13,42 @@ function useWindowSize() {
   const [size, setSize] = useState({ width: 1200, height: 800 });
 
   useEffect(() => {
+    const throttleMs = 100;
+    let timeoutId: number | null = null;
+    let lastUpdate = 0;
+
     const updateSize = () => {
+      timeoutId = null;
+      lastUpdate = performance.now();
       setSize({ width: window.innerWidth, height: window.innerHeight });
     };
+
+    const handleResize = () => {
+      const now = performance.now();
+      const remaining = throttleMs - (now - lastUpdate);
+
+      if (remaining <= 0) {
+        if (timeoutId !== null) {
+          window.clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+        updateSize();
+        return;
+      }
+
+      if (timeoutId === null) {
+        timeoutId = window.setTimeout(updateSize, remaining);
+      }
+    };
+
     updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return size;
@@ -29,7 +59,7 @@ const Diagrams = lazy(() => import('./components/Diagrams').then(m => ({ default
 const ComparisonExplorer = lazy(() => import('./components/Comparison').then(m => ({ default: m.ComparisonExplorer })));
 const TypeDetailPage = lazy(() => import('./components/TypeDetail').then(m => ({ default: m.TypeDetailPage })));
 const SubtypeSelector = lazy(() => import('./components/SubtypeSelector').then(m => ({ default: m.SubtypeSelector })));
-const Quiz = lazy(() => import('./components/Quiz').then(m => ({ default: m.Quiz })));
+const Quiz = lazy(() => import('./components/Quiz').then(m => ({ default: m.AdaptiveQuiz })));
 const Profile = lazy(() => import('./components/Profile').then(m => ({ default: m.Profile })));
 const TranscendencePage = lazy(() => import('./components/Transcendence').then(m => ({ default: m.TranscendencePage })));
 
@@ -165,12 +195,14 @@ function App() {
         Skip to main content
       </a>
       <div className="flex flex-col xl:flex-row gap-4 xl:gap-6 h-full" role="main" id="main-content">
-        {/* Main visualization area */}
+        {/* Main visualization area - fixed width on xl when detail panel is shown */}
         <div
-          className={`flex-1 flex min-h-0 ${
+          className={`flex min-h-0 ${
             viewMode === 'compare'
-              ? 'items-start overflow-y-auto'
-              : 'items-center justify-center'
+              ? 'flex-1 items-start overflow-y-auto'
+              : selectedType && isLargeScreen
+                ? 'w-auto flex-shrink-0 items-center justify-center'
+                : 'flex-1 items-center justify-center'
           }`}
           aria-live="polite"
         >
@@ -213,7 +245,7 @@ function App() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.15 }}
-              className="w-[480px] flex-shrink-0 overflow-y-auto"
+              className="flex-1 min-w-[400px] max-w-[600px] overflow-y-auto"
               aria-label={`Details for Type ${selectedType}`}
             >
               <TypeCard

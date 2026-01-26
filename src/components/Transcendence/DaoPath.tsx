@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   getDaoOverview,
   getDaoTypeProfile,
@@ -58,43 +57,35 @@ export function DaoPath({ selectedType = 5 }: DaoPathProps) {
       </div>
 
       {/* Content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeSection}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.15 }}
-        >
-          {activeSection === 'overview' && (
-            <OverviewSection overview={overview} />
-          )}
+      <div>
+        {activeSection === 'overview' && (
+          <OverviewSection overview={overview} />
+        )}
 
-          {activeSection === 'three-energies' && (
-            <ThreeEnergiesSection overview={overview} />
-          )}
+        {activeSection === 'three-energies' && (
+          <ThreeEnergiesSection overview={overview} />
+        )}
 
-          {activeSection === 'wu-wei' && (
-            <WuWeiSection
-              selectedType={selectedTypeForPath}
-              onTypeChange={setSelectedTypeForPath}
-              wuWeiPractice={wuWeiPractice}
-            />
-          )}
+        {activeSection === 'wu-wei' && (
+          <WuWeiSection
+            selectedType={selectedTypeForPath}
+            onTypeChange={setSelectedTypeForPath}
+            wuWeiPractice={wuWeiPractice}
+          />
+        )}
 
-          {activeSection === 'hexad' && (
-            <HexadSection hexadJourney={hexadJourney} />
-          )}
+        {activeSection === 'hexad' && (
+          <HexadSection hexadJourney={hexadJourney} />
+        )}
 
-          {activeSection === 'your-path' && (
-            <YourPathSection
-              selectedType={selectedTypeForPath}
-              onTypeChange={setSelectedTypeForPath}
-              typeProfile={typeProfile}
-            />
-          )}
-        </motion.div>
-      </AnimatePresence>
+        {activeSection === 'your-path' && (
+          <YourPathSection
+            selectedType={selectedTypeForPath}
+            onTypeChange={setSelectedTypeForPath}
+            typeProfile={typeProfile}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -114,6 +105,35 @@ function Card({ title, accentColor = '#10b981', children }: CardProps) {
         <h3 className="text-lg font-semibold" style={{ color: accentColor }}>{title}</h3>
       </div>
       <div className="p-6">{children}</div>
+    </div>
+  );
+}
+
+// Horizontal type selector row
+function TypeSelectorRow({
+  selectedType,
+  onTypeChange,
+}: {
+  selectedType: number;
+  onTypeChange: (type: number) => void;
+}) {
+  return (
+    <div className="flex gap-1 sm:gap-2">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(t => (
+        <button
+          key={t}
+          onClick={() => onTypeChange(t)}
+          className={`
+            w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base transition-all
+            ${selectedType === t
+              ? 'bg-emerald-600 text-white shadow-lg scale-110'
+              : 'bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 hover:text-white'
+            }
+          `}
+        >
+          {t}
+        </button>
+      ))}
     </div>
   );
 }
@@ -237,17 +257,9 @@ function WuWeiSection({
 }) {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="space-y-3">
         <p className="text-gray-300">Select your type to see your Wu Wei practice:</p>
-        <select
-          value={selectedType}
-          onChange={(e) => onTypeChange(Number(e.target.value))}
-          className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white min-h-[44px]"
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(t => (
-            <option key={t} value={t}>Type {t}</option>
-          ))}
-        </select>
+        <TypeSelectorRow selectedType={selectedType} onTypeChange={onTypeChange} />
       </div>
 
       {wuWeiPractice && (
@@ -379,17 +391,9 @@ function YourPathSection({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="space-y-3">
         <h3 className="text-xl font-semibold text-white">Your Dao Path</h3>
-        <select
-          value={selectedType}
-          onChange={(e) => onTypeChange(Number(e.target.value))}
-          className="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white min-h-[44px]"
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(t => (
-            <option key={t} value={t}>Type {t}</option>
-          ))}
-        </select>
+        <TypeSelectorRow selectedType={selectedType} onTypeChange={onTypeChange} />
       </div>
 
       {/* Energy Card */}

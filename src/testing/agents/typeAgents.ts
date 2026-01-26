@@ -296,18 +296,47 @@ export function createWingAgent(
   const base = typeAgents[baseType];
   const wingAgent = typeAgents[wing];
 
-  // Blend response patterns
+  // Get the primary response key for the base type
+  const typeKeyMap: Record<TypeNumber, keyof typeof base.responsePatterns> = {
+    1: 'fearOfCorruption',
+    2: 'needToBeNeeded',
+    3: 'achievementDrive',
+    4: 'identitySearch',
+    5: 'knowledgeAccumulation',
+    6: 'securitySeeking',
+    7: 'experienceSeeking',
+    8: 'controlAssertiveness',
+    9: 'peaceHarmony',
+  };
+  const primaryKey = typeKeyMap[baseType];
+
+  // Blend response patterns, but PRESERVE the core type's primary motivation
   const blendedPatterns = { ...base.responsePatterns };
   for (const key of Object.keys(blendedPatterns) as Array<keyof typeof blendedPatterns>) {
-    blendedPatterns[key] = base.responsePatterns[key] * (1 - wingInfluence) +
-                          wingAgent.responsePatterns[key] * wingInfluence;
+    if (key === primaryKey) {
+      // Preserve the core type's primary motivation (minimal blending)
+      blendedPatterns[key] = base.responsePatterns[key] * 0.9 +
+                            wingAgent.responsePatterns[key] * 0.1;
+    } else {
+      // Normal blending for other patterns
+      blendedPatterns[key] = base.responsePatterns[key] * (1 - wingInfluence) +
+                            wingAgent.responsePatterns[key] * wingInfluence;
+    }
   }
 
-  // Blend center resonance
+  // Blend center resonance (but preserve the base type's primary center)
+  const baseCenter = base.centerResonance.gut >= 0.7 ? 'gut' :
+                     base.centerResonance.heart >= 0.7 ? 'heart' : 'head';
   const blendedCenter = {
-    gut: base.centerResonance.gut * (1 - wingInfluence) + wingAgent.centerResonance.gut * wingInfluence,
-    heart: base.centerResonance.heart * (1 - wingInfluence) + wingAgent.centerResonance.heart * wingInfluence,
-    head: base.centerResonance.head * (1 - wingInfluence) + wingAgent.centerResonance.head * wingInfluence,
+    gut: baseCenter === 'gut'
+      ? base.centerResonance.gut * 0.85 + wingAgent.centerResonance.gut * 0.15
+      : base.centerResonance.gut * (1 - wingInfluence) + wingAgent.centerResonance.gut * wingInfluence,
+    heart: baseCenter === 'heart'
+      ? base.centerResonance.heart * 0.85 + wingAgent.centerResonance.heart * 0.15
+      : base.centerResonance.heart * (1 - wingInfluence) + wingAgent.centerResonance.heart * wingInfluence,
+    head: baseCenter === 'head'
+      ? base.centerResonance.head * 0.85 + wingAgent.centerResonance.head * 0.15
+      : base.centerResonance.head * (1 - wingInfluence) + wingAgent.centerResonance.head * wingInfluence,
   };
 
   return {

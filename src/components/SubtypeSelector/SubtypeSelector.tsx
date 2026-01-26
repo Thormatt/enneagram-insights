@@ -73,9 +73,11 @@ export function SubtypeSelector({ typeNumber, isOpen, onClose }: SubtypeSelector
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
             className="fixed inset-x-4 top-4 bottom-4 max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}

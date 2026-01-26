@@ -81,21 +81,13 @@ export function updateTypeProbabilities(
     const typeNum = Number(type) as TypeNumber;
     const scoreValue = score || 0;
 
-    // Score contribution depends on whether score is positive or negative
-    // Positive scores: agreement boosts, disagreement reduces
-    // Negative scores: agreement reduces, but disagreement is NEUTRAL
-    //   (to prevent the bug where disagreeing with negative scores causes boosts)
-    if (scoreValue >= 0) {
-      // Standard behavior for positive scores
-      newScores[typeNum] += scoreValue * answerWeight;
-    } else {
-      // For negative scores, only apply when agreeing (answerWeight > 0)
-      // This prevents the paradox where disagreeing with a negative score boosts that type
-      if (answerWeight > 0) {
-        newScores[typeNum] += scoreValue * answerWeight;
-      }
-      // When disagreeing (answerWeight <= 0), negative scores have no effect
-    }
+    // Score contribution: scoreValue * answerWeight
+    // This is the standard Bayesian-inspired update
+    // For questions with direction (differentiators):
+    // - Positive type: high answer = boost, low answer = reduce
+    // - Negative type: high answer = reduce, low answer = boost
+    // The math works out correctly: (-2) * (-1) = +2 for disagreeing with negative type
+    newScores[typeNum] += scoreValue * answerWeight;
   }
 
   // Convert scores to probabilities using softmax
@@ -179,6 +171,54 @@ export function getTopTypes(
     }))
     .sort((a, b) => b.probability - a.probability)
     .slice(0, n);
+}
+
+/**
+ * Get type resonance distribution for display purposes
+ * Uses a higher temperature softmax to show meaningful secondary type percentages
+ * instead of the peaked distribution used for convergence
+ */
+export function getTypeResonanceDistribution(
+  probs: TypeProbabilities
+): Array<{ type: TypeNumber; percentage: number; rank: number }> {
+  const scores = probs.rawScores;
+
+  // Shift scores to be positive (add offset so minimum is 0)
+  const minScore = Math.min(...Object.values(scores));
+  const shiftedScores: Record<TypeNumber, number> = {} as Record<TypeNumber, number>;
+
+  for (const t of [1, 2, 3, 4, 5, 6, 7, 8, 9] as TypeNumber[]) {
+    // Shift and add small base value so no type is ever truly 0
+    shiftedScores[t] = scores[t] - minScore + 1;
+  }
+
+  // Use softmax with higher temperature (8.0) for more spread distribution
+  const maxShifted = Math.max(...Object.values(shiftedScores));
+  const temperature = 8.0; // Higher = more uniform distribution
+  const expScores: Record<TypeNumber, number> = {} as Record<TypeNumber, number>;
+  let sumExp = 0;
+
+  for (const t of [1, 2, 3, 4, 5, 6, 7, 8, 9] as TypeNumber[]) {
+    expScores[t] = Math.exp((shiftedScores[t] - maxShifted) / temperature);
+    sumExp += expScores[t];
+  }
+
+  // Convert to percentages and sort
+  const results = Object.entries(expScores)
+    .map(([type, exp]) => ({
+      type: Number(type) as TypeNumber,
+      percentage: Math.round((exp / sumExp) * 100),
+    }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  // Ensure percentages sum to 100 (adjust top type for rounding)
+  const sum = results.reduce((acc, r) => acc + r.percentage, 0);
+  if (sum !== 100) {
+    results[0].percentage += (100 - sum);
+  }
+
+  // Add rank
+  return results.map((r, idx) => ({ ...r, rank: idx + 1 }));
 }
 
 /**

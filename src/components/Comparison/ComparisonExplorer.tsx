@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { TabNavigation, type ComparisonTab } from './TabNavigation';
 import { HealthLevelToggle, HealthLevelCard, type HealthView } from './HealthLevelToggle';
-// import { HealthMatrixGrid } from './HealthMatrixGrid';
+import { HealthCombinationExplorer } from './HealthCombinationExplorer';
 import { LineConnectionDisplay } from './LineConnectionDisplay';
 import { DefenseClashSection } from './DefenseClashSection';
 import { TriggerCycleCard } from './TriggerCycleCard';
@@ -70,45 +70,74 @@ export function ComparisonExplorer({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const allTypes = getAllTypes();
-  const typeData1 = type1 ? getTypeByNumber(type1) : null;
-  const typeData2 = type2 ? getTypeByNumber(type2) : null;
+  const allTypes = useMemo(() => getAllTypes(), []);
+  const typeData1 = useMemo(() => (type1 ? getTypeByNumber(type1) : null), [type1]);
+  const typeData2 = useMemo(() => (type2 ? getTypeByNumber(type2) : null), [type2]);
 
-  const compatibility = type1 && type2 ? calculateCompatibilityScore(type1, type2) : null;
-  const pairingData = type1 && type2
-    ? compatibilityData.find(
-        c => (c.type1 === type1 && c.type2 === type2) || (c.type1 === type2 && c.type2 === type1)
-      )
-    : null;
-  const relationshipStory = type1 && type2 ? getRelationshipStory(type1, type2) : null;
-  const subtypeStory = type1 && type2 && subtype1 && subtype2
-    ? getSubtypeRelationshipStory(type1, subtype1, type2, subtype2)
-    : null;
+  const compatibility = useMemo(
+    () => (type1 && type2 ? calculateCompatibilityScore(type1, type2) : null),
+    [type1, type2]
+  );
+  const pairingData = useMemo(
+    () => (type1 && type2
+      ? compatibilityData.find(
+          c => (c.type1 === type1 && c.type2 === type2) || (c.type1 === type2 && c.type2 === type1)
+        )
+      : null),
+    [type1, type2]
+  );
+  const relationshipStory = useMemo(
+    () => (type1 && type2 ? getRelationshipStory(type1, type2) : null),
+    [type1, type2]
+  );
+  const subtypeStory = useMemo(
+    () => (type1 && type2 && subtype1 && subtype2
+      ? getSubtypeRelationshipStory(type1, subtype1, type2, subtype2)
+      : null),
+    [type1, type2, subtype1, subtype2]
+  );
+  const relationshipParagraphs = useMemo(
+    () => (relationshipStory?.narrative ? relationshipStory.narrative.split('\n\n') : []),
+    [relationshipStory?.narrative]
+  );
+  const subtypeParagraphs = useMemo(
+    () => (subtypeStory?.narrative ? subtypeStory.narrative.split('\n\n') : []),
+    [subtypeStory?.narrative]
+  );
 
   // Get relationship archetype
-  const archetype = type1 && type2 ? getRelationshipArchetype(type1, type2) : null;
+  const archetype = useMemo(
+    () => (type1 && type2 ? getRelationshipArchetype(type1, type2) : null),
+    [type1, type2]
+  );
 
   // Get group information
-  const harmonic1 = type1 ? getHarmonicGroupByType(type1) : null;
-  const harmonic2 = type2 ? getHarmonicGroupByType(type2) : null;
-  const hornevian1 = type1 ? getHornevianGroupByType(type1) : null;
-  const hornevian2 = type2 ? getHornevianGroupByType(type2) : null;
-  const objectRel1 = type1 ? getObjectRelationsByType(type1) : null;
-  const objectRel2 = type2 ? getObjectRelationsByType(type2) : null;
+  const harmonic1 = useMemo(() => (type1 ? getHarmonicGroupByType(type1) : null), [type1]);
+  const harmonic2 = useMemo(() => (type2 ? getHarmonicGroupByType(type2) : null), [type2]);
+  const hornevian1 = useMemo(() => (type1 ? getHornevianGroupByType(type1) : null), [type1]);
+  const hornevian2 = useMemo(() => (type2 ? getHornevianGroupByType(type2) : null), [type2]);
+  const objectRel1 = useMemo(() => (type1 ? getObjectRelationsByType(type1) : null), [type1]);
+  const objectRel2 = useMemo(() => (type2 ? getObjectRelationsByType(type2) : null), [type2]);
 
   // Get dynamic movement data
-  const integration1 = type1 ? getIntegrationPath(type1) : null;
-  const integration2 = type2 ? getIntegrationPath(type2) : null;
-  const disintegration1 = type1 ? getDisintegrationPath(type1) : null;
-  const disintegration2 = type2 ? getDisintegrationPath(type2) : null;
+  const integration1 = useMemo(() => (type1 ? getIntegrationPath(type1) : null), [type1]);
+  const integration2 = useMemo(() => (type2 ? getIntegrationPath(type2) : null), [type2]);
+  const disintegration1 = useMemo(() => (type1 ? getDisintegrationPath(type1) : null), [type1]);
+  const disintegration2 = useMemo(() => (type2 ? getDisintegrationPath(type2) : null), [type2]);
 
   // Get defense mechanisms
-  const defense1 = type1 ? getDefenseMechanism(type1) : null;
-  const defense2 = type2 ? getDefenseMechanism(type2) : null;
+  const defense1 = useMemo(() => (type1 ? getDefenseMechanism(type1) : null), [type1]);
+  const defense2 = useMemo(() => (type2 ? getDefenseMechanism(type2) : null), [type2]);
 
   // Get levels of health for current health view
-  const levels1 = type1 ? getLevelsByHealthState(type1, healthView) : [];
-  const levels2 = type2 ? getLevelsByHealthState(type2, healthView) : [];
+  const levels1 = useMemo(
+    () => (type1 ? getLevelsByHealthState(type1, healthView) : []),
+    [type1, healthView]
+  );
+  const levels2 = useMemo(
+    () => (type2 ? getLevelsByHealthState(type2, healthView) : []),
+    [type2, healthView]
+  );
 
   // Check integration/disintegration connection
   const isIntegrationPartner =
@@ -116,8 +145,14 @@ export function ComparisonExplorer({
     (type2 && integration1?.movesTo === type2);
 
   // Get center colors
-  const centerColor1 = typeData1 ? getCenterColor(typeData1.center) : '#666';
-  const centerColor2 = typeData2 ? getCenterColor(typeData2.center) : '#666';
+  const centerColor1 = useMemo(
+    () => (typeData1 ? getCenterColor(typeData1.center) : '#666'),
+    [typeData1]
+  );
+  const centerColor2 = useMemo(
+    () => (typeData2 ? getCenterColor(typeData2.center) : '#666'),
+    [typeData2]
+  );
 
   const getScoreColor = (score: number): string => {
     if (score >= 8) return 'text-green-600';
@@ -216,15 +251,8 @@ export function ComparisonExplorer({
       </div>
 
       {/* Comparison Content */}
-      <AnimatePresence mode="wait">
-        {typeData1 && typeData2 && compatibility !== null && (
-          <motion.div
-            key={`${type1}-${type2}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="p-4 sm:p-6"
-          >
+      {typeData1 && typeData2 && compatibility !== null && (
+        <div className="p-4 sm:p-6">
             {/* Dynamic Archetype Label */}
             <div className="text-center mb-6 sm:mb-8">
               {archetype ? (
@@ -267,16 +295,9 @@ export function ComparisonExplorer({
             />
 
             {/* Tab Content */}
-            <AnimatePresence mode="wait">
               {/* Overview Tab */}
               {activeTab === 'overview' && (
-                <motion.div
-                  key="overview"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <div>
                   {/* Archetype Summary */}
                   {archetype && (
                     <div className="mb-6 p-4 bg-gradient-to-r from-charcoal/5 to-charcoal/10 dark:from-white/5 dark:to-white/10 rounded-xl">
@@ -295,7 +316,7 @@ export function ComparisonExplorer({
                       </div>
                       <div className="p-6 bg-white dark:bg-gray-800">
                         <div className="prose prose-warm dark:prose-invert max-w-none">
-                          {relationshipStory.narrative.split('\n\n').map((paragraph, i) => (
+                          {relationshipParagraphs.map((paragraph, i) => (
                             <p key={i} className="text-charcoal-light dark:text-gray-200 leading-relaxed mb-4 last:mb-0">
                               {paragraph}
                             </p>
@@ -362,7 +383,7 @@ export function ComparisonExplorer({
                           </div>
                           <div className="p-6">
                             <div className="prose prose-warm dark:prose-invert max-w-none">
-                              {subtypeStory.narrative.split('\n\n').map((paragraph, i) => (
+                              {subtypeParagraphs.map((paragraph, i) => (
                                 <p key={i} className="text-charcoal-light dark:text-cream-200 leading-relaxed mb-4 last:mb-0">
                                   {paragraph}
                                 </p>
@@ -522,19 +543,12 @@ export function ComparisonExplorer({
                       </CollapsibleSection>
                     </div>
                   )}
-                </motion.div>
+                </div>
               )}
 
               {/* Dynamics Tab */}
               {activeTab === 'dynamics' && (
-                <motion.div
-                  key="dynamics"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-8"
-                >
+                <div className="space-y-8">
                   {/* Integration/Disintegration Lines */}
                   <div>
                     <h3 className="text-lg font-serif font-semibold text-charcoal dark:text-white mb-4 flex items-center gap-2">
@@ -592,29 +606,41 @@ export function ComparisonExplorer({
                       disintegration2={disintegration2 ?? null}
                     />
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {/* Growth Tab */}
               {activeTab === 'growth' && (
-                <motion.div
-                  key="growth"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
-                  {/* Health Level Toggle */}
+                <div className="space-y-6">
+                  {/* Health Combination Explorer */}
+                  <div>
+                    <h3 className="text-lg font-serif font-semibold text-charcoal dark:text-white mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-charcoal-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                      </svg>
+                      What If? Health Combinations
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      Explore how this relationship changes when each person is at different health levels.
+                    </p>
+                    <HealthCombinationExplorer
+                      type1={type1!}
+                      type2={type2!}
+                      centerColor1={centerColor1}
+                      centerColor2={centerColor2}
+                    />
+                  </div>
+
+                  {/* Individual Health Level Details */}
                   <div>
                     <h3 className="text-lg font-serif font-semibold text-charcoal dark:text-white mb-4 flex items-center gap-2">
                       <svg className="w-5 h-5 text-charcoal-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
-                      Levels of Health
+                      Individual Levels of Health
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      See how each type behaves at different health levels. This affects relationship dynamics significantly.
+                      Dive deeper into how each type behaves at each health level.
                     </p>
                     <HealthLevelToggle value={healthView} onChange={setHealthView} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -698,19 +724,12 @@ export function ComparisonExplorer({
                       </ul>
                     </div>
                   )}
-                </motion.div>
+                </div>
               )}
 
               {/* Stress Tab */}
               {activeTab === 'stress' && (
-                <motion.div
-                  key="stress"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                  className="space-y-6"
-                >
+                <div className="space-y-6">
                   {/* Disintegration Patterns */}
                   <div>
                     <h3 className="text-lg font-serif font-semibold text-charcoal dark:text-white mb-4 flex items-center gap-2">
@@ -831,9 +850,8 @@ export function ComparisonExplorer({
                       </ul>
                     </div>
                   )}
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
 
             {/* No pairing data fallback */}
             {!pairingData && activeTab === 'overview' && (
@@ -842,24 +860,19 @@ export function ComparisonExplorer({
                 <p className="text-sm mt-1">The compatibility score is based on group alignments and integration patterns.</p>
               </div>
             )}
-          </motion.div>
-        )}
+        </div>
+      )}
 
         {/* Empty state */}
         {(!type1 || !type2) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="p-8 sm:p-12 text-center text-gray-500 dark:text-gray-400"
-          >
+          <div className="p-8 sm:p-12 text-center text-gray-500 dark:text-gray-400">
             <svg className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <p className="text-base sm:text-lg">Select two types to compare</p>
             <p className="text-sm mt-1">Discover compatibility, growth opportunities, and communication tips</p>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -889,7 +902,7 @@ function TypeSelector({ label, value, onChange, types, excludeType }: TypeSelect
               onClick={() => !isExcluded && onChange(isSelected ? null : type.number)}
               disabled={isExcluded}
               className={`
-                p-3 sm:p-2 rounded-lg text-center transition-all min-h-[52px]
+                p-3 sm:p-2 rounded-lg text-center transition-[transform,box-shadow,background-color,color] min-h-[52px]
                 ${isExcluded ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
                 ${isSelected ? 'ring-2 ring-offset-2 dark:ring-offset-gray-800 shadow-md' : 'hover:shadow'}
               `}
@@ -1044,22 +1057,11 @@ function CollapsibleSection({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      <AnimatePresence initial={false}>
-        {isExpanded && (
-          <motion.div
-            id={`section-${id}`}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isExpanded && (
+        <div id={`section-${id}`} className="px-4 sm:px-6 pb-4 sm:pb-6">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

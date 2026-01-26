@@ -27,49 +27,49 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Balance of discipline and joy', 'Growth line connection (integration)', '1 provides structure, 7 provides spontaneity'],
     challenges: ['1 may see 7 as irresponsible', '7 may feel criticized by 1', 'Different approaches to planning'],
     growthOpportunities: ['1 learns to relax and enjoy', '7 learns focus and follow-through', 'Both balance each other\'s extremes'],
-    communicationTips: ['1s: Appreciate 7\'s enthusiasm before critiquing', '7s: Follow through on commitments with 1', 'Plan spontaneous adventures together']
+    communicationTips: ['1: Appreciate 7\'s enthusiasm before critiquing', '7: Follow through on commitments with 1', 'Plan spontaneous adventures together']
   },
   {
     type1: 2, type2: 8, overallScore: 7,
     strengths: ['Complementary strength and nurturing', 'Mutual intensity', '8 appreciates 2\'s warmth, 2 appreciates 8\'s strength'],
     challenges: ['Power struggles possible', '2 may feel overwhelmed by 8\'s intensity', '8 may feel manipulated by 2\'s indirectness'],
     growthOpportunities: ['2 learns to be direct', '8 learns to soften', 'Both access vulnerability together'],
-    communicationTips: ['2s: Be direct, 8s respect that', '8s: Let 2s help you', 'Both practice vulnerability']
+    communicationTips: ['2: Be direct, 8s respect that', '8: Let 2s help you', 'Both practice vulnerability']
   },
   {
     type1: 4, type2: 5, overallScore: 7,
     strengths: ['Deep intellectual and emotional connection', 'Respect for individuality', 'Creative partnership potential'],
     challenges: ['Both tend to withdraw', '4 wants more emotion, 5 wants more space', 'Communication styles differ'],
     growthOpportunities: ['4 learns detachment, 5 learns emotional depth', 'Both practice engagement', 'Creative collaboration'],
-    communicationTips: ['Schedule regular connection time', '4s: Give 5s processing space', '5s: Express feelings, not just thoughts']
+    communicationTips: ['Schedule regular connection time', '4: Give 5s processing space', '5: Express feelings, not just thoughts']
   },
   {
     type1: 3, type2: 6, overallScore: 7,
     strengths: ['Growth line connection', '3 provides confidence, 6 provides loyalty', 'Complementary skills'],
     challenges: ['3 may dismiss 6\'s worries', '6 may doubt 3\'s authenticity', 'Different relationships with anxiety'],
     growthOpportunities: ['3 learns depth and loyalty', '6 learns confidence and action', 'Both develop authenticity'],
-    communicationTips: ['3s: Be patient with 6\'s concerns', '6s: Trust 3\'s competence', 'Build trust gradually']
+    communicationTips: ['3: Be patient with 6\'s concerns', '6: Trust 3\'s competence', 'Build trust gradually']
   },
   {
     type1: 5, type2: 8, overallScore: 7,
     strengths: ['Growth line connection', 'Both value independence', '5 provides strategy, 8 provides action'],
     challenges: ['Different energy levels', '8 may overwhelm 5', '5 may seem weak to 8'],
     growthOpportunities: ['5 learns to act with confidence', '8 learns strategic thinking', 'Powerful partnership when aligned'],
-    communicationTips: ['8s: Give 5s space to think', '5s: Engage more directly', 'Respect each other\'s autonomy']
+    communicationTips: ['8: Give 5s space to think', '5: Engage more directly', 'Respect each other\'s autonomy']
   },
   {
     type1: 6, type2: 9, overallScore: 8,
     strengths: ['Growth line connection', 'Complementary energies', '9 provides calm, 6 provides engagement'],
     challenges: ['6 may push 9 too hard', '9\'s passivity may frustrate 6', 'Both avoid direct conflict'],
     growthOpportunities: ['6 learns trust and peace', '9 learns engagement and focus', 'Mutual grounding'],
-    communicationTips: ['6s: Don\'t mistake 9\'s calm for uncaring', '9s: Show up and engage', 'Practice direct communication']
+    communicationTips: ['6: Don\'t mistake 9\'s calm for uncaring', '9: Show up and engage', 'Practice direct communication']
   },
   {
     type1: 9, type2: 3, overallScore: 7,
     strengths: ['Growth line connection', '3 energizes 9, 9 calms 3', 'Complementary strengths'],
     challenges: ['9 may feel pushed by 3', '3 may be frustrated by 9\'s pace', 'Different relationships with goals'],
     growthOpportunities: ['9 learns focus and achievement', '3 learns acceptance and being', 'Balance of doing and being'],
-    communicationTips: ['3s: Appreciate 9\'s steady presence', '9s: Set and share personal goals', 'Celebrate achievements together']
+    communicationTips: ['3: Appreciate 9\'s steady presence', '9: Set and share personal goals', 'Celebrate achievements together']
   },
 
   // Heart-center relationships
@@ -85,14 +85,14 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Growth line connection', 'Deep emotional understanding', 'Both value connection'],
     challenges: ['2 may feel rejected by 4\'s withdrawal', '4 may feel smothered by 2', 'Different needs for space'],
     growthOpportunities: ['2 learns self-awareness', '4 learns to receive care', 'Emotional depth together'],
-    communicationTips: ['4s: Receive 2\'s care graciously', '2s: Don\'t take 4\'s moods personally', 'Balance giving and receiving']
+    communicationTips: ['4: Receive 2\'s care graciously', '2: Don\'t take 4\'s moods personally', 'Balance giving and receiving']
   },
   {
     type1: 3, type2: 4, overallScore: 6,
     strengths: ['Complementary within heart center', '3 admires 4\'s authenticity, 4 admires 3\'s competence', 'Creative potential'],
     challenges: ['3 seems inauthentic to 4', '4 seems ineffective to 3', 'Different values around image'],
     growthOpportunities: ['3 learns depth and authenticity', '4 learns practical action', 'Balance feeling and doing'],
-    communicationTips: ['3s: Show real feelings', '4s: Appreciate 3\'s efforts', 'Respect different approaches to identity']
+    communicationTips: ['3: Show real feelings', '4: Appreciate 3\'s efforts', 'Respect different approaches to identity']
   },
 
   // Head-center relationships
@@ -108,14 +108,14 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Growth line connection', 'Both love ideas and possibilities', '7 energizes 5, 5 grounds 7'],
     challenges: ['5 may feel overwhelmed by 7', '7 may feel limited by 5', 'Different energy needs'],
     growthOpportunities: ['5 learns enthusiasm', '7 learns depth', 'Balance breadth and depth'],
-    communicationTips: ['7s: Go deep with 5s', '5s: Try new experiences with 7s', 'Alternate adventure and retreat']
+    communicationTips: ['7: Go deep with 5s', '5: Try new experiences with 7s', 'Alternate adventure and retreat']
   },
   {
     type1: 6, type2: 7, overallScore: 7,
     strengths: ['Adjacent types, understand each other', 'Balance caution and enthusiasm', 'Complementary approaches to fear'],
     challenges: ['6 may dampen 7\'s optimism', '7 may dismiss 6\'s concerns', 'Different responses to anxiety'],
     growthOpportunities: ['6 learns optimism', '7 learns realistic planning', 'Face fear together'],
-    communicationTips: ['6s: Enjoy 7\'s enthusiasm', '7s: Validate 6\'s concerns', 'Balance planning and spontaneity']
+    communicationTips: ['6: Enjoy 7\'s enthusiasm', '7: Validate 6\'s concerns', 'Balance planning and spontaneity']
   },
 
   // Gut-center relationships
@@ -124,7 +124,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Complementary gut types', '8 brings energy, 9 brings calm', 'Both value autonomy'],
     challenges: ['8 may overwhelm 9', '9 may frustrate 8 with passivity', 'Different relationships with anger'],
     growthOpportunities: ['8 learns acceptance', '9 learns assertion', 'Balance power and peace'],
-    communicationTips: ['8s: Soften intensity with 9s', '9s: Express preferences directly', 'Make space for both energies']
+    communicationTips: ['8: Soften intensity with 9s', '9: Express preferences directly', 'Make space for both energies']
   },
   {
     type1: 8, type2: 1, overallScore: 7,
@@ -138,7 +138,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Adjacent types with growth potential', '9 calms 1, 1 activates 9', 'Complementary strengths'],
     challenges: ['1 may be critical of 9', '9 may passively resist 1', 'Different approaches to conflict'],
     growthOpportunities: ['1 learns acceptance', '9 learns engagement', 'Balance action and peace'],
-    communicationTips: ['1s: Appreciate 9\'s calming presence', '9s: Take stands with 1', 'Be direct about needs']
+    communicationTips: ['1: Appreciate 9\'s calming presence', '9: Take stands with 1', 'Be direct about needs']
   },
 
   // === SAME-TYPE RELATIONSHIPS ===
@@ -198,21 +198,21 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Shared sense of responsibility and service', '1 admires 2\'s warmth, 2 admires 1\'s integrity', 'Both want to do the right thing'],
     challenges: ['1 may seem cold to 2', '2 may seem manipulative to 1', 'Different views on expressing care'],
     growthOpportunities: ['1 learns warmth and flexibility', '2 learns boundaries and self-care', 'Balance principles with compassion'],
-    communicationTips: ['1s: Appreciate 2\'s help without critiquing methods', '2s: Respect 1\'s need for fairness', 'Find shared causes to serve together']
+    communicationTips: ['1: Appreciate 2\'s help without critiquing methods', '2: Respect 1\'s need for fairness', 'Find shared causes to serve together']
   },
   {
     type1: 1, type2: 3, overallScore: 6,
     strengths: ['Both value competence and doing well', 'Mutual respect for hard work', 'Goal-oriented partnership'],
     challenges: ['1 values ethics over image, 3 values results over process', '1 may see 3 as cutting corners', '3 may see 1 as rigid'],
     growthOpportunities: ['1 learns efficiency and pragmatism', '3 learns integrity and depth', 'Balance excellence with authenticity'],
-    communicationTips: ['Align on shared values first', '1s: Appreciate 3\'s achievements', '3s: Honor 1\'s principles']
+    communicationTips: ['Align on shared values first', '1: Appreciate 3\'s achievements', '3: Honor 1\'s principles']
   },
   {
     type1: 1, type2: 4, overallScore: 6,
     strengths: ['Disintegration line connection—understand each other\'s shadow', 'Both care about meaning and authenticity', 'Creative tension can produce depth'],
     challenges: ['1 may see 4 as self-indulgent', '4 may see 1 as repressed', 'Different relationships with emotion'],
     growthOpportunities: ['1 learns to access emotions', '4 learns discipline and structure', 'Integration of feeling and doing'],
-    communicationTips: ['1s: Allow space for 4\'s feelings', '4s: Appreciate 1\'s practical support', 'Find creative projects together']
+    communicationTips: ['1: Allow space for 4\'s feelings', '4: Appreciate 1\'s practical support', 'Find creative projects together']
   },
   {
     type1: 1, type2: 5, overallScore: 7,
@@ -226,7 +226,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Both responsible and dutiful', 'Shared commitment to doing right', 'Strong troubleshooting partnership'],
     challenges: ['1\'s certainty may threaten 6', '6\'s doubt may frustrate 1', 'Both can be anxious about mistakes'],
     growthOpportunities: ['1 learns flexibility', '6 gains confidence from 1\'s clarity', 'Build trust through reliability'],
-    communicationTips: ['1s: Validate 6\'s concerns before solving', '6s: Trust 1\'s judgment', 'Focus on solutions together']
+    communicationTips: ['1: Validate 6\'s concerns before solving', '6: Trust 1\'s judgment', 'Focus on solutions together']
   },
 
   // === TYPE 2 CROSS-CENTER RELATIONSHIPS ===
@@ -235,21 +235,21 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Complementary—2 brings warmth, 5 brings depth', 'Both appreciate being seen for who they are', 'Growth potential in opposite directions'],
     challenges: ['2 wants more connection than 5 can give', '5 feels overwhelmed by 2\'s needs', 'Very different social energy'],
     growthOpportunities: ['2 learns healthy detachment', '5 learns to engage emotionally', 'Finding middle ground on intimacy'],
-    communicationTips: ['2s: Give 5s space without taking it personally', '5s: Express appreciation verbally', 'Agree on connection frequency']
+    communicationTips: ['2: Give 5s space without taking it personally', '5: Express appreciation verbally', 'Agree on connection frequency']
   },
   {
     type1: 2, type2: 6, overallScore: 7,
     strengths: ['Both value loyalty and connection', '2 provides warmth, 6 provides stability', 'Strong supportive partnership'],
     challenges: ['6 may suspect 2\'s motives', '2 may feel untrusted', 'Both can be anxious about rejection'],
     growthOpportunities: ['Build trust through consistency', '6 learns to receive care', '2 learns secure attachment'],
-    communicationTips: ['Be reliable and consistent', '6s: Accept help graciously', '2s: Be transparent about needs']
+    communicationTips: ['Be reliable and consistent', '6: Accept help graciously', '2: Be transparent about needs']
   },
   {
     type1: 2, type2: 7, overallScore: 6,
     strengths: ['Both positive and people-oriented', '2 grounds 7, 7 lightens 2', 'Social and fun partnership'],
     challenges: ['7 may avoid 2\'s emotional needs', '2 may feel abandoned by 7\'s independence', 'Different needs for depth'],
     growthOpportunities: ['7 learns commitment and depth', '2 learns self-sufficiency', 'Balance togetherness and freedom'],
-    communicationTips: ['7s: Follow through on emotional promises', '2s: Give 7s freedom without guilt', 'Plan adventures that include connection']
+    communicationTips: ['7: Follow through on emotional promises', '2: Give 7s freedom without guilt', 'Plan adventures that include connection']
   },
   {
     type1: 2, type2: 9, overallScore: 7,
@@ -265,7 +265,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['3 brings action, 5 brings analysis', 'Mutual respect for competence', 'Efficient problem-solving together'],
     challenges: ['3 may seem superficial to 5', '5 may seem impractical to 3', 'Different values around visibility'],
     growthOpportunities: ['3 learns depth and reflection', '5 learns presentation and action', 'Balance doing and thinking'],
-    communicationTips: ['3s: Value 5\'s ideas even without visible output', '5s: Appreciate 3\'s execution', 'Combine strategy with implementation']
+    communicationTips: ['3: Value 5\'s ideas even without visible output', '5: Appreciate 3\'s execution', 'Combine strategy with implementation']
   },
   {
     type1: 3, type2: 7, overallScore: 7,
@@ -295,21 +295,21 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Creative opposites attract', '7 lightens 4\'s heaviness', '4 adds depth to 7\'s breadth'],
     challenges: ['Very different emotional styles', '4 feels dismissed by 7\'s positivity', '7 feels drained by 4\'s melancholy'],
     growthOpportunities: ['4 learns joy and lightness', '7 learns depth and presence', 'Integration of shadow and light'],
-    communicationTips: ['4s: Don\'t assume 7 is avoiding', '7s: Stay present with 4\'s feelings', 'Balance depth with adventure']
+    communicationTips: ['4: Don\'t assume 7 is avoiding', '7: Stay present with 4\'s feelings', 'Balance depth with adventure']
   },
   {
     type1: 4, type2: 8, overallScore: 6,
     strengths: ['Both intense and authentic', 'Mutual respect for depth', 'Neither settles for superficial'],
     challenges: ['Power struggles possible', '8\'s directness may hurt 4', '4\'s sensitivity may frustrate 8'],
     growthOpportunities: ['4 learns strength and action', '8 learns emotional nuance', 'Powerful creative partnership'],
-    communicationTips: ['8s: Be gentle with 4\'s feelings', '4s: Appreciate 8\'s protection', 'Channel intensity productively']
+    communicationTips: ['8: Be gentle with 4\'s feelings', '4: Appreciate 8\'s protection', 'Channel intensity productively']
   },
   {
     type1: 4, type2: 9, overallScore: 6,
     strengths: ['Both seek harmony and depth', '9 accepts 4 unconditionally', '4 brings passion, 9 brings peace'],
     challenges: ['4 may feel 9 doesn\'t see their uniqueness', '9 may feel overwhelmed by 4\'s emotions', 'Different energy levels'],
     growthOpportunities: ['4 learns contentment', '9 learns emotional engagement', 'Balance intensity with acceptance'],
-    communicationTips: ['9s: Show 4 they\'re truly seen', '4s: Appreciate 9\'s steadiness', 'Don\'t mistake calm for indifference']
+    communicationTips: ['9: Show 4 they\'re truly seen', '4: Appreciate 9\'s steadiness', 'Don\'t mistake calm for indifference']
   },
 
   // === REMAINING HEAD/GUT/CROSS RELATIONSHIPS ===
@@ -325,7 +325,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['8 provides security 6 craves', '6\'s loyalty matches 8\'s protection', 'Strong alliance when trust is built'],
     challenges: ['6 may fear 8\'s intensity', '8 may be frustrated by 6\'s doubt', 'Trust takes time to build'],
     growthOpportunities: ['6 learns confidence from 8', '8 learns to temper power', 'Building unshakeable trust'],
-    communicationTips: ['8s: Be patient with 6\'s process', '6s: Don\'t test 8\'s loyalty', 'Build trust through actions']
+    communicationTips: ['8: Be patient with 6\'s process', '6: Don\'t test 8\'s loyalty', 'Build trust through actions']
   },
   {
     type1: 7, type2: 8, overallScore: 7,
@@ -339,7 +339,7 @@ export const compatibilityData: TypeCompatibility[] = [
     strengths: ['Both positive and easygoing', '9 provides calm to 7\'s energy', '7 energizes 9'],
     challenges: ['Neither addresses problems', '7 may leave 9 behind', '9 may feel overwhelmed by 7\'s pace'],
     growthOpportunities: ['Face difficulties together', '9 learns engagement from 7', '7 learns presence from 9'],
-    communicationTips: ['Slow down for 9 sometimes', '9s: Express preferences', 'Balance activity with rest']
+    communicationTips: ['Slow down for 9 sometimes', '9: Express preferences', 'Balance activity with rest']
   }
 ];
 

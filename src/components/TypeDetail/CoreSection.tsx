@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { TypeNumber, EnneagramType, Wing, ViceVirtue, Fixation, HolyIdea } from '../../types';
 
 interface CoreSectionProps {
@@ -47,7 +47,7 @@ export function CoreSection({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
               activeTab === tab.id
                 ? 'bg-charcoal dark:bg-white text-white dark:text-charcoal'
                 : 'text-charcoal-light dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-800'
@@ -59,16 +59,15 @@ export function CoreSection({
       </div>
 
       {/* Tab content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.1 }}
-        >
-          {activeTab === 'overview' && (
-            <div className="space-y-6">
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.12, ease: 'easeOut' }}
+        style={{ willChange: 'opacity' }}
+      >
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
               {/* Core Fear & Desire */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card label="Core Fear" color={color}>
@@ -129,8 +128,8 @@ export function CoreSection({
             </div>
           )}
 
-          {activeTab === 'mechanics' && (
-            <div className="space-y-6">
+        {activeTab === 'mechanics' && (
+          <div className="space-y-6">
               {/* Vice & Virtue */}
               {viceVirtue && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -181,8 +180,8 @@ export function CoreSection({
             </div>
           )}
 
-          {activeTab === 'essence' && essence && (
-            <div className="space-y-6">
+        {activeTab === 'essence' && essence && (
+          <div className="space-y-6">
               {/* Essence Quality */}
               <Card label="Your Essence" title={essence.essenceQuality} color="#8b5cf6">
                 <p className="text-lg text-charcoal-light dark:text-gray-300 leading-relaxed whitespace-pre-line">
@@ -233,8 +232,7 @@ export function CoreSection({
               </div>
             </div>
           )}
-        </motion.div>
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

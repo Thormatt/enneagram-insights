@@ -437,6 +437,61 @@ export const differentiatorQuestions: DifferentiatorQuestion[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
+  // TYPE 5 vs TYPE 7 (Both head types, but opposite energy directions)
+  // 5 withdraws/conserves; 7 expands/seeks stimulation
+  // ═══════════════════════════════════════════════════════════════
+
+  {
+    id: 'diff-5v7-1',
+    text: 'I withdraw from the world to conserve my energy and resources.',
+    pair: [5, 7],
+    direction: { positive: 5, negative: 7 },
+    rationale: '5s withdraw and conserve; 7s move toward experiences',
+  },
+  {
+    id: 'diff-5v7-2',
+    text: 'I seek out new experiences and stimulation to feel fully alive.',
+    pair: [5, 7],
+    direction: { positive: 7, negative: 5 },
+    rationale: '7s seek stimulation; 5s minimize engagement',
+  },
+  {
+    id: 'diff-5v7-3',
+    text: 'I feel depleted by too much interaction and need time alone to recharge.',
+    pair: [5, 7],
+    direction: { positive: 5, negative: 7 },
+    rationale: '5s are drained by engagement; 7s are energized by it',
+  },
+  {
+    id: 'diff-5v7-4',
+    text: 'I reframe negative situations to find the positive and keep my spirits up.',
+    pair: [5, 7],
+    direction: { positive: 7, negative: 5 },
+    rationale: '7s reframe to avoid pain; 5s accept reality detachedly',
+  },
+  {
+    id: 'diff-5v7-5',
+    text: 'I prefer depth of understanding in a few areas over breadth of experience.',
+    pair: [5, 7],
+    direction: { positive: 5, negative: 7 },
+    rationale: '5s go deep and narrow; 7s go broad and varied',
+  },
+  {
+    id: 'diff-5v7-6',
+    text: 'I feel trapped and anxious when my options are limited or I am confined.',
+    pair: [5, 7],
+    direction: { positive: 7, negative: 5 },
+    rationale: '7s fear limitation; 5s fear depletion',
+  },
+  {
+    id: 'diff-5v7-7',
+    text: 'I minimize my needs and try to be as self-sufficient as possible.',
+    pair: [5, 7],
+    direction: { positive: 5, negative: 7 },
+    rationale: '5s minimize needs; 7s maximize experiences',
+  },
+
+  // ═══════════════════════════════════════════════════════════════
   // TYPE 3 vs TYPE 7 (Both assertive, optimistic)
   // ═══════════════════════════════════════════════════════════════
 

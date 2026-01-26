@@ -6,7 +6,6 @@ import {
   type ScreeningQuestion,
 } from '../questionPool/screeningQuestions';
 import {
-  differentiatorQuestions,
   getDifferentiatorsForPair,
   type DifferentiatorQuestion,
 } from '../questionPool/differentiatorQuestions';
@@ -260,10 +259,6 @@ export function selectNextQuestion(
   const scoredQuestions: QuestionCandidate[] = availableQuestions.map(q => {
     const infoGain = calculateInformationGain(q, probs);
     const relevance = calculateRelevance(q, candidates);
-
-    // Combine information gain with relevance
-    // Questions that are both informative AND relevant to current candidates are best
-    const combinedScore = infoGain * (0.5 + relevance * 0.5);
 
     return {
       question: q,

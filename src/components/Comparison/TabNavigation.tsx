@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export type ComparisonTab = 'overview' | 'dynamics' | 'growth' | 'stress';
 
 interface TabInfo {
@@ -68,9 +66,9 @@ export function TabNavigation({
               onClick={() => onTabChange(tab.id)}
               className={`
                 relative flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap
-                transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-500
                 ${isActive
-                  ? 'text-charcoal dark:text-white'
+                  ? 'text-charcoal dark:text-white border-b-2 border-terracotta-600 dark:border-terracotta-400'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }
               `}
@@ -80,13 +78,6 @@ export function TabNavigation({
                 {tab.icon}
               </span>
               <span>{tab.label}</span>
-              {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-terracotta-600 dark:bg-terracotta-400"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
             </button>
           );
         })}

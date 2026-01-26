@@ -161,44 +161,23 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
     merge.append('feMergeNode');
     merge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-    // Glow filter for selected node - intense radiant effect
+    // Simple glow filter for selected node - lightweight for performance
     const glowFilter = defs.append('filter')
       .attr('id', 'selected-glow')
-      .attr('x', '-100%')
-      .attr('y', '-100%')
-      .attr('width', '300%')
-      .attr('height', '300%');
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%');
 
-    // Multiple blur layers for a rich glow
+    // Single blur for glow effect
     glowFilter.append('feGaussianBlur')
-      .attr('in', 'SourceGraphic')
-      .attr('stdDeviation', 12)
-      .attr('result', 'blur1');
-    glowFilter.append('feGaussianBlur')
-      .attr('in', 'SourceGraphic')
-      .attr('stdDeviation', 6)
-      .attr('result', 'blur2');
-    glowFilter.append('feGaussianBlur')
-      .attr('in', 'SourceGraphic')
-      .attr('stdDeviation', 3)
-      .attr('result', 'blur3');
+      .attr('in', 'SourceAlpha')
+      .attr('stdDeviation', 4)
+      .attr('result', 'blur');
 
-    // Brighten the glow
-    glowFilter.append('feColorMatrix')
-      .attr('in', 'blur1')
-      .attr('type', 'matrix')
-      .attr('values', '1 0 0 0 0.1  0 1 0 0 0.1  0 0 1 0 0.1  0 0 0 1.5 0')
-      .attr('result', 'glow1');
-    glowFilter.append('feColorMatrix')
-      .attr('in', 'blur2')
-      .attr('type', 'matrix')
-      .attr('values', '1 0 0 0 0.2  0 1 0 0 0.2  0 0 1 0 0.2  0 0 0 1.2 0')
-      .attr('result', 'glow2');
-
+    // Composite the blur behind the source
     const glowMerge = glowFilter.append('feMerge');
-    glowMerge.append('feMergeNode').attr('in', 'glow1');
-    glowMerge.append('feMergeNode').attr('in', 'glow2');
-    glowMerge.append('feMergeNode').attr('in', 'blur3');
+    glowMerge.append('feMergeNode').attr('in', 'blur');
     glowMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     // Create groups for layers
@@ -493,15 +472,7 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .attr('transform', `translate(${pos.x}, ${pos.y}) scale(${baseScale})`)
         .attr('opacity', shouldDim ? 0.25 : 1)
         .attr('class', 'cursor-pointer')
-        .style('transition', 'transform 0.2s ease')
-        .on('click', () => selectType(type.number as TypeNumber))
-        .on('mouseenter', function() {
-          const hoverScale = isSelected ? 1.2 : 1.1;
-          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(${hoverScale})`);
-        })
-        .on('mouseleave', function() {
-          d3.select(this).attr('transform', `translate(${pos.x}, ${pos.y}) scale(${baseScale})`);
-        });
+        .on('click', () => selectType(type.number as TypeNumber));
 
       // Selection indicator - subtle glow
       if (isSelected) {
@@ -551,13 +522,13 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('stroke-dasharray', '4,2');
       }
 
-      // Node circle with shadow (or glow for selected)
+      // Node circle with shadow
       nodeGroup.append('circle')
         .attr('r', nodeRadius)
         .attr('fill', color)
         .attr('stroke', 'white')
         .attr('stroke-width', isSelected ? 4 : 3)
-        .attr('filter', isSelected ? 'url(#selected-glow)' : 'url(#drop-shadow)');
+        .attr('filter', 'url(#drop-shadow)');
 
       // Type number
       nodeGroup.append('text')
@@ -686,8 +657,8 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .text('Click a type to explore');
     }
 
-    // Legend for selected type (shows what wings and arrows mean)
-    if (selectedType && circleLayer !== 'dynamics') {
+    // Legend for selected type (shows what wings and arrows mean) - only on basic layer
+    if (selectedType && circleLayer === 'basic') {
       const legend = svg.append('g')
         .attr('transform', `translate(20, ${height - 100})`);
 
@@ -738,9 +709,10 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.15 }}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.15, ease: 'easeOut' }}
+      style={{ willChange: 'transform, opacity' }}
       className="flex flex-col justify-center items-center gap-4"
     >
       <svg

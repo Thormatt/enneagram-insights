@@ -21,10 +21,11 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
             <div className="bg-cream-50 dark:bg-gray-800 rounded-2xl shadow-warm-lg max-w-lg w-full overflow-hidden relative">
@@ -40,7 +41,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
               </button>
 
               {/* Header */}
-              <div className="bg-warm-gradient p-8 text-center border-b border-warm-border">
+              <div className="bg-warm-gradient dark:bg-gray-800 p-8 text-center border-b border-warm-border dark:border-gray-700">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-terracotta-500 flex items-center justify-center shadow-warm">
                   <span className="text-4xl font-serif font-bold text-white">9</span>
                 </div>
