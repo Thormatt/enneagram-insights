@@ -219,11 +219,11 @@ export function CoreSection({
               </Card>
 
               {/* Remember callout */}
-              <div className="bg-warm-gradient dark:bg-gray-800 rounded-2xl p-8 border border-warm-border dark:border-gray-700">
-                <h4 className="font-serif text-xl font-semibold text-charcoal dark:text-white mb-4">
+              <div className="bg-warm-gradient dark:bg-purple-900/30 rounded-2xl p-8 border border-warm-border dark:border-purple-700/50">
+                <h4 className="font-serif text-xl font-semibold text-charcoal dark:text-purple-200 mb-4">
                   Remember
                 </h4>
-                <p className="text-charcoal-light dark:text-gray-300 leading-relaxed">
+                <p className="text-charcoal-light dark:text-gray-200 leading-relaxed">
                   Your type is not who you <em className="font-medium text-charcoal dark:text-white">are</em>—it's your pattern of forgetting who you are.
                   The goal is not to become a "healthy {type.name}" but to transcend type fixation altogether,
                   returning to the wholeness you never actually lost. You are already essence; the personality
