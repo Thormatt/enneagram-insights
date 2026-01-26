@@ -71,6 +71,13 @@ const WING_LINES: { from: TypeNumber; to: TypeNumber }[] = [
 
 const TYPE_ORDER = [9, 1, 2, 3, 4, 5, 6, 7, 8] as const;
 
+// Get wings for a given type (adjacent types on the circle)
+function getWings(typeNumber: TypeNumber): [TypeNumber, TypeNumber] {
+  const lower = typeNumber === 1 ? 9 : (typeNumber - 1) as TypeNumber;
+  const upper = typeNumber === 9 ? 1 : (typeNumber + 1) as TypeNumber;
+  return [lower, upper];
+}
+
 export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCircleProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   // Use selectors to prevent unnecessary re-renders
@@ -188,7 +195,8 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       .attr('r', radius)
       .attr('fill', 'none')
       .attr('stroke', themeColors.circleStroke)
-      .attr('stroke-width', 2);
+      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.4);
 
     // Draw inner enneagram symbol (triangle + hexagon)
     if (circleLayer === 'dynamics' || circleLayer === 'basic') {
@@ -313,6 +321,114 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       });
     }
 
+    // Draw selected type's integration/disintegration arrows (shown on any layer when a type is selected)
+    if (selectedType) {
+      const integrationTarget = integrationMap[selectedType];
+      const disintegrationTarget = disintegrationMap[selectedType];
+      const wings = getWings(selectedType);
+
+      // Arrow markers for selected type arrows
+      if (!defs.select('#arrow-integration').node()) {
+        defs.append('marker')
+          .attr('id', 'arrow-integration')
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 8)
+          .attr('refY', 0)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 6)
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', 'M0,-5L10,0L0,5')
+          .attr('fill', '#7D9B84'); // Sage - integration
+
+        defs.append('marker')
+          .attr('id', 'arrow-disintegration')
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 8)
+          .attr('refY', 0)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 6)
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', 'M0,-5L10,0L0,5')
+          .attr('fill', '#C4785C'); // Terracotta - stress
+      }
+
+      // Draw integration arrow (solid sage green)
+      if (integrationTarget) {
+        const fromPos = getTypePosition(selectedType);
+        const toPos = getTypePosition(integrationTarget);
+
+        const dx = toPos.x - fromPos.x;
+        const dy = toPos.y - fromPos.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        const offsetFrom = nodeRadius + 5;
+        const offsetTo = nodeRadius + 12;
+
+        const startX = fromPos.x + (dx / len) * offsetFrom;
+        const startY = fromPos.y + (dy / len) * offsetFrom;
+        const endX = toPos.x - (dx / len) * offsetTo;
+        const endY = toPos.y - (dy / len) * offsetTo;
+
+        linesGroup.append('line')
+          .attr('x1', startX)
+          .attr('y1', startY)
+          .attr('x2', endX)
+          .attr('y2', endY)
+          .attr('stroke', '#7D9B84') // Sage - integration
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow-integration)')
+          .attr('class', 'selected-integration-line')
+          .attr('opacity', 0.9);
+      }
+
+      // Draw disintegration arrow (dashed terracotta)
+      if (disintegrationTarget) {
+        const fromPos = getTypePosition(selectedType);
+        const toPos = getTypePosition(disintegrationTarget);
+
+        const dx = toPos.x - fromPos.x;
+        const dy = toPos.y - fromPos.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        const offsetFrom = nodeRadius + 5;
+        const offsetTo = nodeRadius + 12;
+
+        const startX = fromPos.x + (dx / len) * offsetFrom;
+        const startY = fromPos.y + (dy / len) * offsetFrom;
+        const endX = toPos.x - (dx / len) * offsetTo;
+        const endY = toPos.y - (dy / len) * offsetTo;
+
+        linesGroup.append('line')
+          .attr('x1', startX)
+          .attr('y1', startY)
+          .attr('x2', endX)
+          .attr('y2', endY)
+          .attr('stroke', '#C4785C') // Terracotta - stress
+          .attr('stroke-width', 3)
+          .attr('stroke-dasharray', '8,4')
+          .attr('marker-end', 'url(#arrow-disintegration)')
+          .attr('class', 'selected-stress-line')
+          .attr('opacity', 0.9);
+      }
+
+      // Draw wing connection highlights (glowing arcs)
+      wings.forEach(wingType => {
+        const fromPos = getTypePosition(selectedType);
+        const toPos = getTypePosition(wingType);
+
+        // Glow effect for wing line
+        linesGroup.append('line')
+          .attr('x1', fromPos.x)
+          .attr('y1', fromPos.y)
+          .attr('x2', toPos.x)
+          .attr('y2', toPos.y)
+          .attr('stroke', '#C9A962') // Gold for wings
+          .attr('stroke-width', 4)
+          .attr('opacity', 0.6)
+          .attr('class', 'wing-highlight');
+      });
+    }
+
     // Draw type nodes
     enneagramTypes.forEach(type => {
       const pos = getTypePosition(type.number as TypeNumber);
@@ -320,6 +436,10 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         ? GROUP_COLORS[harmonicGroupMap[type.number as TypeNumber]]
         : getCenterColor(type.center);
       const isSelected = selectedType === type.number;
+      const wings = selectedType ? getWings(selectedType) : null;
+      const isWing = wings !== null && (wings[0] === type.number || wings[1] === type.number);
+      const isIntegrationTarget = selectedType && integrationMap[selectedType] === type.number;
+      const isDisintegrationTarget = selectedType && disintegrationMap[selectedType] === type.number;
 
       const nodeGroup = nodesGroup.append('g')
         .attr('transform', `translate(${pos.x}, ${pos.y})`)
@@ -341,6 +461,37 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
           .attr('stroke', color)
           .attr('stroke-width', 3)
           .attr('stroke-opacity', 0.6)
+          .attr('stroke-dasharray', '4,2');
+      }
+
+      // Wing highlight ring (golden glow)
+      if (isWing && !isSelected) {
+        nodeGroup.append('circle')
+          .attr('r', nodeRadius + 6)
+          .attr('fill', 'none')
+          .attr('stroke', '#C9A962') // Gold
+          .attr('stroke-width', 3)
+          .attr('stroke-opacity', 0.7);
+      }
+
+      // Integration target highlight (sage green glow)
+      if (isIntegrationTarget && !isSelected) {
+        nodeGroup.append('circle')
+          .attr('r', nodeRadius + 6)
+          .attr('fill', 'none')
+          .attr('stroke', '#7D9B84') // Sage
+          .attr('stroke-width', 3)
+          .attr('stroke-opacity', 0.8);
+      }
+
+      // Disintegration target highlight (terracotta glow)
+      if (isDisintegrationTarget && !isSelected) {
+        nodeGroup.append('circle')
+          .attr('r', nodeRadius + 6)
+          .attr('fill', 'none')
+          .attr('stroke', '#C4785C') // Terracotta
+          .attr('stroke-width', 3)
+          .attr('stroke-opacity', 0.8)
           .attr('stroke-dasharray', '4,2');
       }
 
