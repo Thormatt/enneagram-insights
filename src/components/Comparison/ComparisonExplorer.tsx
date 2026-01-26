@@ -260,19 +260,6 @@ export function ComparisonExplorer({
               <TypeComparisonCard type={typeData2} color={centerColor2} />
             </div>
 
-            {/* Subtype Selectors */}
-            {type1 && type2 && (
-              <div className="mb-6 sm:mb-8 p-4 bg-cream-100 dark:bg-gray-700/30 rounded-xl border border-warm-border dark:border-gray-600">
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">
-                  Compare Specific Subtypes (Optional)
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <SubtypeSelector label={`Type ${type1} Subtype`} value={subtype1} onChange={setSubtype1} typeNumber={type1} />
-                  <SubtypeSelector label={`Type ${type2} Subtype`} value={subtype2} onChange={setSubtype2} typeNumber={type2} />
-                </div>
-              </div>
-            )}
-
             {/* Tab Navigation */}
             <TabNavigation
               activeTab={activeTab}
@@ -302,106 +289,24 @@ export function ComparisonExplorer({
                     </div>
                   )}
 
-                  {/* Subtype-Specific Relationship Story */}
-                  {subtypeStory && (
-                    <div className="mb-8 bg-gradient-to-br from-amber-50 via-violet-50 to-pink-50 dark:from-amber-900/20 dark:via-violet-900/20 dark:to-pink-900/20 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600">
-                      <div className="p-6 bg-gradient-to-r from-amber-600 via-violet-600 to-pink-600 text-white">
-                        <div className="flex items-center gap-2 text-amber-100 text-sm mb-2">
-                          <span className="px-2 py-0.5 rounded-full bg-white/20">
-                            {subtype1?.toUpperCase()}
-                          </span>
-                          <span>+</span>
-                          <span className="px-2 py-0.5 rounded-full bg-white/20">
-                            {subtype2?.toUpperCase()}
-                          </span>
-                        </div>
-                        <h3 className="text-2xl font-serif font-bold">{subtypeStory.title}</h3>
-                        <p className="text-white/80 italic mt-1">{subtypeStory.subtitle}</p>
-                      </div>
-                      <div className="p-6">
-                        <div className="prose prose-warm dark:prose-invert max-w-none">
-                          {subtypeStory.narrative.split('\n\n').map((paragraph, i) => (
-                            <p key={i} className="text-charcoal-light dark:text-cream-200 leading-relaxed mb-4 last:mb-0">
-                              {paragraph}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="px-6 pb-4">
-                        <div className="bg-white/60 dark:bg-gray-700/60 rounded-xl p-4">
-                          <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase mb-2">
-                            The Dynamic
-                          </h4>
-                          <p className="text-charcoal-light dark:text-cream-200">
-                            {subtypeStory.dynamicDescription}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="p-6 bg-sage-50 dark:bg-sage-900/20 border-t border-warm-border dark:border-gray-600">
-                        <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-sage-300 mb-2 flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                          </svg>
-                          Growth Path
-                        </h4>
-                        <p className="text-sage-700 dark:text-sage-300">{subtypeStory.growthPath}</p>
-                      </div>
-                      <div className="p-6 bg-terracotta-50 dark:bg-terracotta-900/20 border-t border-warm-border dark:border-gray-600">
-                        <h4 className="text-lg font-serif font-semibold text-terracotta-700 dark:text-terracotta-300 mb-2 flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                          </svg>
-                          Watch Out For
-                        </h4>
-                        <p className="text-terracotta-700 dark:text-terracotta-300">{subtypeStory.watchOut}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Prompt to select subtypes */}
-                  {!subtypeStory && type1 && type2 && (
-                    <div className="mb-8 bg-gradient-to-r from-amber-100 via-violet-100 to-pink-100 dark:from-amber-900/30 dark:via-violet-900/30 dark:to-pink-900/30 rounded-2xl p-6 text-center border border-warm-border dark:border-gray-600">
-                      <div className="flex justify-center gap-3 mb-3">
-                        <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-                        <span className="w-3 h-3 rounded-full bg-violet-500"></span>
-                        <span className="w-3 h-3 rounded-full bg-pink-500"></span>
-                      </div>
-                      <h4 className="text-lg font-serif font-semibold text-charcoal dark:text-cream-100 mb-2">
-                        Explore Subtype Dynamics
-                      </h4>
-                      <p className="text-charcoal-light dark:text-cream-300 text-sm">
-                        Select a subtype for each type above to see how specific instinctual variants interact.
-                        {(!subtype1 || !subtype2) && (
-                          <span className="block mt-2 text-gray-500 dark:text-gray-400">
-                            {!subtype1 && !subtype2
-                              ? 'Select both subtypes to see the dynamic.'
-                              : !subtype1
-                                ? `Select Type ${type1}'s subtype.`
-                                : `Select Type ${type2}'s subtype.`}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* General Relationship Story */}
+                  {/* General Relationship Story - BROAD (shown first) */}
                   {relationshipStory && (
-                    <div className="mb-8 bg-cream-100 dark:bg-gray-750 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600">
-                      <div className="p-6 bg-gradient-to-r from-charcoal to-charcoal-light text-white">
+                    <div className="mb-8 bg-cream-100 dark:bg-gray-800 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-700">
+                      <div className="p-6 bg-gradient-to-r from-charcoal to-charcoal-light dark:from-gray-700 dark:to-gray-600 text-white">
                         <h3 className="text-2xl font-serif font-bold">{relationshipStory.title}</h3>
-                        <p className="text-cream-300 italic mt-1">{relationshipStory.subtitle}</p>
+                        <p className="text-cream-300 dark:text-gray-300 italic mt-1">{relationshipStory.subtitle}</p>
                       </div>
-                      <div className="p-6">
+                      <div className="p-6 bg-white dark:bg-gray-800">
                         <div className="prose prose-warm dark:prose-invert max-w-none">
                           {relationshipStory.narrative.split('\n\n').map((paragraph, i) => (
-                            <p key={i} className="text-charcoal-light dark:text-cream-200 leading-relaxed mb-4 last:mb-0">
+                            <p key={i} className="text-charcoal-light dark:text-gray-200 leading-relaxed mb-4 last:mb-0">
                               {paragraph}
                             </p>
                           ))}
                         </div>
                       </div>
-                      <div className="p-6 border-t border-warm-border dark:border-gray-600">
-                        <h4 className="text-lg font-serif font-semibold text-charcoal dark:text-cream-100 mb-4 flex items-center gap-2">
+                      <div className="p-6 bg-cream-50 dark:bg-gray-800 border-t border-warm-border dark:border-gray-700">
+                        <h4 className="text-lg font-serif font-semibold text-charcoal dark:text-gray-100 mb-4 flex items-center gap-2">
                           <span>How Instincts Shape This Dynamic</span>
                         </h4>
                         <div className="flex gap-2 mb-4">
@@ -440,24 +345,103 @@ export function ComparisonExplorer({
                           </div>
                         )}
                       </div>
-                      <div className="p-6 bg-sage-50 dark:bg-sage-900/20 border-t border-warm-border dark:border-gray-600">
-                        <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-sage-300 mb-2 flex items-center gap-2">
+                      <div className="p-6 bg-sage-50 dark:bg-emerald-900/20 border-t border-warm-border dark:border-gray-700">
+                        <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-emerald-300 mb-2 flex items-center gap-2">
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
                           The Growth Moment
                         </h4>
-                        <p className="text-sage-700 dark:text-sage-300">{relationshipStory.growthMoment}</p>
+                        <p className="text-sage-700 dark:text-emerald-200">{relationshipStory.growthMoment}</p>
                       </div>
-                      <div className="p-6 bg-gold-50 dark:bg-gold-900/20 border-t border-warm-border dark:border-gray-600">
-                        <h4 className="text-lg font-serif font-semibold text-gold-700 dark:text-gold-300 mb-2 flex items-center gap-2">
+                      <div className="p-6 bg-gold-50 dark:bg-amber-900/20 border-t border-warm-border dark:border-gray-700">
+                        <h4 className="text-lg font-serif font-semibold text-gold-700 dark:text-amber-300 mb-2 flex items-center gap-2">
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           Reflection
                         </h4>
-                        <p className="text-gold-700 dark:text-gold-300 italic">{relationshipStory.reflection}</p>
+                        <p className="text-gold-700 dark:text-amber-200 italic">{relationshipStory.reflection}</p>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Subtype Drill-Down Section - NARROW (after general story) */}
+                  {type1 && type2 && (
+                    <div className="mb-8">
+                      {/* Subtype Selectors */}
+                      <div className="p-4 bg-gradient-to-r from-amber-50 via-violet-50 to-pink-50 dark:from-amber-900/20 dark:via-violet-900/20 dark:to-pink-900/20 rounded-xl border border-warm-border dark:border-gray-600 mb-4">
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center flex items-center justify-center gap-2">
+                          <svg className="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                          </svg>
+                          Dive Deeper: Compare Specific Subtypes
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <SubtypeSelector label={`Type ${type1} Subtype`} value={subtype1} onChange={setSubtype1} typeNumber={type1} />
+                          <SubtypeSelector label={`Type ${type2} Subtype`} value={subtype2} onChange={setSubtype2} typeNumber={type2} />
+                        </div>
+                      </div>
+
+                      {/* Subtype-Specific Relationship Story */}
+                      {subtypeStory && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="bg-gradient-to-br from-amber-50 via-violet-50 to-pink-50 dark:from-amber-900/20 dark:via-violet-900/20 dark:to-pink-900/20 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600"
+                        >
+                          <div className="p-6 bg-gradient-to-r from-amber-600 via-violet-600 to-pink-600 text-white">
+                            <div className="flex items-center gap-2 text-amber-100 text-sm mb-2">
+                              <span className="px-2 py-0.5 rounded-full bg-white/20">
+                                {subtype1?.toUpperCase()}
+                              </span>
+                              <span>+</span>
+                              <span className="px-2 py-0.5 rounded-full bg-white/20">
+                                {subtype2?.toUpperCase()}
+                              </span>
+                            </div>
+                            <h3 className="text-2xl font-serif font-bold">{subtypeStory.title}</h3>
+                            <p className="text-white/80 italic mt-1">{subtypeStory.subtitle}</p>
+                          </div>
+                          <div className="p-6">
+                            <div className="prose prose-warm dark:prose-invert max-w-none">
+                              {subtypeStory.narrative.split('\n\n').map((paragraph, i) => (
+                                <p key={i} className="text-charcoal-light dark:text-cream-200 leading-relaxed mb-4 last:mb-0">
+                                  {paragraph}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="px-6 pb-4">
+                            <div className="bg-white/60 dark:bg-gray-700/60 rounded-xl p-4">
+                              <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase mb-2">
+                                The Dynamic
+                              </h4>
+                              <p className="text-charcoal-light dark:text-cream-200">
+                                {subtypeStory.dynamicDescription}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="p-6 bg-sage-50 dark:bg-sage-900/20 border-t border-warm-border dark:border-gray-600">
+                            <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-sage-300 mb-2 flex items-center gap-2">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                              </svg>
+                              Growth Path
+                            </h4>
+                            <p className="text-sage-700 dark:text-sage-300">{subtypeStory.growthPath}</p>
+                          </div>
+                          <div className="p-6 bg-terracotta-50 dark:bg-terracotta-900/20 border-t border-warm-border dark:border-gray-600">
+                            <h4 className="text-lg font-serif font-semibold text-terracotta-700 dark:text-terracotta-300 mb-2 flex items-center gap-2">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                              </svg>
+                              Watch Out For
+                            </h4>
+                            <p className="text-terracotta-700 dark:text-terracotta-300">{subtypeStory.watchOut}</p>
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
                   )}
 
