@@ -50,7 +50,7 @@ export function Layout({ children }: LayoutProps) {
                       </svg>
                     </button>
                   </div>
-                  <Sidebar onSelectType={() => setSidebarOpen(false)} />
+                  <Sidebar onSelectType={() => setSidebarOpen(false)} onClose={() => setSidebarOpen(false)} />
                 </div>
               </motion.div>
             </>

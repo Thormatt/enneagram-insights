@@ -18,11 +18,10 @@ import {
   getObjectRelationsByType
 } from '../../data';
 import { useAppStore } from '../../stores';
-import type { TypeNumber } from '../../types';
+import type { TypeNumber, Subtype } from '../../types';
 
 interface TypeCardProps {
   typeNumber: TypeNumber;
-  onOpenSubtypes?: () => void;
 }
 
 type TabId = 'core' | 'motivation' | 'dynamics' | 'instincts' | 'shadow' | 'somatic' | 'groups';
@@ -42,7 +41,7 @@ const tabs: Tab[] = [
   { id: 'groups', label: 'Groups' }
 ];
 
-export function TypeCard({ typeNumber, onOpenSubtypes }: TypeCardProps) {
+export function TypeCard({ typeNumber }: TypeCardProps) {
   const [activeTab, setActiveTab] = useState<TabId>('core');
   const setViewMode = useAppStore((state) => state.setViewMode);
 
@@ -263,27 +262,9 @@ export function TypeCard({ typeNumber, onOpenSubtypes }: TypeCardProps) {
             )}
 
             {activeTab === 'instincts' && (
-              <div className="space-y-6">
-                {onOpenSubtypes && (
-                  <button
-                    onClick={onOpenSubtypes}
-                    className="w-full py-3 px-4 bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium rounded-xl shadow-warm transition-colors flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    Explore Subtypes in Detail
-                  </button>
-                )}
+              <div className="space-y-4">
                 {subtypes.map(subtype => (
-                  <Section key={subtype.instinct} title={`${subtype.instinct.toUpperCase()}: ${subtype.name}`}>
-                    <p className="text-charcoal-muted dark:text-gray-400 text-sm italic mb-2">{subtype.ichazoTitle}</p>
-                    <p className="text-charcoal-light dark:text-gray-300 mb-3">{subtype.description}</p>
-                    <h5 className="font-medium text-charcoal dark:text-white mb-2">Characteristics:</h5>
-                    <ul className="list-disc list-inside text-charcoal-light dark:text-gray-300 space-y-1">
-                      {subtype.characteristics.slice(0, 3).map((c, i) => <li key={i}>{c}</li>)}
-                    </ul>
-                  </Section>
+                  <CollapsibleSubtype key={subtype.instinct} subtype={subtype} color={color} />
                 ))}
               </div>
             )}
@@ -388,6 +369,127 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <div>
       <h3 className="font-serif text-lg font-semibold text-charcoal dark:text-white mb-2">{title}</h3>
       {children}
+    </div>
+  );
+}
+
+const INSTINCT_COLORS: Record<string, string> = {
+  sp: '#C9A962', // Gold
+  so: '#7D9B84', // Sage
+  sx: '#C4785C'  // Terracotta
+};
+
+const INSTINCT_LABELS: Record<string, string> = {
+  sp: 'Self-Preservation',
+  so: 'Social',
+  sx: 'Sexual/One-to-One'
+};
+
+function CollapsibleSubtype({ subtype, color }: { subtype: Subtype; color: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const instinctColor = INSTINCT_COLORS[subtype.instinct] || color;
+
+  return (
+    <div className="border border-warm-border dark:border-gray-700 rounded-xl overflow-hidden">
+      {/* Header - always visible */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 flex items-center justify-between bg-cream-100 dark:bg-gray-700/50 hover:bg-cream-200 dark:hover:bg-gray-700 transition-colors text-left"
+      >
+        <div className="flex items-center gap-3">
+          <span
+            className="px-2 py-0.5 text-xs font-bold rounded text-white uppercase"
+            style={{ backgroundColor: instinctColor }}
+          >
+            {subtype.instinct}
+          </span>
+          <div>
+            <h4 className="font-serif font-semibold text-charcoal dark:text-white">
+              {subtype.name}
+            </h4>
+            <p className="text-xs text-charcoal-muted dark:text-gray-400">
+              {INSTINCT_LABELS[subtype.instinct]}
+            </p>
+          </div>
+        </div>
+        <motion.svg
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="w-5 h-5 text-charcoal-muted dark:text-gray-400 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </motion.svg>
+      </button>
+
+      {/* Collapsible content */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="p-4 space-y-4 border-t border-warm-border dark:border-gray-700 bg-white dark:bg-gray-800">
+              {/* Ichazo Title */}
+              {subtype.ichazoTitle !== subtype.name && (
+                <p className="text-charcoal-muted dark:text-gray-400 text-sm italic">
+                  Ichazo Title: {subtype.ichazoTitle}
+                </p>
+              )}
+
+              {/* Description */}
+              <p className="text-charcoal-light dark:text-gray-300">{subtype.description}</p>
+
+              {/* Characteristics */}
+              <div>
+                <h5 className="font-medium text-charcoal dark:text-white mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: instinctColor }} />
+                  Key Characteristics
+                </h5>
+                <ul className="space-y-1.5 ml-3">
+                  {subtype.characteristics.map((c, i) => (
+                    <li key={i} className="text-charcoal-light dark:text-gray-300 text-sm flex items-start gap-2">
+                      <span className="text-charcoal-muted dark:text-gray-500 mt-1">•</span>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Blind Spots */}
+              {subtype.blindSpots && subtype.blindSpots.length > 0 && (
+                <div>
+                  <h5 className="font-medium text-charcoal dark:text-white mb-2 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-terracotta-500" />
+                    Blind Spots
+                  </h5>
+                  <ul className="space-y-1.5 ml-3">
+                    {subtype.blindSpots.map((b, i) => (
+                      <li key={i} className="text-charcoal-light dark:text-gray-300 text-sm flex items-start gap-2">
+                        <span className="text-terracotta-500 mt-1">!</span>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Growth Path */}
+              {subtype.growthPath && (
+                <div className="mt-3 p-3 bg-sage-50 dark:bg-sage-900/20 rounded-lg border border-sage-200 dark:border-sage-800">
+                  <h5 className="font-medium text-sage-800 dark:text-sage-200 mb-1 text-sm">Path of Growth</h5>
+                  <p className="text-sage-700 dark:text-sage-300 text-sm">{subtype.growthPath}</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

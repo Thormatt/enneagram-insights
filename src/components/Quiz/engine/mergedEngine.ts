@@ -8,9 +8,14 @@ import { coreTypeQuestions, instinctQuestions } from '../quizData';
 import {
   updateTypeProbabilities,
   getLeadingType,
+  calculateEntropy,
   type TypeProbabilities,
   type InstinctProbabilities,
 } from './scoreCalculator';
+import {
+  synthesizeResults,
+  type SynthesizedResults,
+} from './resultsSynthesis';
 import {
   checkConvergence,
   type ConvergenceConfig,
@@ -39,6 +44,8 @@ import {
   type HealthQuestion,
   type HealthLevel,
 } from '../questionPool/healthLevelQuestions';
+import { getLevel as getLevelData } from '../../../data/development/levels';
+import type { HealthLevel as HealthLevelNumber } from '../../../types';
 
 /**
  * Merged Quiz Engine
@@ -151,9 +158,22 @@ export interface MergedQuizResults {
   healthLevel: HealthLevel;
   healthScore: number;
   healthInterpretation: string;
+  // Integration level (for UI compatibility with AdaptiveQuizResults)
+  integrationLevel: {
+    level: HealthLevelNumber;
+    healthLevel: HealthLevel;
+    normalized: number;
+    levelTitle: string;
+    levelDescription: string;
+  };
   questionsAnswered: number;
   convergenceReason: string;
   methodology: 'merged';
+  // Inconclusive result detection
+  isInconclusive: boolean;
+  inconclusiveReason: string | null;
+  // Synthesized insights
+  synthesis: SynthesizedResults;
 }
 
 // Configuration
@@ -896,6 +916,84 @@ function calculateMergedResults(
     state.instinctAnswers.length +
     Object.keys(healthAnswers).length;
 
+  // Detect inconclusive results
+  // Criteria:
+  // 1. Top probability < 25% (barely better than chance for 9 types = 11%)
+  // 2. Margin over second type < 5%
+  // 3. Normalized entropy > 0.75 (too spread out)
+  const entropy = calculateEntropy(probs);
+  const marginOverSecond = leading.marginOverSecond;
+
+  let isInconclusive = false;
+  let inconclusiveReason: string | null = null;
+
+  if (leading.probability < 0.25) {
+    isInconclusive = true;
+    inconclusiveReason = 'No type emerged as a clear match. Your answers suggest you may identify with multiple types.';
+  } else if (marginOverSecond < 0.05) {
+    isInconclusive = true;
+    inconclusiveReason = `Types ${leading.type} and ${topThree[1].type} are nearly tied. Consider exploring both types to see which resonates more.`;
+  } else if (entropy > 0.75) {
+    isInconclusive = true;
+    inconclusiveReason = 'Your answers were spread across many types. This could indicate you answered neutrally or identify with multiple perspectives.';
+  }
+
+  // Growth arrow mapping (direction of integration)
+  const GROWTH_ARROWS: Record<TypeNumber, TypeNumber> = {
+    1: 7, 2: 4, 3: 6, 4: 1, 5: 8, 6: 9, 7: 5, 8: 2, 9: 3,
+  };
+
+  // Collect all Likert answers for answer pattern analysis
+  const allLikertAnswers: Record<string, number> = {};
+  for (const item of state.questionHistory) {
+    if (typeof item.answer === 'number' && 'id' in item.question) {
+      allLikertAnswers[item.question.id] = item.answer;
+    }
+  }
+  // Add wing and health answers
+  Object.assign(allLikertAnswers, state.wingAnswers, healthAnswers);
+
+  // Generate synthesized insights
+  const synthesis = synthesizeResults(
+    leading.type,
+    instinctResult.stack[0],
+    allTypeScores,
+    tritypeCode,
+    healthResult.level,
+    GROWTH_ARROWS[leading.type],
+    allLikertAnswers
+  );
+
+  // Map health state to level number (1-9)
+  // healthy = levels 1-3, average = levels 4-6, unhealthy = levels 7-9
+  // Use score to fine-tune within the range
+  let healthLevelNumber: HealthLevelNumber;
+  if (healthResult.level === 'healthy') {
+    // Score 33-100 maps to levels 1-3
+    healthLevelNumber = healthResult.score >= 66 ? 1 : healthResult.score >= 33 ? 2 : 3;
+  } else if (healthResult.level === 'average') {
+    // Score -33 to 33 maps to levels 4-6
+    healthLevelNumber = healthResult.score >= 0 ? 4 : healthResult.score >= -33 ? 5 : 6;
+  } else {
+    // Score -100 to -33 maps to levels 7-9
+    healthLevelNumber = healthResult.score >= -66 ? 7 : healthResult.score >= -90 ? 8 : 9;
+  }
+
+  // Get level data for the type
+  const levelData = getLevelData(leading.type, healthLevelNumber);
+
+  // Calculate normalized value (-1 to 1)
+  const normalized = healthResult.score / 100;
+
+  // Build integration level object
+  const integrationLevel = {
+    level: healthLevelNumber,
+    healthLevel: healthResult.level,
+    normalized,
+    levelTitle: levelData?.title || `Level ${healthLevelNumber}`,
+    levelDescription: levelData?.description || healthResult.interpretation,
+  };
+
   return {
     primaryType: leading.type,
     typeConfidence: Math.round(leading.probability * 100),
@@ -909,9 +1007,13 @@ function calculateMergedResults(
     healthLevel: healthResult.level,
     healthScore: healthResult.score,
     healthInterpretation: healthResult.interpretation,
+    integrationLevel,
     questionsAnswered,
     convergenceReason: state.typeConvergence.reason || 'completed',
     methodology: 'merged',
+    isInconclusive,
+    inconclusiveReason,
+    synthesis,
   };
 }
 

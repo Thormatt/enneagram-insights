@@ -38,7 +38,7 @@ export const screeningQuestions: ScreeningQuestion[] = [
   // Type 5 gets strong negative - head types analyze, don't use gut instinct
   {
     id: 'screen-gut-1',
-    text: 'I have a strong physical presence and often make decisions based on gut instinct rather than lengthy analysis.',
+    text: 'I tend to make decisions based on an immediate gut sense rather than analyzing options at length.',
     category: 'center',
     primaryTargets: [8, 9, 1],
     exclusions: [5, 6, 7],
@@ -230,7 +230,7 @@ export const screeningQuestions: ScreeningQuestion[] = [
   // Type 3 and 8 get negative - assertive types don't put others' needs first
   {
     id: 'screen-comply-1',
-    text: 'I often put others\' needs before my own and seek to earn my place through being helpful or responsible.',
+    text: 'I frequently prioritize what others need over my own wants or preferences.',
     category: 'hornevian',
     primaryTargets: [2, 6],
     exclusions: [8, 7, 9, 3],
@@ -397,7 +397,7 @@ export const screeningQuestions: ScreeningQuestion[] = [
   // Negatives: Type 3 (commits to achievement), Type 1 (commits to standards), Type 5 (goes deep not wide)
   {
     id: 'screen-core-7',
-    text: 'I feel anxious when I\'m limited to one option - I need to keep possibilities open.',
+    text: 'I feel uncomfortable when locked into a single path - I prefer to keep multiple options available.',
     category: 'core_motivation',
     primaryTargets: [7],
     exclusions: [1, 5, 3],
@@ -409,7 +409,7 @@ export const screeningQuestions: ScreeningQuestion[] = [
   // Note: Type 1 also values autonomy, so don't penalize them
   {
     id: 'screen-core-8',
-    text: 'I cannot stand being controlled or manipulated - I must be in charge of my own life.',
+    text: 'I strongly prefer to make my own decisions and resist being directed or managed by others.',
     category: 'core_motivation',
     primaryTargets: [8],
     exclusions: [2, 9, 6],

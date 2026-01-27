@@ -36,12 +36,12 @@ export function GrowthSection({
   return (
     <div className="space-y-8">
       {/* Sub-navigation */}
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-1 sm:gap-2 justify-start sm:justify-center overflow-x-auto pb-1">
         {growthTabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-3 sm:px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
               activeTab === tab.id
                 ? 'bg-charcoal dark:bg-white text-white dark:text-charcoal'
                 : 'text-charcoal-light dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-800'

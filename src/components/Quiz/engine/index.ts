@@ -1,11 +1,24 @@
 /**
- * Adaptive Quiz Engine
+ * Quiz Engine System
  *
- * Core components for the adaptive quiz system:
- * - Score Calculator: Bayesian probability updates
- * - Question Selector: Information gain-based selection
- * - Convergence Checker: Stopping rules
- * - Adaptive Engine: Main orchestration
+ * CANONICAL ENGINE: mergedEngine.ts
+ * The merged engine combines the best of adaptive + hybrid approaches
+ * and should be used for production. It provides:
+ * - Scenario-based screening for quick center identification
+ * - Bayesian probability updates with softmax normalization
+ * - Forced-choice disambiguation for confused type pairs
+ * - Ipsative instinct ranking
+ * - Health level assessment
+ * - Inconclusive result detection
+ *
+ * OTHER ENGINES:
+ * - adaptiveEngine.ts: Original adaptive approach (kept for backward compatibility)
+ * - hybridEngine.ts: Experimental (deprecated - use merged instead)
+ *
+ * SHARED UTILITIES:
+ * - scoreCalculator.ts: Bayesian probability updates
+ * - questionSelector.ts: Information gain-based selection
+ * - convergenceChecker.ts: Stopping rules
  */
 
 // Score Calculator
@@ -48,7 +61,7 @@ export {
   type ConvergenceConfig,
 } from './convergenceChecker';
 
-// Adaptive Engine
+// Adaptive Engine (original - kept for backward compatibility)
 export {
   createInitialState,
   startQuiz,
@@ -60,3 +73,33 @@ export {
   type AdaptiveQuizResults,
   type AnyQuestion,
 } from './adaptiveEngine';
+
+// Merged Engine (CANONICAL - use this for new implementations)
+export {
+  createMergedInitialState,
+  startMergedQuiz,
+  processMergedAnswer,
+  getMergedProgress,
+  type MergedQuizState,
+  type MergedQuizResults,
+  type MergedQuizStage,
+} from './mergedEngine';
+
+// Results Synthesis
+export {
+  type SynthesizedResults,
+  getSubtypeProfile,
+  calculateCenterBalance,
+  getHarmonicGroup,
+  getHornevianGroup,
+  findConfusionCandidates,
+  getTritypeArchetype,
+  analyzeAnswerPatterns,
+  generateGrowthSummary,
+  synthesizeResults,
+  CENTER_TYPES,
+  HARMONIC_GROUPS,
+  HORNEVIAN_GROUPS,
+  SUBTYPE_PROFILES,
+  TRITYPE_ARCHETYPES,
+} from './resultsSynthesis';

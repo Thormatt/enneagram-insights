@@ -99,17 +99,18 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
   const { type, color, wings, viceVirtue, fixation, holyIdea, integration, disintegration, subtypes, defense, shadow, bodyPattern, harmonic, hornevian, objectRelations, levels, essence, stories } = typeData;
 
   return (
-    <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors overflow-x-hidden">
       {/* Combined Header */}
       <header className="sticky top-0 z-10 border-b border-warm-border dark:border-gray-700" style={{ backgroundColor: color }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           {/* Top row: navigation and actions */}
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-14 gap-2">
             {/* Navigation */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 min-w-0 flex-1">
+              {/* Prev arrow - hidden on small screens */}
               <button
                 onClick={() => onNavigate?.(prevType)}
-                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                className="hidden sm:flex p-2 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
                 aria-label={`Go to Type ${prevType}`}
               >
                 <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,13 +118,13 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                 </svg>
               </button>
 
-              {/* Type selector pills - 44px min touch target for mobile */}
-              <div className="flex items-center gap-0.5 bg-black/20 rounded-full p-1">
+              {/* Type selector pills - scrollable */}
+              <div className="flex items-center gap-0.5 bg-black/20 rounded-full p-1 overflow-x-auto">
                 {TYPE_ORDER.map(num => (
                   <button
                     key={num}
                     onClick={() => onNavigate?.(num)}
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-semibold transition-all ${
+                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs sm:text-sm font-semibold transition-colors flex-shrink-0 ${
                       num === typeNumber
                         ? 'bg-white text-charcoal shadow-md'
                         : 'text-white/70 hover:text-white hover:bg-white/20'
@@ -134,9 +135,10 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                 ))}
               </div>
 
+              {/* Next arrow - hidden on small screens */}
               <button
                 onClick={() => onNavigate?.(nextType)}
-                className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                className="hidden sm:flex p-2 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
                 aria-label={`Go to Type ${nextType}`}
               >
                 <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,8 +147,8 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
               </button>
             </div>
 
-            {/* Theme toggle and close button */}
-            <div className="flex items-center gap-2">
+            {/* Theme toggle and close button - fixed on right */}
+            <div className="flex items-center gap-1 flex-shrink-0">
               <ThemeToggle />
               {onClose && (
                 <button
@@ -200,14 +202,14 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
       </header>
 
       {/* Section Navigation */}
-      <nav className="sticky top-16 z-10 bg-cream-100 dark:bg-gray-900 border-b border-warm-border dark:border-gray-700">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex gap-2 py-3 overflow-x-auto">
+      <nav className="bg-cream-100 dark:bg-gray-900 border-b border-warm-border dark:border-gray-700">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex gap-1 sm:gap-2 py-2 sm:py-3 overflow-x-auto">
             {sections.map(section => (
               <button
                 key={section.id}
                 onClick={() => setActiveSection(section.id)}
-                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-3 sm:px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   activeSection === section.id
                     ? 'bg-charcoal dark:bg-white text-white dark:text-gray-900'
                     : 'text-charcoal-light dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-800'
@@ -221,7 +223,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
       </nav>
 
       {/* Content */}
-      <main className="max-w-5xl mx-auto px-6 py-10">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={`${typeNumber}-${activeSection}`}

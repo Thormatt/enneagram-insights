@@ -259,7 +259,7 @@ export interface UserProfile {
 // UI State Types
 // ============================================
 
-export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence';
+export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence' | 'wisdomLineage';
 export type CircleLayer = 'basic' | 'dynamics' | 'groups' | 'subtypes';
 export type DiagramType = 'centers' | 'triads' | 'relationships';
 

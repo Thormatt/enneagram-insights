@@ -1,12 +1,31 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { StoryComparison } from './StoryComparison';
-import type { AdaptiveQuizResults } from '../engine';
-import type { TypeNumber } from '../../../types';
+import type { AdaptiveQuizResults, SynthesizedResults } from '../engine';
+import {
+  getSubtypeProfile,
+  calculateCenterBalance,
+  getHarmonicGroup,
+  getHornevianGroup,
+  findConfusionCandidates,
+  getTritypeArchetype,
+  generateGrowthSummary,
+} from '../engine';
+import type { TypeNumber, InstinctType } from '../../../types';
 import { getTritypeInfo } from '../../../data/tritypes/tritypeDescriptions';
 
+// Growth arrow mapping (direction of integration)
+const GROWTH_ARROWS: Record<TypeNumber, TypeNumber> = {
+  1: 7, 2: 4, 3: 6, 4: 1, 5: 8, 6: 9, 7: 5, 8: 2, 9: 3,
+};
+
+// Extended results type that may include synthesis
+interface ResultsWithSynthesis extends AdaptiveQuizResults {
+  synthesis?: SynthesizedResults;
+}
+
 interface AdaptiveResultsProps {
-  results: AdaptiveQuizResults;
+  results: ResultsWithSynthesis;
   onSave?: () => void;
   onRetake?: () => void;
 }
@@ -61,6 +80,69 @@ export function AdaptiveResults({ results, onSave, onRetake }: AdaptiveResultsPr
     ? [...results.allTypeScores].sort((a, b) => b.percentage - a.percentage)
     : results.topThreeTypes.map(t => ({ ...t, percentage: Math.round(t.probability * 100) }));
 
+  // Generate synthesis if not provided (for adaptive engine results)
+  const synthesis = useMemo<SynthesizedResults | undefined>(() => {
+    // If already provided, use it
+    if (results.synthesis) {
+      return results.synthesis;
+    }
+
+    // Generate on the fly
+    const dominantInstinct = results.instinctStack[0] as InstinctType;
+    const healthLevel = results.integrationLevel?.level === 'healthy' ? 'healthy' :
+                        results.integrationLevel?.level === 'unhealthy' ? 'unhealthy' : 'average';
+    const growthArrow = GROWTH_ARROWS[results.primaryType];
+
+    // Build allTypeScores for synthesis
+    const typeScoresForSynthesis = sortedTypes.map(t => ({
+      type: t.type,
+      percentage: t.percentage,
+    }));
+
+    // Create subtype profile
+    const subtypeProfile = getSubtypeProfile(results.primaryType, dominantInstinct);
+
+    // Calculate center balance
+    const centerBalance = calculateCenterBalance(typeScoresForSynthesis);
+    const dominant = centerBalance.gut >= centerBalance.heart && centerBalance.gut >= centerBalance.head
+      ? 'gut'
+      : centerBalance.heart >= centerBalance.head
+      ? 'heart'
+      : 'head';
+
+    // Get groups
+    const harmonicGroup = getHarmonicGroup(results.primaryType);
+    const hornevianGroup = getHornevianGroup(results.primaryType);
+
+    // Find confusion candidates
+    const confusionCandidates = findConfusionCandidates(results.primaryType, typeScoresForSynthesis);
+
+    // Get tritype archetype
+    const tritypeArchetype = results.tritype
+      ? getTritypeArchetype(results.tritype.code)
+      : null;
+
+    // Generate growth summary
+    const growthSummary = generateGrowthSummary(results.primaryType, healthLevel, growthArrow);
+
+    return {
+      subtypeProfile,
+      centerBalance: { ...centerBalance, dominant },
+      harmonicGroup,
+      hornevianGroup,
+      confusionCandidates,
+      tritypeArchetype,
+      answerPatterns: {
+        totalAnswers: results.questionsAnswered,
+        neutralPercentage: 0, // Not available from adaptive results
+        strongOpinionPercentage: 0,
+        pattern: 'balanced',
+        insight: 'Answer patterns are analyzed when available from the quiz engine.',
+      },
+      growthSummary,
+    };
+  }, [results, sortedTypes]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -83,8 +165,31 @@ export function AdaptiveResults({ results, onSave, onRetake }: AdaptiveResultsPr
         </p>
       </div>
 
+      {/* Inconclusive result warning */}
+      {'isInconclusive' in results && results.isInconclusive && (
+        <div className="bg-purple-50 dark:bg-purple-900/30 border-2 border-purple-300 dark:border-purple-700 rounded-xl p-5">
+          <div className="flex items-start gap-3">
+            <svg className="w-6 h-6 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="flex-1">
+              <p className="font-semibold text-purple-800 dark:text-purple-200 mb-2">
+                Inconclusive Result
+              </p>
+              <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">
+                {'inconclusiveReason' in results && results.inconclusiveReason}
+              </p>
+              <p className="text-sm text-purple-600 dark:text-purple-400">
+                The type shown below is your highest-scoring result, but we recommend exploring your top 3 types
+                to find which truly resonates with your inner experience.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Close result warning with story comparison */}
-      {isCloseResult && (
+      {isCloseResult && !('isInconclusive' in results && results.isInconclusive) && (
         <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
           <div className="flex items-start gap-3">
             <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -443,7 +548,315 @@ export function AdaptiveResults({ results, onSave, onRetake }: AdaptiveResultsPr
             </div>
           ))}
         </div>
+
+        {/* Subtype Profile (from synthesis) */}
+        {synthesis?.subtypeProfile && (
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+            <div className="flex items-start gap-3">
+              {synthesis!.subtypeProfile.isCounterType && (
+                <span className="shrink-0 px-2 py-0.5 text-xs font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded-full">
+                  Counter-type
+                </span>
+              )}
+              <div>
+                <p className="font-semibold text-charcoal dark:text-gray-200">
+                  {synthesis!.subtypeProfile.tagline}
+                </p>
+                <p className="text-sm text-charcoal-light dark:text-gray-400 mt-1">
+                  {synthesis!.subtypeProfile.briefDescription}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Center Balance Visualization */}
+      {synthesis?.centerBalance && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-warm-border dark:border-gray-700 overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === 'centers' ? null : 'centers')}
+            className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-charcoal dark:text-gray-200">
+                Center Balance
+              </h3>
+              <p className="text-sm text-charcoal-light dark:text-gray-400">
+                Dominant: {synthesis!.centerBalance.dominant.charAt(0).toUpperCase() + synthesis!.centerBalance.dominant.slice(1)} Center
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
+                <span className="px-2 py-1 text-xs font-medium rounded bg-gut-100 dark:bg-gut-900/40 text-gut-700 dark:text-gut-300">
+                  {synthesis!.centerBalance.gut}%
+                </span>
+                <span className="px-2 py-1 text-xs font-medium rounded bg-heart-100 dark:bg-heart-900/40 text-heart-700 dark:text-heart-300">
+                  {synthesis!.centerBalance.heart}%
+                </span>
+                <span className="px-2 py-1 text-xs font-medium rounded bg-head-100 dark:bg-head-900/40 text-head-700 dark:text-head-300">
+                  {synthesis!.centerBalance.head}%
+                </span>
+              </div>
+              <svg
+                className={`w-5 h-5 text-charcoal-muted transition-transform ${expandedSection === 'centers' ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </button>
+
+          {expandedSection === 'centers' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-6 pb-6 border-t border-gray-100 dark:border-gray-700"
+            >
+              <div className="pt-4 space-y-4">
+                {/* Center bars */}
+                {[
+                  { name: 'Gut (8, 9, 1)', key: 'gut', color: 'gut' },
+                  { name: 'Heart (2, 3, 4)', key: 'heart', color: 'heart' },
+                  { name: 'Head (5, 6, 7)', key: 'head', color: 'head' },
+                ].map(center => (
+                  <div key={center.key}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-charcoal dark:text-gray-200">{center.name}</span>
+                      <span className={`text-sm font-bold text-${center.color}-600 dark:text-${center.color}-400`}>
+                        {results.synthesis!.centerBalance[center.key as 'gut' | 'heart' | 'head']}%
+                      </span>
+                    </div>
+                    <div className="h-3 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${results.synthesis!.centerBalance[center.key as 'gut' | 'heart' | 'head']}%` }}
+                        transition={{ duration: 0.5 }}
+                        className={`h-full rounded-full ${
+                          center.color === 'gut' ? 'bg-gut-500' :
+                          center.color === 'heart' ? 'bg-heart-500' : 'bg-head-500'
+                        }`}
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                <p className="text-xs text-charcoal-muted dark:text-gray-500 mt-4">
+                  This shows how your answers distributed across the three intelligence centers.
+                  Your {synthesis!.centerBalance.dominant} center is most active.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
+
+      {/* Harmonic & Hornevian Groups */}
+      {synthesis && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-warm-border dark:border-gray-700 overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === 'groups' ? null : 'groups')}
+            className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-charcoal dark:text-gray-200">
+                Behavioral Styles
+              </h3>
+              <p className="text-sm text-charcoal-light dark:text-gray-400">
+                {synthesis!.harmonicGroup.name} · {synthesis!.hornevianGroup.name}
+              </p>
+            </div>
+            <svg
+              className={`w-5 h-5 text-charcoal-muted transition-transform ${expandedSection === 'groups' ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'groups' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-6 pb-6 border-t border-gray-100 dark:border-gray-700"
+            >
+              <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Harmonic Group */}
+                <div className="bg-cream-100 dark:bg-gray-700/50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-5 h-5 text-gold-600 dark:text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h4 className="font-semibold text-charcoal dark:text-gray-200">
+                      Harmonic: {synthesis!.harmonicGroup.name}
+                    </h4>
+                  </div>
+                  <p className="text-sm text-charcoal-light dark:text-gray-400">
+                    {synthesis!.harmonicGroup.description}
+                  </p>
+                </div>
+
+                {/* Hornevian Group */}
+                <div className="bg-cream-100 dark:bg-gray-700/50 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-5 h-5 text-sage-600 dark:text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                    <h4 className="font-semibold text-charcoal dark:text-gray-200">
+                      Hornevian: {synthesis!.hornevianGroup.name}
+                    </h4>
+                  </div>
+                  <p className="text-sm text-charcoal-light dark:text-gray-400">
+                    {synthesis!.hornevianGroup.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
+
+      {/* Confusion Candidates */}
+      {synthesis?.confusionCandidates && synthesis!.confusionCandidates.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-warm-border dark:border-gray-700 overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === 'confusion' ? null : 'confusion')}
+            className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-charcoal dark:text-gray-200">
+                Types to Consider
+              </h3>
+              <p className="text-sm text-charcoal-light dark:text-gray-400">
+                {synthesis!.confusionCandidates.length} type{synthesis!.confusionCandidates.length > 1 ? 's' : ''} scored close to your primary type
+              </p>
+            </div>
+            <svg
+              className={`w-5 h-5 text-charcoal-muted transition-transform ${expandedSection === 'confusion' ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'confusion' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-6 pb-6 border-t border-gray-100 dark:border-gray-700"
+            >
+              <div className="pt-4 space-y-4">
+                {synthesis!.confusionCandidates.map(candidate => (
+                  <div key={candidate.type} className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 flex items-center justify-center text-amber-800 dark:text-amber-200 font-bold">
+                          {candidate.type}
+                        </span>
+                        <span className="font-medium text-charcoal dark:text-gray-200">
+                          {TYPE_NAMES[candidate.type]}
+                        </span>
+                      </div>
+                      <span className="text-sm text-amber-700 dark:text-amber-300">
+                        {candidate.percentage}%
+                      </span>
+                    </div>
+                    <p className="text-sm text-amber-800 dark:text-amber-200">
+                      {candidate.differentiator}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
+
+      {/* Answer Pattern Insights */}
+      {synthesis?.answerPatterns && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-warm-border dark:border-gray-700 overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === 'patterns' ? null : 'patterns')}
+            className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          >
+            <div>
+              <h3 className="text-lg font-semibold text-charcoal dark:text-gray-200">
+                Answer Patterns
+              </h3>
+              <p className="text-sm text-charcoal-light dark:text-gray-400">
+                {synthesis!.answerPatterns.pattern.charAt(0).toUpperCase() + synthesis!.answerPatterns.pattern.slice(1)} response style
+              </p>
+            </div>
+            <svg
+              className={`w-5 h-5 text-charcoal-muted transition-transform ${expandedSection === 'patterns' ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'patterns' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="px-6 pb-6 border-t border-gray-100 dark:border-gray-700"
+            >
+              <div className="pt-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-charcoal dark:text-white">
+                      {synthesis!.answerPatterns.strongOpinionPercentage}%
+                    </p>
+                    <p className="text-xs text-charcoal-muted dark:text-gray-400">
+                      Strong Opinions
+                    </p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
+                    <p className="text-2xl font-bold text-charcoal dark:text-white">
+                      {synthesis!.answerPatterns.neutralPercentage}%
+                    </p>
+                    <p className="text-xs text-charcoal-muted dark:text-gray-400">
+                      Neutral Responses
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-charcoal-light dark:text-gray-400">
+                  {synthesis!.answerPatterns.insight}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
+
+      {/* Personalized Growth Summary */}
+      {synthesis?.growthSummary && (
+        <div className="bg-gradient-to-br from-sage-50 to-cream-100 dark:from-sage-900/30 dark:to-gray-800 rounded-xl p-6 border border-sage-200 dark:border-sage-800">
+          <div className="flex items-center gap-2 mb-4">
+            <svg className="w-6 h-6 text-sage-600 dark:text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <h3 className="text-lg font-semibold text-sage-800 dark:text-sage-200">
+              Your Growth Path
+            </h3>
+          </div>
+          <p className="text-charcoal dark:text-gray-200 leading-relaxed">
+            {synthesis!.growthSummary}
+          </p>
+        </div>
+      )}
 
       {/* Integration Level */}
       {results.integrationLevel && (

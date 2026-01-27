@@ -170,6 +170,9 @@ export interface AdaptiveQuizResults {
     levelTitle: string;
     levelDescription: string;
   };
+  // Inconclusive result detection
+  isInconclusive: boolean;
+  inconclusiveReason: string | null;
 }
 
 /**
@@ -803,9 +806,19 @@ function calculateFinalResults(
     levelDescription: levelData?.description || '',
   };
 
+  // Determine if result is inconclusive
+  const typeConfidenceValue = Math.round(probability * 100);
+  const gap = topThree.length >= 2 ? topThree[0].probability - topThree[1].probability : 1;
+  const isInconclusive = typeConfidenceValue < 40 || gap < 0.1;
+  const inconclusiveReason = isInconclusive
+    ? typeConfidenceValue < 40
+      ? 'Low overall confidence - results may need more exploration'
+      : 'Top types are very close - consider exploring both possibilities'
+    : null;
+
   return {
     primaryType: type,
-    typeConfidence: Math.round(probability * 100),
+    typeConfidence: typeConfidenceValue,
     topThreeTypes: topThree,
     allTypeScores,
     tritype,
@@ -819,6 +832,8 @@ function calculateFinalResults(
     attentionChecksPassed,
     attentionChecksScore,
     integrationLevel,
+    isInconclusive,
+    inconclusiveReason,
   };
 }
 

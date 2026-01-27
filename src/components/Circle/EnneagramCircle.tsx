@@ -207,15 +207,17 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
       });
     }
 
-    // Draw outer circle
-    svg.append('circle')
-      .attr('cx', centerX)
-      .attr('cy', centerY)
-      .attr('r', radius)
-      .attr('fill', 'none')
-      .attr('stroke', themeColors.circleStroke)
-      .attr('stroke-width', 1.5)
-      .attr('stroke-opacity', 0.4);
+    // Draw outer circle (only when wing lines are NOT shown, to avoid double-ring effect)
+    if (circleLayer === 'dynamics' || circleLayer === 'groups') {
+      svg.append('circle')
+        .attr('cx', centerX)
+        .attr('cy', centerY)
+        .attr('r', radius)
+        .attr('fill', 'none')
+        .attr('stroke', themeColors.circleStroke)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-opacity', 0.4);
+    }
 
     // Draw inner enneagram symbol (triangle + hexagon)
     if (circleLayer === 'dynamics' || circleLayer === 'basic') {
@@ -594,8 +596,11 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         { label: 'Sexual/One-to-One (SX)', color: '#ec4899' }
       ];
 
+      // Position legend higher if a type is selected (to avoid overlap with arrows legend)
+      const legendY = selectedType ? height - 180 : height - 80;
+
       const legend = svg.append('g')
-        .attr('transform', `translate(20, ${height - 80})`);
+        .attr('transform', `translate(20, ${legendY})`);
 
       legendData.forEach((item, i) => {
         const row = legend.append('g')
@@ -657,8 +662,8 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
         .text('Click a type to explore');
     }
 
-    // Legend for selected type (shows what wings and arrows mean) - only on basic layer
-    if (selectedType && circleLayer === 'basic') {
+    // Legend for selected type (shows what wings and arrows mean) - on basic and subtypes layers
+    if (selectedType && (circleLayer === 'basic' || circleLayer === 'subtypes')) {
       const legend = svg.append('g')
         .attr('transform', `translate(20, ${height - 100})`);
 

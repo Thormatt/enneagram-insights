@@ -374,6 +374,8 @@ export function simulateAdaptiveQuiz(
         levelTitle: 'Average',
         levelDescription: '',
       },
+      isInconclusive: false,
+      inconclusiveReason: null,
     };
   }
 

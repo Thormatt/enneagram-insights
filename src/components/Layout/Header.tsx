@@ -57,48 +57,10 @@ export function Header({ onMenuClick }: HeaderProps) {
           <span className="hidden xl:inline text-sm text-cream-300 whitespace-nowrap">A map of consciousness</span>
         </div>
 
-        <div className="flex items-center gap-2 lg:gap-4">
-          {/* View Mode Toggle - Mobile (compact icons) */}
-          <div className="flex md:hidden items-center">
-            <div
-              className="flex bg-charcoal-light/30 rounded-full p-1"
-              role="group"
-              aria-label="View mode selector"
-            >
-              {viewModes.map(({ value, label }) => (
-                <button
-                  key={value}
-                  onClick={() => setViewMode(value)}
-                  aria-pressed={viewMode === value}
-                  aria-label={label}
-                  className={`p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 ${
-                    viewMode === value
-                      ? 'bg-cream-100 text-charcoal shadow-warm'
-                      : 'text-cream-200 hover:text-white'
-                  }`}
-                >
-                  {value === 'circle' && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="9" strokeWidth={2} />
-                    </svg>
-                  )}
-                  {value === 'diagrams' && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                    </svg>
-                  )}
-                  {value === 'compare' && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
+        {/* Desktop controls - hidden on mobile (md breakpoint) */}
+        <div className="hidden md:flex items-center gap-2 lg:gap-4">
           {/* View Mode Toggle - Desktop (labels) */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <span id="view-mode-label" className="text-sm text-cream-300">View:</span>
             <div
               className="flex bg-charcoal-light/30 rounded-full p-1"
@@ -132,6 +94,18 @@ export function Header({ onMenuClick }: HeaderProps) {
             <span className="hidden lg:inline">Beyond Type</span>
           </button>
 
+          {/* Wisdom Lineage Button */}
+          <button
+            onClick={() => setViewMode('wisdomLineage')}
+            className="px-3 py-1.5 text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
+            aria-label="Explore Wisdom Lineage"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span className="hidden lg:inline">Lineage</span>
+          </button>
+
           {/* Quiz Button */}
           <button
             onClick={() => setViewMode('quiz')}
@@ -160,7 +134,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         </div>
       </div>
 
-      {/* Secondary Navigation Row - Contextual (fixed height to prevent layout shift) */}
+      {/* Secondary Navigation Row - Desktop only (md+), contextual */}
       {showSecondaryNav && (
         <div className="hidden md:flex items-center gap-4 px-4 lg:px-6 h-[44px] bg-charcoal-light/20 dark:bg-gray-900/50 border-t border-charcoal-light/10">
           {/* Layer Toggle (only for circle view) */}

@@ -117,6 +117,14 @@ export function updateTypeProbabilities(
 
 /**
  * Update instinct probabilities based on a question response
+ *
+ * Uses centered scoring (answer - 3) for consistency with type scoring:
+ * - Answer 1 = -2 (strong disagreement = negative evidence)
+ * - Answer 3 = 0 (neutral = no evidence)
+ * - Answer 5 = +2 (strong agreement = positive evidence)
+ *
+ * This allows disagreement to count as evidence AGAINST an instinct,
+ * improving separation between instincts.
  */
 export function updateInstinctProbabilities(
   current: InstinctProbabilities,
@@ -126,9 +134,9 @@ export function updateInstinctProbabilities(
   const newScores = { ...current.rawScores };
   const newProbabilities = { ...current.probabilities };
 
-  // Instinct questions are usually positive (high score = resonates with instinct)
-  // So we use answer directly rather than centering
-  const answerWeight = answer / 5; // 0.2 to 1.0
+  // Center the answer: 3 = neutral, <3 = disagree, >3 = agree
+  // Same approach as type scoring for consistency
+  const answerWeight = answer - 3; // -2 to +2
 
   for (const instinct of ['sp', 'so', 'sx'] as InstinctType[]) {
     newScores[instinct] += instinctScores[instinct] * answerWeight;

@@ -1,0 +1,1 @@
+export { WisdomLineagePage } from './WisdomLineagePage';

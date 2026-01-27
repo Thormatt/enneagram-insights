@@ -58,10 +58,11 @@ function useWindowSize() {
 const Diagrams = lazy(() => import('./components/Diagrams').then(m => ({ default: m.Diagrams })));
 const ComparisonExplorer = lazy(() => import('./components/Comparison').then(m => ({ default: m.ComparisonExplorer })));
 const TypeDetailPage = lazy(() => import('./components/TypeDetail').then(m => ({ default: m.TypeDetailPage })));
-const SubtypeSelector = lazy(() => import('./components/SubtypeSelector').then(m => ({ default: m.SubtypeSelector })));
+// SubtypeSelector removed - content now embedded in TypeCard's Instincts tab
 const Quiz = lazy(() => import('./components/Quiz').then(m => ({ default: m.AdaptiveQuiz })));
 const Profile = lazy(() => import('./components/Profile').then(m => ({ default: m.Profile })));
 const TranscendencePage = lazy(() => import('./components/Transcendence').then(m => ({ default: m.TranscendencePage })));
+const WisdomLineagePage = lazy(() => import('./components/WisdomLineage').then(m => ({ default: m.WisdomLineagePage })));
 
 // Loading fallback component
 function LoadingFallback({ message = 'Loading...' }: { message?: string }) {
@@ -83,7 +84,6 @@ function App() {
   const selectType = useAppStore((state) => state.selectType);
   const setViewMode = useAppStore((state) => state.setViewMode);
   const setUserProfile = useAppStore((state) => state.setUserProfile);
-  const [subtypeSelectorOpen, setSubtypeSelectorOpen] = useState(false);
   const [typeCardOpen, setTypeCardOpen] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -172,6 +172,15 @@ function App() {
     );
   }
 
+  // Wisdom Lineage view is full screen
+  if (viewMode === 'wisdomLineage') {
+    return (
+      <Suspense fallback={<LoadingFallback message="Loading wisdom traditions..." />}>
+        <WisdomLineagePage onClose={() => setViewMode('circle')} />
+      </Suspense>
+    );
+  }
+
   // Detail view is full screen
   if (viewMode === 'detail' && selectedType) {
     return (
@@ -248,10 +257,7 @@ function App() {
               className="flex-1 min-w-[400px] max-w-[600px] overflow-y-auto"
               aria-label={`Details for Type ${selectedType}`}
             >
-              <TypeCard
-                typeNumber={selectedType}
-                onOpenSubtypes={() => setSubtypeSelectorOpen(true)}
-              />
+              <TypeCard typeNumber={selectedType} />
             </motion.aside>
           )}
         </AnimatePresence>
@@ -301,25 +307,11 @@ function App() {
                   </svg>
                 </button>
               </div>
-              <TypeCard
-                typeNumber={selectedType}
-                onOpenSubtypes={() => setSubtypeSelectorOpen(true)}
-              />
+              <TypeCard typeNumber={selectedType} />
             </motion.aside>
           </>
         )}
       </AnimatePresence>
-
-      {/* Subtype Selector Overlay */}
-      {selectedType && (
-        <Suspense fallback={null}>
-          <SubtypeSelector
-            typeNumber={selectedType}
-            isOpen={subtypeSelectorOpen}
-            onClose={() => setSubtypeSelectorOpen(false)}
-          />
-        </Suspense>
-      )}
 
     </Layout>
   );

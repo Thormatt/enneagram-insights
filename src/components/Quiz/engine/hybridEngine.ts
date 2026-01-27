@@ -1,3 +1,10 @@
+/**
+ * @deprecated This engine is deprecated. Use mergedEngine.ts instead.
+ *
+ * The merged engine combines the best aspects of this hybrid approach
+ * with the adaptive engine for better accuracy and user experience.
+ */
+
 import type { TypeNumber, InstinctType, WingVariant, InstinctStack } from '../../../types';
 import {
   getAllScenarioQuestions,
