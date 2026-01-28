@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getCenterColor } from '../../data';
+import { getCenterColor } from '../../data/core/centers';
 import { CENTERS } from '../../data/tritypes/tritypeDescriptions';
 import type { TypeNumber, PrimaryCenter } from '../../types';
 

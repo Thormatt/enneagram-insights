@@ -108,7 +108,7 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
   return (
     <div className="min-h-screen bg-cream-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-cream-50/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-warm-border dark:border-gray-700">
+      <header className="sticky top-0 z-30 bg-cream-50/95 dark:bg-gray-900/95 border-b border-warm-border dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">

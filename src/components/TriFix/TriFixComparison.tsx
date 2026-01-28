@@ -1,4 +1,4 @@
-import { getCenterColor } from '../../data';
+import { getCenterColor } from '../../data/core/centers';
 import type { TypeNumber, PrimaryCenter } from '../../types';
 import type { TriFixInfo } from '../../data/tritypes/tritypeDescriptions';
 

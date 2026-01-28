@@ -30,11 +30,12 @@ export const TriFixCard = memo(function TriFixCard({
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-4 rounded-2xl border-2 transition-colors duration-100 ${
+      className={`w-full text-left p-4 rounded-2xl border-2 transform-gpu transition-[transform,background-color,border-color] duration-120 ease-out motion-reduce:transition-none ${
         isSelected
-          ? 'border-terracotta-500 bg-terracotta-50 dark:bg-terracotta-900/20 shadow-warm-lg'
-          : 'border-warm-border dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-terracotta-300 dark:hover:border-terracotta-600 hover:shadow-warm'
-      }`}
+          ? 'border-terracotta-500 bg-terracotta-50 dark:bg-terracotta-900/20'
+          : 'border-warm-border dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-terracotta-300 dark:hover:border-terracotta-600'
+      } hover:-translate-y-0.5`}
+      style={{ contain: 'layout paint' }}
     >
       {/* Tri-Fix Code Display */}
       <div className="flex items-center gap-1 mb-3">

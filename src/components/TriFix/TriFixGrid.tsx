@@ -1,7 +1,7 @@
 import { memo, useState, useMemo } from 'react';
 import { TriFixCard } from './TriFixCard';
 import { triFixDescriptions, CENTERS, getTriFixKey } from '../../data/tritypes/tritypeDescriptions';
-import { getCenterColor } from '../../data';
+import { getCenterColor } from '../../data/core/centers';
 import type { TypeNumber, PrimaryCenter } from '../../types';
 
 interface TriFixGridProps {

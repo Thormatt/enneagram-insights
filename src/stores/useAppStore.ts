@@ -168,10 +168,9 @@ export const useAppStore = create<AppState>()(
     {
       name: 'enneagram-sync-storage',
       partialize: (state) => ({
+        // Only persist user preferences, not navigation state
+        // Navigation state comes from URL params instead
         userProfile: state.userProfile,
-        viewMode: state.viewMode,
-        circleLayer: state.circleLayer,
-        diagramType: state.diagramType,
         theme: state.theme,
         hasCompletedOnboarding: state.hasCompletedOnboarding,
         userExperienceLevel: state.userExperienceLevel
