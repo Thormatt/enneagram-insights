@@ -5,6 +5,7 @@ import { EnneagramCircle } from './components/Circle';
 import { TypeCard } from './components/TypeCard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAppStore, createUserProfile } from './stores';
+import { useUrlSync } from './hooks';
 import type { TypeNumber, WingVariant, InstinctStack } from './types';
 import './index.css';
 
@@ -79,6 +80,9 @@ function LoadingFallback({ message = 'Loading...' }: { message?: string }) {
 }
 
 function App() {
+  // Sync URL query params with app state
+  useUrlSync();
+
   // Use selectors to prevent unnecessary re-renders
   const selectedType = useAppStore((state) => state.selectedType);
   const viewMode = useAppStore((state) => state.viewMode);
