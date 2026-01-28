@@ -14,14 +14,20 @@ interface DiagramsProps {
   height?: number;
 }
 
+// Mobile breakpoint for responsive layouts
+const MOBILE_BREAKPOINT = 480;
+
 export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
   // Use selectors to prevent unnecessary re-renders
   const selectedType = useAppStore((state) => state.selectedType);
   const selectType = useAppStore((state) => state.selectType);
   const diagramType = useAppStore((state) => state.diagramType);
 
+  // Determine if we're in mobile layout based on width
+  const isMobile = width < MOBILE_BREAKPOINT;
+
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full">
       {/* Diagram Content */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -30,6 +36,7 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.1 }}
+          className="w-full flex justify-center"
         >
           {diagramType === 'centers' && (
             <CentersDiagram
@@ -37,6 +44,7 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
               height={height}
               selectedType={selectedType}
               onSelectType={selectType}
+              isMobile={isMobile}
             />
           )}
           {diagramType === 'triads' && (
@@ -45,6 +53,7 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
               height={height}
               selectedType={selectedType}
               onSelectType={selectType}
+              isMobile={isMobile}
             />
           )}
           {diagramType === 'relationships' && (
@@ -53,6 +62,7 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
               height={height}
               selectedType={selectedType}
               onSelectType={selectType}
+              isMobile={isMobile}
             />
           )}
         </motion.div>
@@ -61,22 +71,20 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
   );
 }
 
-// Centers Diagram - Gut, Heart, Head (horizontal layout)
+// Centers Diagram - Gut, Heart, Head (horizontal on desktop, vertical on mobile)
 function CentersDiagram({
   width,
   height,
   selectedType,
-  onSelectType
+  onSelectType,
+  isMobile
 }: {
   width: number;
   height: number;
   selectedType: TypeNumber | null;
   onSelectType: (type: TypeNumber | null) => void;
+  isMobile: boolean;
 }) {
-  const padding = 40;
-  const boxWidth = (width - padding * 4) / 3;
-  const boxHeight = height - padding * 2;
-
   const centers = [
     {
       key: 'gut',
@@ -103,6 +111,102 @@ function CentersDiagram({
       coreEmotion: 'Fear'
     },
   ];
+
+  // Mobile layout: vertical stacked cards with horizontal type nodes
+  if (isMobile) {
+    const cardHeight = 100;
+    const cardGap = 12;
+    const padding = 16;
+    const cardWidth = width - padding * 2;
+    const mobileHeight = centers.length * (cardHeight + cardGap) + padding * 2;
+    const nodeRadius = 22; // Minimum 44px touch target
+
+    return (
+      <svg width={width} height={mobileHeight} className="overflow-visible">
+        {centers.map((center, centerIndex) => {
+          const cardY = padding + centerIndex * (cardHeight + cardGap);
+
+          return (
+            <g key={center.key}>
+              {/* Background card */}
+              <rect
+                x={padding}
+                y={cardY}
+                width={cardWidth}
+                height={cardHeight}
+                rx={12}
+                fill={center.color}
+                fillOpacity={0.1}
+                stroke={center.color}
+                strokeWidth={2}
+                strokeOpacity={0.4}
+              />
+
+              {/* Center label and emotion - left side */}
+              <text
+                x={padding + 12}
+                y={cardY + 24}
+                className="font-serif text-sm font-semibold fill-charcoal dark:fill-white"
+              >
+                {center.label}
+              </text>
+              <text
+                x={padding + 12}
+                y={cardY + 42}
+                className="text-xs fill-charcoal-muted dark:fill-gray-400"
+              >
+                {center.coreEmotion}
+              </text>
+
+              {/* Type nodes - horizontal row on right */}
+              {center.types.map((typeNum, i) => {
+                const nodeX = cardWidth - 30 - i * 56;
+                const nodeY = cardY + cardHeight / 2;
+                const isSelected = selectedType === typeNum;
+
+                return (
+                  <g
+                    key={typeNum}
+                    onClick={() => onSelectType(typeNum)}
+                    className="cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select Type ${typeNum}`}
+                  >
+                    <circle
+                      cx={nodeX}
+                      cy={nodeY}
+                      r={isSelected ? nodeRadius + 2 : nodeRadius}
+                      fill={isSelected ? center.color : 'white'}
+                      stroke={center.color}
+                      strokeWidth={isSelected ? 3 : 2}
+                      className="dark:fill-gray-800 transition-all duration-200"
+                    />
+                    <text
+                      x={nodeX}
+                      y={nodeY + 1}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      className={`font-serif font-bold text-lg ${
+                        isSelected ? 'fill-white' : 'fill-charcoal dark:fill-white'
+                      }`}
+                    >
+                      {typeNum}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
+      </svg>
+    );
+  }
+
+  // Desktop layout: horizontal columns
+  const padding = 40;
+  const boxWidth = (width - padding * 4) / 3;
+  const boxHeight = height - padding * 2;
 
   return (
     <svg width={width} height={height} className="overflow-visible">
@@ -180,6 +284,9 @@ function CentersDiagram({
                   key={typeNum}
                   onClick={() => onSelectType(typeNum)}
                   className="cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Select Type ${typeNum}`}
                 >
                   <circle
                     cx={nodeX}
@@ -227,40 +334,158 @@ function TriadsDiagram({
   width,
   height,
   selectedType,
-  onSelectType
+  onSelectType,
+  isMobile
 }: {
   width: number;
   height: number;
   selectedType: TypeNumber | null;
   onSelectType: (type: TypeNumber | null) => void;
+  isMobile: boolean;
 }) {
   const [triadType, setTriadType] = useState<'harmonic' | 'hornevian' | 'object'>('harmonic');
 
   const triads = {
     harmonic: {
       groups: [
-        { name: 'Positive Outlook', types: [2, 7, 9] as TypeNumber[], color: '#7D9B84', description: 'Reframe problems positively' },
-        { name: 'Competency', types: [1, 3, 5] as TypeNumber[], color: '#C9A962', description: 'Solve problems objectively' },
-        { name: 'Reactive', types: [4, 6, 8] as TypeNumber[], color: '#C4785C', description: 'React emotionally to problems' },
+        { name: 'Positive Outlook', types: [2, 7, 9] as TypeNumber[], color: '#7D9B84', description: 'Reframe positively' },
+        { name: 'Competency', types: [1, 3, 5] as TypeNumber[], color: '#C9A962', description: 'Solve objectively' },
+        { name: 'Reactive', types: [4, 6, 8] as TypeNumber[], color: '#C4785C', description: 'React emotionally' },
       ]
     },
     hornevian: {
       groups: [
-        { name: 'Assertive', types: [3, 7, 8] as TypeNumber[], color: '#C4785C', description: 'Move against others' },
-        { name: 'Compliant', types: [1, 2, 6] as TypeNumber[], color: '#7D9B84', description: 'Move toward others' },
-        { name: 'Withdrawn', types: [4, 5, 9] as TypeNumber[], color: '#6B7B8A', description: 'Move away from others' },
+        { name: 'Assertive', types: [3, 7, 8] as TypeNumber[], color: '#C4785C', description: 'Move against' },
+        { name: 'Compliant', types: [1, 2, 6] as TypeNumber[], color: '#7D9B84', description: 'Move toward' },
+        { name: 'Withdrawn', types: [4, 5, 9] as TypeNumber[], color: '#6B7B8A', description: 'Move away' },
       ]
     },
     object: {
       groups: [
-        { name: 'Attachment', types: [3, 6, 9] as TypeNumber[], color: '#C9A962', description: 'Issues with attachment figures' },
-        { name: 'Frustration', types: [1, 4, 7] as TypeNumber[], color: '#C4785C', description: 'Frustrated by environment' },
-        { name: 'Rejection', types: [2, 5, 8] as TypeNumber[], color: '#6B7B8A', description: 'Rejected nurturing figure' },
+        { name: 'Attachment', types: [3, 6, 9] as TypeNumber[], color: '#C9A962', description: 'Attachment issues' },
+        { name: 'Frustration', types: [1, 4, 7] as TypeNumber[], color: '#C4785C', description: 'Environmental' },
+        { name: 'Rejection', types: [2, 5, 8] as TypeNumber[], color: '#6B7B8A', description: 'Nurturing' },
       ]
     }
   };
 
   const currentTriad = triads[triadType];
+
+  // Mobile layout: vertical cards with horizontal type nodes
+  if (isMobile) {
+    const cardHeight = 90;
+    const cardGap = 10;
+    const padding = 12;
+    const cardWidth = width - padding * 2;
+    const nodeRadius = 22; // Minimum 44px touch target
+
+    return (
+      <div className="flex flex-col items-center gap-3 w-full">
+        {/* Triad Type Selector - mobile optimized with larger touch targets */}
+        <div className="flex gap-1.5 w-full px-3">
+          {[
+            { id: 'harmonic', label: 'Harmonic' },
+            { id: 'hornevian', label: 'Hornevian' },
+            { id: 'object', label: 'Object' },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => setTriadType(id as typeof triadType)}
+              className={`flex-1 min-h-[44px] px-2 py-2.5 text-xs font-medium rounded-lg transition-colors ${
+                triadType === id
+                  ? 'bg-terracotta-500 text-white'
+                  : 'bg-cream-200 dark:bg-gray-700 text-charcoal-muted dark:text-gray-400 active:bg-cream-300 dark:active:bg-gray-600'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Triad Groups */}
+        <svg width={width} height={currentTriad.groups.length * (cardHeight + cardGap) + padding}>
+          {currentTriad.groups.map((group, groupIndex) => {
+            const cardY = padding + groupIndex * (cardHeight + cardGap);
+
+            return (
+              <g key={group.name}>
+                {/* Group background */}
+                <rect
+                  x={padding}
+                  y={cardY}
+                  width={cardWidth}
+                  height={cardHeight}
+                  rx={12}
+                  fill={group.color}
+                  fillOpacity={0.1}
+                  stroke={group.color}
+                  strokeWidth={2}
+                  strokeOpacity={0.3}
+                />
+
+                {/* Group name and description - left side */}
+                <text
+                  x={padding + 12}
+                  y={cardY + 24}
+                  className="font-serif font-semibold text-sm fill-charcoal dark:fill-white"
+                >
+                  {group.name}
+                </text>
+                <text
+                  x={padding + 12}
+                  y={cardY + 42}
+                  className="text-xs fill-charcoal-muted dark:fill-gray-400"
+                >
+                  {group.description}
+                </text>
+
+                {/* Type nodes - horizontal row on right */}
+                {group.types.map((typeNum, i) => {
+                  const nodeX = cardWidth - 26 - i * 52;
+                  const nodeY = cardY + cardHeight / 2;
+                  const isSelected = selectedType === typeNum;
+
+                  return (
+                    <g
+                      key={typeNum}
+                      onClick={() => onSelectType(typeNum)}
+                      className="cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Select Type ${typeNum}`}
+                    >
+                      <circle
+                        cx={nodeX}
+                        cy={nodeY}
+                        r={isSelected ? nodeRadius + 2 : nodeRadius}
+                        fill={isSelected ? group.color : 'white'}
+                        stroke={group.color}
+                        strokeWidth={isSelected ? 3 : 2}
+                        className="dark:fill-gray-800 transition-all duration-200"
+                      />
+                      <text
+                        x={nodeX}
+                        y={nodeY + 1}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className={`font-serif font-bold text-lg ${
+                          isSelected ? 'fill-white' : 'fill-charcoal dark:fill-white'
+                        }`}
+                      >
+                        {typeNum}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    );
+  }
+
+  // Desktop layout: horizontal columns
   const groupWidth = (width - 60) / 3;
 
   return (
@@ -275,7 +500,7 @@ function TriadsDiagram({
           <button
             key={id}
             onClick={() => setTriadType(id as typeof triadType)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+            className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-lg transition-colors ${
               triadType === id
                 ? 'bg-terracotta-500 text-white'
                 : 'bg-cream-200 dark:bg-gray-700 text-charcoal-muted dark:text-gray-400 hover:bg-cream-300 dark:hover:bg-gray-600'
@@ -338,6 +563,9 @@ function TriadsDiagram({
                     key={typeNum}
                     onClick={() => onSelectType(typeNum)}
                     className="cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Select Type ${typeNum}`}
                   >
                     <circle
                       cx={groupX}
@@ -385,24 +613,27 @@ function RelationshipsDiagram({
   width,
   height,
   selectedType,
-  onSelectType
+  onSelectType,
+  isMobile
 }: {
   width: number;
   height: number;
   selectedType: TypeNumber | null;
   onSelectType: (type: TypeNumber | null) => void;
+  isMobile: boolean;
 }) {
   const centerX = width / 2;
   const centerY = height / 2;
 
+  // Type selector when no type is selected
   if (!selectedType) {
     return (
       <div
         className="flex items-center justify-center bg-cream-100 dark:bg-gray-800 rounded-2xl border-2 border-dashed border-warm-border dark:border-gray-600"
-        style={{ width, height }}
+        style={{ width, height: isMobile ? 280 : height }}
       >
-        <div className="text-center p-8">
-          <p className="text-charcoal-muted dark:text-gray-400 mb-4">
+        <div className="text-center p-4 sm:p-8">
+          <p className="text-charcoal-muted dark:text-gray-400 mb-4 text-sm sm:text-base">
             Select a type to see its relationships
           </p>
           <div className="flex flex-wrap justify-center gap-2">
@@ -410,7 +641,8 @@ function RelationshipsDiagram({
               <button
                 key={num}
                 onClick={() => onSelectType(num)}
-                className="w-10 h-10 rounded-full bg-cream-200 dark:bg-gray-700 hover:bg-terracotta-100 dark:hover:bg-terracotta-900/30 text-charcoal dark:text-white font-serif font-bold transition-colors"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-cream-200 dark:bg-gray-700 hover:bg-terracotta-100 dark:hover:bg-terracotta-900/30 active:bg-terracotta-200 text-charcoal dark:text-white font-serif font-bold transition-colors"
+                aria-label={`Select Type ${num}`}
               >
                 {num}
               </button>
@@ -430,7 +662,194 @@ function RelationshipsDiagram({
   const wingLeft = selectedType === 1 ? 9 : (selectedType - 1) as TypeNumber;
   const wingRight = selectedType === 9 ? 1 : (selectedType + 1) as TypeNumber;
 
-  // Positions
+  // Mobile layout: compact vertical arrangement
+  if (isMobile) {
+    const mobileHeight = 380;
+    const mainRadius = 32;
+    const relatedRadius = 24; // 48px diameter - meets 44px touch target
+    const verticalSpacing = 80;
+    const horizontalSpacing = 70;
+    const mobileCenterY = mobileHeight / 2 + 20;
+
+    const mobilePositions = {
+      main: { x: centerX, y: mobileCenterY },
+      wingLeft: { x: centerX - horizontalSpacing, y: mobileCenterY },
+      wingRight: { x: centerX + horizontalSpacing, y: mobileCenterY },
+      integration: { x: centerX, y: mobileCenterY - verticalSpacing },
+      disintegration: { x: centerX, y: mobileCenterY + verticalSpacing },
+    };
+
+    // Helper to render mobile type nodes inline
+    const renderMobileNode = (
+      typeNum: TypeNumber,
+      x: number,
+      y: number,
+      radius: number,
+      nodeColor: string,
+      label?: string,
+      isMain = false
+    ) => (
+      <g
+        key={`node-${typeNum}-${label || 'main'}`}
+        onClick={() => !isMain && onSelectType(typeNum)}
+        className={isMain ? '' : 'cursor-pointer'}
+        role={isMain ? undefined : 'button'}
+        tabIndex={isMain ? undefined : 0}
+        aria-label={isMain ? undefined : `Select Type ${typeNum}`}
+      >
+        <circle
+          cx={x}
+          cy={y}
+          r={radius}
+          fill={isMain ? nodeColor : 'white'}
+          stroke={nodeColor}
+          strokeWidth={isMain ? 3 : 2}
+          className="dark:fill-gray-800"
+        />
+        <text
+          x={x}
+          y={y + 1}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          className={`font-serif font-bold ${isMain ? 'text-xl fill-white' : 'text-base fill-charcoal dark:fill-white'}`}
+        >
+          {typeNum}
+        </text>
+        {label && (
+          <text
+            x={x}
+            y={y + radius + 14}
+            textAnchor="middle"
+            className="text-xs font-medium fill-charcoal-muted dark:fill-gray-400"
+          >
+            {label}
+          </text>
+        )}
+      </g>
+    );
+
+    return (
+      <div className="flex flex-col items-center gap-2 w-full">
+        <svg width={width} height={mobileHeight} className="overflow-visible">
+          {/* Arrow markers */}
+          <defs>
+            <marker id="arrow-green-mobile" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#7D9B84" />
+            </marker>
+            <marker id="arrow-red-mobile" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#C4785C" />
+            </marker>
+          </defs>
+
+          {/* Connection lines */}
+          {/* Wings - dashed lines */}
+          <line
+            x1={mobilePositions.main.x - mainRadius}
+            y1={mobilePositions.main.y}
+            x2={mobilePositions.wingLeft.x + relatedRadius}
+            y2={mobilePositions.wingLeft.y}
+            stroke="#C9A962"
+            strokeWidth={2}
+            strokeDasharray="4,3"
+          />
+          <line
+            x1={mobilePositions.main.x + mainRadius}
+            y1={mobilePositions.main.y}
+            x2={mobilePositions.wingRight.x - relatedRadius}
+            y2={mobilePositions.wingRight.y}
+            stroke="#C9A962"
+            strokeWidth={2}
+            strokeDasharray="4,3"
+          />
+
+          {/* Integration arrow */}
+          <line
+            x1={mobilePositions.main.x}
+            y1={mobilePositions.main.y - mainRadius}
+            x2={mobilePositions.integration.x}
+            y2={mobilePositions.integration.y + relatedRadius + 8}
+            stroke="#7D9B84"
+            strokeWidth={2}
+            markerEnd="url(#arrow-green-mobile)"
+          />
+
+          {/* Disintegration arrow */}
+          <line
+            x1={mobilePositions.main.x}
+            y1={mobilePositions.main.y + mainRadius}
+            x2={mobilePositions.disintegration.x}
+            y2={mobilePositions.disintegration.y - relatedRadius - 8}
+            stroke="#C4785C"
+            strokeWidth={2}
+            markerEnd="url(#arrow-red-mobile)"
+          />
+
+          {/* Type nodes */}
+          {renderMobileNode(
+            integration?.movesTo as TypeNumber,
+            mobilePositions.integration.x,
+            mobilePositions.integration.y,
+            relatedRadius,
+            '#7D9B84',
+            'Growth'
+          )}
+          {renderMobileNode(
+            disintegration?.movesTo as TypeNumber,
+            mobilePositions.disintegration.x,
+            mobilePositions.disintegration.y,
+            relatedRadius,
+            '#C4785C',
+            'Stress'
+          )}
+          {renderMobileNode(
+            wingLeft,
+            mobilePositions.wingLeft.x,
+            mobilePositions.wingLeft.y,
+            relatedRadius,
+            '#C9A962',
+            'Wing'
+          )}
+          {renderMobileNode(
+            wingRight,
+            mobilePositions.wingRight.x,
+            mobilePositions.wingRight.y,
+            relatedRadius,
+            '#C9A962',
+            'Wing'
+          )}
+
+          {/* Main type in center */}
+          {renderMobileNode(
+            selectedType,
+            mobilePositions.main.x,
+            mobilePositions.main.y,
+            mainRadius,
+            color,
+            undefined,
+            true
+          )}
+        </svg>
+
+        {/* Mobile legend - horizontal below diagram */}
+        <div className="flex justify-center gap-4 text-xs text-charcoal-muted dark:text-gray-400 px-4">
+          <div className="flex items-center gap-1.5">
+            <div className="w-4 h-0.5 bg-sage-500" />
+            <span>Growth</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-4 h-0.5 bg-terracotta-500" />
+            <span>Stress</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-4 h-0.5 border-t-2 border-dashed border-gold-500" />
+            <span>Wings</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout
   const mainRadius = 40;
   const relatedRadius = 30;
   const distance = 120;
@@ -443,26 +862,26 @@ function RelationshipsDiagram({
     disintegration: { x: centerX, y: centerY + distance },
   };
 
-  const TypeNode = ({
-    typeNum,
-    x,
-    y,
-    radius,
-    nodeColor,
-    label,
+  // Helper to render type nodes inline (avoids component-in-render warning)
+  const renderTypeNode = (
+    typeNum: TypeNumber,
+    x: number,
+    y: number,
+    radius: number,
+    nodeColor: string,
+    label?: string,
     isMain = false
-  }: {
-    typeNum: TypeNumber;
-    x: number;
-    y: number;
-    radius: number;
-    nodeColor: string;
-    label?: string;
-    isMain?: boolean;
-  }) => {
+  ) => {
     const nodeType = enneagramTypes.find(t => t.number === typeNum);
     return (
-      <g onClick={() => !isMain && onSelectType(typeNum)} className={isMain ? '' : 'cursor-pointer'}>
+      <g
+        key={`node-${typeNum}-${label || 'main'}`}
+        onClick={() => !isMain && onSelectType(typeNum)}
+        className={isMain ? '' : 'cursor-pointer'}
+        role={isMain ? undefined : 'button'}
+        tabIndex={isMain ? undefined : 0}
+        aria-label={isMain ? undefined : `Select Type ${typeNum}`}
+      >
         <circle
           cx={x}
           cy={y}
@@ -559,48 +978,49 @@ function RelationshipsDiagram({
       />
 
       {/* Type nodes */}
-      <TypeNode
-        typeNum={integration?.movesTo as TypeNumber}
-        x={positions.integration.x}
-        y={positions.integration.y}
-        radius={relatedRadius}
-        nodeColor="#7D9B84"
-        label="Growth"
-      />
-      <TypeNode
-        typeNum={disintegration?.movesTo as TypeNumber}
-        x={positions.disintegration.x}
-        y={positions.disintegration.y}
-        radius={relatedRadius}
-        nodeColor="#C4785C"
-        label="Stress"
-      />
-      <TypeNode
-        typeNum={wingLeft}
-        x={positions.wingLeft.x}
-        y={positions.wingLeft.y}
-        radius={relatedRadius}
-        nodeColor="#C9A962"
-        label="Wing"
-      />
-      <TypeNode
-        typeNum={wingRight}
-        x={positions.wingRight.x}
-        y={positions.wingRight.y}
-        radius={relatedRadius}
-        nodeColor="#C9A962"
-        label="Wing"
-      />
+      {renderTypeNode(
+        integration?.movesTo as TypeNumber,
+        positions.integration.x,
+        positions.integration.y,
+        relatedRadius,
+        '#7D9B84',
+        'Growth'
+      )}
+      {renderTypeNode(
+        disintegration?.movesTo as TypeNumber,
+        positions.disintegration.x,
+        positions.disintegration.y,
+        relatedRadius,
+        '#C4785C',
+        'Stress'
+      )}
+      {renderTypeNode(
+        wingLeft,
+        positions.wingLeft.x,
+        positions.wingLeft.y,
+        relatedRadius,
+        '#C9A962',
+        'Wing'
+      )}
+      {renderTypeNode(
+        wingRight,
+        positions.wingRight.x,
+        positions.wingRight.y,
+        relatedRadius,
+        '#C9A962',
+        'Wing'
+      )}
 
       {/* Main type in center */}
-      <TypeNode
-        typeNum={selectedType}
-        x={positions.main.x}
-        y={positions.main.y}
-        radius={mainRadius}
-        nodeColor={color}
-        isMain
-      />
+      {renderTypeNode(
+        selectedType,
+        positions.main.x,
+        positions.main.y,
+        mainRadius,
+        color,
+        undefined,
+        true
+      )}
 
       {/* Legend */}
       <g transform={`translate(${width - 120}, ${height - 80})`}>

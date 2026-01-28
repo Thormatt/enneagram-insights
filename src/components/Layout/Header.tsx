@@ -45,7 +45,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {onMenuClick && (
             <button
               onClick={onMenuClick}
-              className="lg:hidden p-2 -ml-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
+              className="lg:hidden p-3 -ml-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
               aria-label="Open navigation menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                   key={value}
                   onClick={() => setViewMode(value)}
                   aria-pressed={viewMode === value}
-                  className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
+                  className={`px-3 py-1.5 min-h-[44px] text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
                     viewMode === value
                       ? 'bg-cream-100 text-charcoal shadow-warm'
                       : 'text-cream-200 hover:text-white'
@@ -87,7 +87,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {/* Beyond Type / Transcendence Button */}
           <button
             onClick={() => setViewMode('transcendence')}
-            className="px-3 py-1.5 text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
+            className="px-3 py-1.5 min-h-[44px] text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="Explore Beyond Type"
           >
             <span className="font-serif font-bold" aria-hidden="true">0</span>
@@ -97,7 +97,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {/* Wisdom Lineage Button */}
           <button
             onClick={() => setViewMode('wisdomLineage')}
-            className="px-3 py-1.5 text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
+            className="px-3 py-1.5 min-h-[44px] text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="Explore Wisdom Lineage"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -106,10 +106,34 @@ export function Header({ onMenuClick }: HeaderProps) {
             <span className="hidden lg:inline">Lineage</span>
           </button>
 
+          {/* Tri-Fix Button */}
+          <button
+            onClick={() => setViewMode('tritypes')}
+            className="px-3 py-1.5 min-h-[44px] text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
+            aria-label="Explore Tri-Fix"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+            </svg>
+            <span className="hidden lg:inline">Tri-Fix</span>
+          </button>
+
+          {/* Scenarios Button */}
+          <button
+            onClick={() => setViewMode('scenarios')}
+            className="px-3 py-1.5 min-h-[44px] text-cream-200 text-sm font-medium rounded-full hover:bg-charcoal-light/30 hover:text-white transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-cream-300 focus:ring-offset-1 focus:ring-offset-charcoal"
+            aria-label="Interactive Scenarios"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span className="hidden lg:inline">Scenarios</span>
+          </button>
+
           {/* Quiz Button */}
           <button
             onClick={() => setViewMode('quiz')}
-            className="px-3 py-1.5 bg-terracotta-500/20 text-terracotta-300 text-sm font-medium rounded-full hover:bg-terracotta-500/30 hover:text-terracotta-200 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
+            className="px-3 py-1.5 min-h-[44px] bg-terracotta-500/20 text-terracotta-300 text-sm font-medium rounded-full hover:bg-terracotta-500/30 hover:text-terracotta-200 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="Take Enneagram Quiz"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -124,7 +148,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           {/* Profile Button */}
           <button
             onClick={() => setViewMode('profile')}
-            className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
+            className="p-3 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal"
             aria-label="View my profile"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -151,7 +175,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     key={value}
                     onClick={() => setCircleLayer(value)}
                     aria-pressed={circleLayer === value}
-                    className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
+                    className={`px-3 py-1.5 min-h-[44px] text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
                       circleLayer === value
                         ? 'bg-cream-100 text-charcoal shadow-warm'
                         : 'text-cream-200 hover:text-white'
@@ -178,7 +202,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     key={value}
                     onClick={() => setDiagramType(value)}
                     aria-pressed={diagramType === value}
-                    className={`px-3 py-1.5 text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
+                    className={`px-3 py-1.5 min-h-[44px] text-sm rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:ring-offset-1 focus:ring-offset-charcoal ${
                       diagramType === value
                         ? 'bg-cream-100 text-charcoal shadow-warm'
                         : 'text-cream-200 hover:text-white'

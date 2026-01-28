@@ -95,7 +95,7 @@ export function TypeCard({ typeNumber }: TypeCardProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode('compare')}
-            className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 min-h-[44px] bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
             aria-label="Compare this type with another"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ export function TypeCard({ typeNumber }: TypeCardProps) {
           </button>
           <button
             onClick={() => setViewMode('detail')}
-            className="flex-1 px-4 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-2.5 min-h-[44px] bg-white/20 hover:bg-white/30 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
             aria-label="View full details"
           >
             Deep Dive
@@ -143,7 +143,7 @@ export function TypeCard({ typeNumber }: TypeCardProps) {
               aria-controls={`tabpanel-${tab.id}`}
               id={`tab-${tab.id}`}
               tabIndex={activeTab === tab.id ? 0 : -1}
-              className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-terracotta-500 ${
+              className={`px-4 py-3 min-h-[44px] text-sm font-medium whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-terracotta-500 ${
                 activeTab === tab.id
                   ? 'text-charcoal dark:text-white border-b-2'
                   : 'text-charcoal-muted dark:text-gray-400 hover:text-charcoal dark:hover:text-gray-300'
@@ -191,7 +191,7 @@ export function TypeCard({ typeNumber }: TypeCardProps) {
                 </Section>
 
                 <Section title="Wings">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {wings.map(wing => (
                       <div key={wing.variant} className="p-3 bg-cream-100 dark:bg-gray-700 rounded-xl border border-warm-border dark:border-gray-600">
                         <h4 className="font-serif font-semibold text-charcoal dark:text-white">{wing.variant}: {wing.name}</h4>
@@ -394,7 +394,7 @@ function CollapsibleSubtype({ subtype, color }: { subtype: Subtype; color: strin
       {/* Header - always visible */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 flex items-center justify-between bg-cream-100 dark:bg-gray-700/50 hover:bg-cream-200 dark:hover:bg-gray-700 transition-colors text-left"
+        className="w-full px-4 py-3 min-h-[44px] flex items-center justify-between bg-cream-100 dark:bg-gray-700/50 hover:bg-cream-200 dark:hover:bg-gray-700 transition-colors text-left"
       >
         <div className="flex items-center gap-3">
           <span

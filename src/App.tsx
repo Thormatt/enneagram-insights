@@ -63,6 +63,8 @@ const Quiz = lazy(() => import('./components/Quiz').then(m => ({ default: m.Adap
 const Profile = lazy(() => import('./components/Profile').then(m => ({ default: m.Profile })));
 const TranscendencePage = lazy(() => import('./components/Transcendence').then(m => ({ default: m.TranscendencePage })));
 const WisdomLineagePage = lazy(() => import('./components/WisdomLineage').then(m => ({ default: m.WisdomLineagePage })));
+const TriFixExplorer = lazy(() => import('./components/TriFix').then(m => ({ default: m.TriFixExplorer })));
+const ScenarioPage = lazy(() => import('./components/Scenarios').then(m => ({ default: m.ScenarioPage })));
 
 // Loading fallback component
 function LoadingFallback({ message = 'Loading...' }: { message?: string }) {
@@ -177,6 +179,24 @@ function App() {
     return (
       <Suspense fallback={<LoadingFallback message="Loading wisdom traditions..." />}>
         <WisdomLineagePage onClose={() => setViewMode('circle')} />
+      </Suspense>
+    );
+  }
+
+  // Tri-Fix Explorer view is full screen
+  if (viewMode === 'tritypes') {
+    return (
+      <Suspense fallback={<LoadingFallback message="Loading tri-fix explorer..." />}>
+        <TriFixExplorer onClose={() => setViewMode('circle')} />
+      </Suspense>
+    );
+  }
+
+  // Interactive Scenarios view is full screen
+  if (viewMode === 'scenarios') {
+    return (
+      <Suspense fallback={<LoadingFallback message="Loading scenarios..." />}>
+        <ScenarioPage onClose={() => setViewMode('circle')} />
       </Suspense>
     );
   }

@@ -362,7 +362,7 @@ function TimelineView({ traditionsByEra, selectedTradition, onSelect }: Timeline
                   <div className="flex items-start gap-4">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                      style={{ backgroundColor: `${tradition.color}30` }}
+                      style={{ backgroundColor: `${tradition.color}30`, color: tradition.color }}
                     >
                       {tradition.symbol}
                     </div>
@@ -569,7 +569,7 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
                     >
                       <div
                         className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-                        style={{ backgroundColor: `${tradition.color}30` }}
+                        style={{ backgroundColor: `${tradition.color}30`, color: tradition.color }}
                       >
                         {tradition.symbol}
                       </div>
@@ -702,7 +702,7 @@ function TraditionDetailPanel({
             <div className="flex items-center gap-4">
               <div
                 className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl"
-                style={{ backgroundColor: `${tradition.color}30` }}
+                style={{ backgroundColor: `${tradition.color}30`, color: tradition.color }}
               >
                 {tradition.symbol}
               </div>
@@ -871,7 +871,7 @@ function TraditionDetailPanel({
                     <div className="flex items-center gap-3 mb-2">
                       <div
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-lg"
-                        style={{ backgroundColor: `${connTradition.color}30` }}
+                        style={{ backgroundColor: `${connTradition.color}30`, color: connTradition.color }}
                       >
                         {connTradition.symbol}
                       </div>

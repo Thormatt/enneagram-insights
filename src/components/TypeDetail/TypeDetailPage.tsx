@@ -110,7 +110,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
               {/* Prev arrow - hidden on small screens */}
               <button
                 onClick={() => onNavigate?.(prevType)}
-                className="hidden sm:flex p-2 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
+                className="hidden sm:flex p-3 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
                 aria-label={`Go to Type ${prevType}`}
               >
                 <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -124,7 +124,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                   <button
                     key={num}
                     onClick={() => onNavigate?.(num)}
-                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs sm:text-sm font-semibold transition-colors flex-shrink-0 ${
+                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full text-xs sm:text-sm font-semibold transition-colors flex-shrink-0 ${
                       num === typeNumber
                         ? 'bg-white text-charcoal shadow-md'
                         : 'text-white/70 hover:text-white hover:bg-white/20'
@@ -138,7 +138,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
               {/* Next arrow - hidden on small screens */}
               <button
                 onClick={() => onNavigate?.(nextType)}
-                className="hidden sm:flex p-2 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
+                className="hidden sm:flex p-3 hover:bg-white/20 rounded-xl transition-colors flex-shrink-0"
                 aria-label={`Go to Type ${nextType}`}
               >
                 <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,7 +153,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+                  className="p-3 hover:bg-white/20 rounded-xl transition-colors"
                   aria-label="Close"
                 >
                   <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -209,7 +209,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
               <button
                 key={section.id}
                 onClick={() => setActiveSection(section.id)}
-                className={`px-3 sm:px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-3 sm:px-5 py-2 min-h-[44px] rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   activeSection === section.id
                     ? 'bg-charcoal dark:bg-white text-white dark:text-gray-900'
                     : 'text-charcoal-light dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-800'

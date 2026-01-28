@@ -108,8 +108,12 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
             {state.stage !== 'intro' && state.stage !== 'results' && (
               <button
                 onClick={() => setShowRankings(prev => !prev)}
-                className="p-2 text-cream-200 hover:text-white hover:bg-charcoal-light/30 rounded-xl transition-colors"
-                title="Show type rankings"
+                className={`p-2 rounded-xl transition-colors ${
+                  showRankings
+                    ? 'text-terracotta-400 bg-charcoal-light/30'
+                    : 'text-cream-200 hover:text-white hover:bg-charcoal-light/30'
+                }`}
+                title={showRankings ? "Hide type rankings (recommended)" : "Show type rankings (may bias answers)"}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -170,10 +174,10 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
                 </svg>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-800 dark:text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 dark:text-white mb-4">
                 Adaptive Enneagram Assessment
               </h2>
-              <p className="text-base sm:text-lg text-charcoal-light dark:text-gray-400 mb-6 max-w-xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-xl mx-auto">
                 This assessment adapts to your answers in real-time, asking fewer questions
                 while achieving higher accuracy than traditional fixed-length quizzes.
               </p>
@@ -288,6 +292,7 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
                     confidence={rankings[0]?.probability}
                     margin={rankings[0]?.probability - (rankings[1]?.probability || 0)}
                     phase={progress.phase}
+                    hideType={!showRankings}
                   />
                 </div>
               )}

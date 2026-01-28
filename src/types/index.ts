@@ -259,7 +259,7 @@ export interface UserProfile {
 // UI State Types
 // ============================================
 
-export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence' | 'wisdomLineage';
+export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence' | 'wisdomLineage' | 'tritypes' | 'scenarios';
 export type CircleLayer = 'basic' | 'dynamics' | 'groups' | 'subtypes';
 export type DiagramType = 'centers' | 'triads' | 'relationships';
 
@@ -270,4 +270,68 @@ export interface AppState {
   compareTypes: [TypeNumber, TypeNumber] | null;
   selectedSubtype: InstinctType | null;
   userProfile: UserProfile | null;
+}
+
+// ============================================
+// Extended Tritype Types
+// ============================================
+
+export type PrimaryCenter = 'gut' | 'heart' | 'head';
+
+export interface ExtendedTritypeInfo {
+  code: string;
+  name: string;
+  archetype: string;
+  gutType: TypeNumber;
+  heartType: TypeNumber;
+  headType: TypeNumber;
+  primaryCenter: PrimaryCenter;
+  description: string;
+  strengths: string[];
+  challenges: string[];
+  innerExperience: string;
+  growthPath: string;
+  complementaryTritypes: string[];
+  tensionTritypes: string[];
+}
+
+// ============================================
+// Interactive Scenario Types
+// ============================================
+
+export type ScenarioCategory = 'relationships' | 'work' | 'stress' | 'growth' | 'daily';
+
+export interface ScenarioResponse {
+  type: TypeNumber;
+  preview: string;
+  fullResponse: {
+    thought: string;
+    action: string;
+    somaticMarker: string;
+  };
+  psychologicalInsight: string;
+  healthVariations: {
+    healthy: string;
+    unhealthy: string;
+  };
+}
+
+export interface Scenario {
+  id: string;
+  title: string;
+  category: ScenarioCategory;
+  situation: string;
+  responses: ScenarioResponse[];
+}
+
+export interface ScenarioProgress {
+  completedScenarios: string[];
+  resonanceHistory: Array<{
+    scenarioId: string;
+    resonatedTypes: TypeNumber[];
+    timestamp: Date;
+  }>;
+  streak: number;
+  lastCompletedDate: Date | null;
+  totalPoints: number;
 }

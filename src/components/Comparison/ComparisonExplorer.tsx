@@ -185,7 +185,7 @@ export function ComparisonExplorer({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 hover:bg-charcoal-light/30 rounded-xl transition-colors"
+              className="p-3 hover:bg-charcoal-light/30 rounded-xl transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -221,7 +221,7 @@ export function ComparisonExplorer({
                 Type {typeData2.number}
               </div>
               {archetype && (
-                <span className="text-sm font-medium text-charcoal dark:text-cream-200 hidden sm:inline">
+                <span className="text-sm font-medium text-charcoal dark:text-cream-200 hidden sm:inline overflow-hidden text-ellipsis whitespace-nowrap max-w-[200px]">
                   {archetype.archetype}
                 </span>
               )}
@@ -902,7 +902,7 @@ function TypeSelector({ label, value, onChange, types, excludeType }: TypeSelect
               onClick={() => !isExcluded && onChange(isSelected ? null : type.number)}
               disabled={isExcluded}
               className={`
-                p-3 sm:p-2 rounded-lg text-center transition-[transform,box-shadow,background-color,color] min-h-[52px]
+                p-3 rounded-lg text-center transition-[transform,box-shadow,background-color,color] min-h-[52px]
                 ${isExcluded ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
                 ${isSelected ? 'ring-2 ring-offset-2 dark:ring-offset-gray-800 shadow-md' : 'hover:shadow'}
               `}

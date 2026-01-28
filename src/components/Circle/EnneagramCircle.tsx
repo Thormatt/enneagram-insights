@@ -100,14 +100,47 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
   }), [isDark]);
 
   // Memoize derived dimensions
-  const dimensions = useMemo(() => ({
-    centerX: width / 2,
-    centerY: height / 2,
-    radius: Math.min(width, height) / 2 - 60,
-    nodeRadius: 28
-  }), [width, height]);
+  const dimensions = useMemo(() => {
+    const isMobile = width < 400;
+    const baseNodeRadius = isMobile ? 22 : 28;
+    const basePadding = isMobile ? 45 : 60;
 
-  const { centerX, centerY, radius, nodeRadius } = dimensions;
+    return {
+      centerX: width / 2,
+      centerY: height / 2,
+      radius: Math.min(width, height) / 2 - basePadding,
+      nodeRadius: baseNodeRadius,
+      isMobile
+    };
+  }, [width, height]);
+
+  const { centerX, centerY, radius, nodeRadius, isMobile } = dimensions;
+
+  // Calculate legend positioning to avoid overlap with circle
+  const legendConfig = useMemo(() => {
+    // Bottom of the circle (accounting for node radius and any highlights)
+    const circleBottom = centerY + radius + nodeRadius + 15;
+    // Available space below the circle
+    const spaceBelow = height - circleBottom;
+
+    // On mobile or when space is tight, position legend below circle
+    // Otherwise use traditional bottom-left corner positioning
+    const useBelowCircle = isMobile || spaceBelow < 100;
+
+    return {
+      useBelowCircle,
+      // When below circle, center the legend; otherwise left-align
+      x: useBelowCircle ? centerX : 20,
+      // Base Y position for legend
+      baseY: useBelowCircle ? circleBottom + 10 : height - 80,
+      // Font size scales down on mobile
+      fontSize: isMobile ? '10px' : '12px',
+      // Line spacing for legend items
+      itemSpacing: isMobile ? 18 : 22,
+      // Whether to use compact single-line legend on very small screens
+      useCompact: width < 340
+    };
+  }, [centerX, centerY, radius, nodeRadius, height, width, isMobile]);
 
   // Calculate positions for each type on the circle
   const getTypePosition = useCallback((typeNumber: TypeNumber) => {
@@ -563,27 +596,34 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
     // Legend for groups layer
     if (circleLayer === 'groups') {
       const legendData = [
-        { label: 'Positive Outlook (7,9,2)', color: GROUP_COLORS.positive_outlook },
-        { label: 'Competency (1,3,5)', color: GROUP_COLORS.competency },
-        { label: 'Reactive (4,6,8)', color: GROUP_COLORS.reactive }
+        { label: legendConfig.useCompact ? 'Pos (7,9,2)' : 'Positive Outlook (7,9,2)', color: GROUP_COLORS.positive_outlook },
+        { label: legendConfig.useCompact ? 'Comp (1,3,5)' : 'Competency (1,3,5)', color: GROUP_COLORS.competency },
+        { label: legendConfig.useCompact ? 'React (4,6,8)' : 'Reactive (4,6,8)', color: GROUP_COLORS.reactive }
       ];
 
       const legend = svg.append('g')
-        .attr('transform', `translate(20, ${height - 80})`);
+        .attr('transform', legendConfig.useBelowCircle
+          ? `translate(${legendConfig.x}, ${legendConfig.baseY})`
+          : `translate(20, ${height - 80})`
+        );
 
       legendData.forEach((item, i) => {
         const row = legend.append('g')
-          .attr('transform', `translate(0, ${i * 22})`);
+          .attr('transform', legendConfig.useBelowCircle
+            ? `translate(${(i - 1) * (legendConfig.useCompact ? 80 : 120)}, 0)`
+            : `translate(0, ${i * legendConfig.itemSpacing})`
+          );
 
         row.append('circle')
-          .attr('r', 6)
+          .attr('r', isMobile ? 5 : 6)
           .attr('fill', item.color);
 
         row.append('text')
-          .attr('x', 14)
+          .attr('x', isMobile ? 10 : 14)
           .attr('y', 4)
-          .attr('font-size', '12px')
+          .attr('font-size', legendConfig.fontSize)
           .attr('fill', themeColors.legendText)
+          .attr('text-anchor', legendConfig.useBelowCircle ? 'start' : 'start')
           .text(item.label);
       });
     }
@@ -591,29 +631,38 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
     // Legend for subtypes layer
     if (circleLayer === 'subtypes') {
       const legendData = [
-        { label: 'Self-Preservation (SP)', color: '#f59e0b' },
-        { label: 'Social (SO)', color: '#8b5cf6' },
-        { label: 'Sexual/One-to-One (SX)', color: '#ec4899' }
+        { label: legendConfig.useCompact ? 'SP' : 'Self-Preservation (SP)', color: '#f59e0b' },
+        { label: legendConfig.useCompact ? 'SO' : 'Social (SO)', color: '#8b5cf6' },
+        { label: legendConfig.useCompact ? 'SX' : 'Sexual/One-to-One (SX)', color: '#ec4899' }
       ];
 
       // Position legend higher if a type is selected (to avoid overlap with arrows legend)
-      const legendY = selectedType ? height - 180 : height - 80;
+      // On mobile with below-circle positioning, stack vertically with offset
+      const legendY = legendConfig.useBelowCircle
+        ? legendConfig.baseY + (selectedType ? legendConfig.itemSpacing * 3 + 10 : 0)
+        : (selectedType ? height - 180 : height - 80);
 
       const legend = svg.append('g')
-        .attr('transform', `translate(20, ${legendY})`);
+        .attr('transform', legendConfig.useBelowCircle
+          ? `translate(${legendConfig.x}, ${legendY})`
+          : `translate(20, ${legendY})`
+        );
 
       legendData.forEach((item, i) => {
         const row = legend.append('g')
-          .attr('transform', `translate(0, ${i * 22})`);
+          .attr('transform', legendConfig.useBelowCircle
+            ? `translate(${(i - 1) * (legendConfig.useCompact ? 50 : 100)}, 0)`
+            : `translate(0, ${i * legendConfig.itemSpacing})`
+          );
 
         row.append('circle')
-          .attr('r', 6)
+          .attr('r', isMobile ? 5 : 6)
           .attr('fill', item.color);
 
         row.append('text')
-          .attr('x', 14)
+          .attr('x', isMobile ? 10 : 14)
           .attr('y', 4)
-          .attr('font-size', '12px')
+          .attr('font-size', legendConfig.fontSize)
           .attr('fill', themeColors.legendText)
           .text(item.label);
       });
@@ -621,33 +670,69 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
 
     // Legend for dynamics layer
     if (circleLayer === 'dynamics') {
+      const lineWidth = isMobile ? 20 : 30;
+      const textOffset = isMobile ? 28 : 38;
+
       const legend = svg.append('g')
-        .attr('transform', `translate(20, ${height - 60})`);
+        .attr('transform', legendConfig.useBelowCircle
+          ? `translate(${legendConfig.x - (legendConfig.useCompact ? 100 : 140)}, ${legendConfig.baseY})`
+          : `translate(20, ${height - 60})`
+        );
 
-      // Integration
-      legend.append('line')
-        .attr('x1', 0).attr('y1', 0)
-        .attr('x2', 30).attr('y2', 0)
-        .attr('stroke', '#7D9B84') // Sage
-        .attr('stroke-width', 2);
-      legend.append('text')
-        .attr('x', 38).attr('y', 4)
-        .attr('font-size', '12px')
-        .attr('fill', themeColors.dynamicsLegendText)
-        .text('Integration (Growth)');
+      if (legendConfig.useBelowCircle) {
+        // Horizontal layout for mobile
+        // Integration
+        legend.append('line')
+          .attr('x1', 0).attr('y1', 0)
+          .attr('x2', lineWidth).attr('y2', 0)
+          .attr('stroke', '#7D9B84')
+          .attr('stroke-width', 2);
+        legend.append('text')
+          .attr('x', textOffset).attr('y', 4)
+          .attr('font-size', legendConfig.fontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text(legendConfig.useCompact ? 'Growth' : 'Integration');
 
-      // Stress
-      legend.append('line')
-        .attr('x1', 0).attr('y1', 22)
-        .attr('x2', 30).attr('y2', 22)
-        .attr('stroke', '#C4785C') // Terracotta
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6,4');
-      legend.append('text')
-        .attr('x', 38).attr('y', 26)
-        .attr('font-size', '12px')
-        .attr('fill', themeColors.dynamicsLegendText)
-        .text('Disintegration (Stress)');
+        // Stress - positioned to the right
+        const stressOffset = legendConfig.useCompact ? 90 : 130;
+        legend.append('line')
+          .attr('x1', stressOffset).attr('y1', 0)
+          .attr('x2', stressOffset + lineWidth).attr('y2', 0)
+          .attr('stroke', '#C4785C')
+          .attr('stroke-width', 2)
+          .attr('stroke-dasharray', '6,4');
+        legend.append('text')
+          .attr('x', stressOffset + textOffset).attr('y', 4)
+          .attr('font-size', legendConfig.fontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text(legendConfig.useCompact ? 'Stress' : 'Disintegration');
+      } else {
+        // Vertical layout for desktop
+        // Integration
+        legend.append('line')
+          .attr('x1', 0).attr('y1', 0)
+          .attr('x2', lineWidth).attr('y2', 0)
+          .attr('stroke', '#7D9B84')
+          .attr('stroke-width', 2);
+        legend.append('text')
+          .attr('x', textOffset).attr('y', 4)
+          .attr('font-size', legendConfig.fontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text('Integration (Growth)');
+
+        // Stress
+        legend.append('line')
+          .attr('x1', 0).attr('y1', legendConfig.itemSpacing)
+          .attr('x2', lineWidth).attr('y2', legendConfig.itemSpacing)
+          .attr('stroke', '#C4785C')
+          .attr('stroke-width', 2)
+          .attr('stroke-dasharray', '6,4');
+        legend.append('text')
+          .attr('x', textOffset).attr('y', legendConfig.itemSpacing + 4)
+          .attr('font-size', legendConfig.fontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text('Disintegration (Stress)');
+      }
     }
 
     // Center label
@@ -664,50 +749,84 @@ export function EnneagramCircle({ width = 600, height = 600 }: EnneagramCirclePr
 
     // Legend for selected type (shows what wings and arrows mean) - on basic and subtypes layers
     if (selectedType && (circleLayer === 'basic' || circleLayer === 'subtypes')) {
+      const lineWidth = isMobile ? 16 : 24;
+      const textOffset = isMobile ? 22 : 32;
+      const selectedFontSize = isMobile ? '9px' : '11px';
+      const rowSpacing = isMobile ? 20 : 26;
+
       const legend = svg.append('g')
-        .attr('transform', `translate(20, ${height - 100})`);
+        .attr('transform', legendConfig.useBelowCircle
+          ? `translate(${legendConfig.x - (legendConfig.useCompact ? 80 : 120)}, ${legendConfig.baseY})`
+          : `translate(20, ${height - 100})`
+        );
 
-      // Wings
-      legend.append('line')
-        .attr('x1', 0).attr('y1', 0)
-        .attr('x2', 24).attr('y2', 0)
-        .attr('stroke', '#C9A962') // Gold
-        .attr('stroke-width', 4)
-        .attr('opacity', 0.7);
-      legend.append('text')
-        .attr('x', 32).attr('y', 4)
-        .attr('font-size', '11px')
-        .attr('fill', themeColors.dynamicsLegendText)
-        .text('Wings (adjacent influences)');
+      if (legendConfig.useBelowCircle) {
+        // Horizontal compact layout for mobile
+        const items = [
+          { color: '#C9A962', label: 'Wings', dashed: false, thick: true },
+          { color: '#7D9B84', label: 'Growth', dashed: false, thick: false },
+          { color: '#C4785C', label: 'Stress', dashed: true, thick: false }
+        ];
 
-      // Integration
-      legend.append('line')
-        .attr('x1', 0).attr('y1', 26)
-        .attr('x2', 24).attr('y2', 26)
-        .attr('stroke', '#7D9B84') // Sage
-        .attr('stroke-width', 2);
-      legend.append('text')
-        .attr('x', 32).attr('y', 30)
-        .attr('font-size', '11px')
-        .attr('fill', themeColors.dynamicsLegendText)
-        .text('Growth direction');
+        items.forEach((item, i) => {
+          const xOffset = i * (legendConfig.useCompact ? 65 : 85);
+          legend.append('line')
+            .attr('x1', xOffset).attr('y1', 0)
+            .attr('x2', xOffset + lineWidth).attr('y2', 0)
+            .attr('stroke', item.color)
+            .attr('stroke-width', item.thick ? 4 : 2)
+            .attr('opacity', item.thick ? 0.7 : 1)
+            .attr('stroke-dasharray', item.dashed ? '6,4' : 'none');
+          legend.append('text')
+            .attr('x', xOffset + textOffset).attr('y', 4)
+            .attr('font-size', selectedFontSize)
+            .attr('fill', themeColors.dynamicsLegendText)
+            .text(item.label);
+        });
+      } else {
+        // Vertical layout for desktop
+        // Wings
+        legend.append('line')
+          .attr('x1', 0).attr('y1', 0)
+          .attr('x2', lineWidth).attr('y2', 0)
+          .attr('stroke', '#C9A962')
+          .attr('stroke-width', 4)
+          .attr('opacity', 0.7);
+        legend.append('text')
+          .attr('x', textOffset).attr('y', 4)
+          .attr('font-size', selectedFontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text('Wings (adjacent influences)');
 
-      // Disintegration
-      legend.append('line')
-        .attr('x1', 0).attr('y1', 52)
-        .attr('x2', 24).attr('y2', 52)
-        .attr('stroke', '#C4785C') // Terracotta
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6,4');
-      legend.append('text')
-        .attr('x', 32).attr('y', 56)
-        .attr('font-size', '11px')
-        .attr('fill', themeColors.dynamicsLegendText)
-        .text('Stress direction');
+        // Integration
+        legend.append('line')
+          .attr('x1', 0).attr('y1', rowSpacing)
+          .attr('x2', lineWidth).attr('y2', rowSpacing)
+          .attr('stroke', '#7D9B84')
+          .attr('stroke-width', 2);
+        legend.append('text')
+          .attr('x', textOffset).attr('y', rowSpacing + 4)
+          .attr('font-size', selectedFontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text('Growth direction');
+
+        // Disintegration
+        legend.append('line')
+          .attr('x1', 0).attr('y1', rowSpacing * 2)
+          .attr('x2', lineWidth).attr('y2', rowSpacing * 2)
+          .attr('stroke', '#C4785C')
+          .attr('stroke-width', 2)
+          .attr('stroke-dasharray', '6,4');
+        legend.append('text')
+          .attr('x', textOffset).attr('y', rowSpacing * 2 + 4)
+          .attr('font-size', selectedFontSize)
+          .attr('fill', themeColors.dynamicsLegendText)
+          .text('Stress direction');
+      }
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps -- selectType is stable from Zustand
-  }, [centerX, centerY, radius, nodeRadius, selectedType, circleLayer, getTypePosition, integrationLines, stressLines, height, themeColors]);
+  }, [centerX, centerY, radius, nodeRadius, selectedType, circleLayer, getTypePosition, integrationLines, stressLines, height, themeColors, legendConfig, isMobile]);
 
   // Show CTA when user hasn't taken the quiz and no type is selected
   const showDiscoverCta = !userProfile && !selectedType;

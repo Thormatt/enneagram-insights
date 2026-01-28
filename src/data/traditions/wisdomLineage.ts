@@ -320,7 +320,7 @@ export const wisdomTraditions: WisdomTradition[] = [
 
     enneagramConnection: {
       strength: 'strong',
-      description: 'The Dao Path is already integrated into your app. Wu Wei offers a powerful framework for releasing type fixation — each type has a specific way of "forcing" that Taoism can address.',
+      description: 'Wu Wei offers a powerful framework for releasing type fixation — each type has a specific way of "forcing" that Taoism can address.',
       sharedConcepts: ['Return to original nature', 'Release of forcing/grasping', 'Three energies (yin, yang, balance)', 'Flow vs. fixation'],
       differences: ['No typology of ego patterns', 'Impersonal cosmic principle', 'Less psychological, more philosophical'],
     },

@@ -989,3 +989,14 @@ export function getTritypeInfoFromCode(code: string): TritypeInfo | null {
 
   return getTritypeInfo(gut, heart, head);
 }
+
+
+// ============ TRI-FIX ALIASES (non-trademarked term) ============
+// These are aliases for the tritype exports using the community-preferred "tri-fix" terminology
+
+export type TriFixInfo = TritypeInfo;
+export const triFixDescriptions = tritypeDescriptions;
+export const getTriFixKey = getTritypeKey;
+export const getTriFixInfo = getTritypeInfo;
+export const getTriFixInfoFromCode = getTritypeInfoFromCode;
+

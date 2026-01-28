@@ -7,6 +7,7 @@ interface ConfidenceDisplayProps {
   confidence?: number;
   margin?: number;
   phase: QuizPhase;
+  hideType?: boolean;
 }
 
 export function ConfidenceDisplay({
@@ -14,6 +15,7 @@ export function ConfidenceDisplay({
   confidence = 0,
   margin = 0,
   phase,
+  hideType = true,
 }: ConfidenceDisplayProps) {
   const confidencePercent = Math.round(confidence * 100);
   const marginPercent = Math.round(margin * 100);
@@ -53,12 +55,20 @@ export function ConfidenceDisplay({
       <div className="flex items-center gap-4 mb-3">
         {topType && marginPercent > 0 ? (
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-charcoal dark:text-gray-200">
-              Type {topType}
-            </span>
-            <span className="text-lg text-charcoal-light dark:text-gray-300">
-              at {confidencePercent}%
-            </span>
+            {hideType ? (
+              <span className="text-xl text-charcoal dark:text-gray-200">
+                Leading candidate at <span className="font-bold">{confidencePercent}%</span> confidence
+              </span>
+            ) : (
+              <>
+                <span className="text-2xl font-bold text-charcoal dark:text-gray-200">
+                  Type {topType}
+                </span>
+                <span className="text-lg text-charcoal-light dark:text-gray-300">
+                  at {confidencePercent}%
+                </span>
+              </>
+            )}
           </div>
         ) : (
           <div className="flex items-center gap-2">
@@ -68,7 +78,7 @@ export function ConfidenceDisplay({
           </div>
         )}
 
-        {marginPercent > 0 && (
+        {marginPercent > 0 && !hideType && (
           <div className="flex items-center gap-1 text-sm text-charcoal-light dark:text-gray-400">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
