@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { TypeNumber, IntegrationPath, DisintegrationPath, LevelOfDevelopment, DefenseMechanism, Shadow, BodyPattern } from '../../types';
+import type { TypeNumber, IntegrationPath, DisintegrationPath, LevelOfDevelopment, DefenseMechanism, Shadow, BodyPattern, GrowthPractice } from '../../types';
 
 interface GrowthSectionProps {
   typeNumber: TypeNumber;
@@ -11,15 +11,17 @@ interface GrowthSectionProps {
   defense: DefenseMechanism | undefined;
   shadow: Shadow | undefined;
   bodyPattern: BodyPattern | undefined;
+  practices: GrowthPractice | undefined;
 }
 
-type GrowthTab = 'movement' | 'levels' | 'shadow' | 'body';
+type GrowthTab = 'movement' | 'levels' | 'shadow' | 'body' | 'practices';
 
 const growthTabs: { id: GrowthTab; label: string }[] = [
   { id: 'movement', label: 'Movement' },
   { id: 'levels', label: 'Levels' },
   { id: 'shadow', label: 'Shadow' },
-  { id: 'body', label: 'Body' }
+  { id: 'body', label: 'Body' },
+  { id: 'practices', label: 'Practices' }
 ];
 
 export function GrowthSection({
@@ -29,7 +31,8 @@ export function GrowthSection({
   levels,
   defense,
   shadow,
-  bodyPattern
+  bodyPattern,
+  practices
 }: GrowthSectionProps) {
   const [activeTab, setActiveTab] = useState<GrowthTab>('movement');
 
@@ -75,6 +78,10 @@ export function GrowthSection({
 
           {activeTab === 'body' && (
             <BodyContent bodyPattern={bodyPattern} />
+          )}
+
+          {activeTab === 'practices' && (
+            <PracticesContent practices={practices} />
           )}
         </motion.div>
       </AnimatePresence>
@@ -466,6 +473,86 @@ function BodyContent({ bodyPattern }: BodyContentProps) {
               </li>
             ))}
           </ul>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// Practices Content
+interface PracticesContentProps {
+  practices: GrowthPractice | undefined;
+}
+
+function PracticesContent({ practices }: PracticesContentProps) {
+  if (!practices) {
+    return (
+      <div className="text-center py-16 text-charcoal-muted dark:text-gray-500">
+        <p className="text-lg">No practices data available.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Journal Prompts */}
+      <Card label="Journal Prompts" title="Reflect & Discover" color="#8b5cf6">
+        <ul className="space-y-4">
+          {practices.journalPrompts.map((prompt, i) => (
+            <li key={i} className="flex items-start gap-4">
+              <span className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 font-semibold text-sm flex-shrink-0 mt-0.5">
+                {i + 1}
+              </span>
+              <p className="text-charcoal-light dark:text-gray-300 leading-relaxed italic">
+                "{prompt}"
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Card>
+
+      {/* Meditation Focus */}
+      <Card label="Meditation Focus" title="Contemplative Practice" color="#7D9B84">
+        <div className="bg-sage-50 dark:bg-sage-900/20 rounded-xl p-6 border border-sage-200 dark:border-sage-800">
+          <p className="text-charcoal-light dark:text-gray-300 leading-relaxed text-lg">
+            {practices.meditationFocus}
+          </p>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cognitive Reframing */}
+        <Card label="Cognitive Reframing" title="Shift Your Thinking" color="#3b82f6">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-5 border border-blue-200 dark:border-blue-800">
+            <p className="text-charcoal-light dark:text-gray-300 leading-relaxed">
+              {practices.cognitiveReframing}
+            </p>
+          </div>
+        </Card>
+
+        {/* Emotional Practice */}
+        <Card label="Emotional Practice" title="Feel & Process" color="#ec4899">
+          <div className="bg-pink-50 dark:bg-pink-900/20 rounded-xl p-5 border border-pink-200 dark:border-pink-800">
+            <p className="text-charcoal-light dark:text-gray-300 leading-relaxed">
+              {practices.emotionalPractice}
+            </p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Action Challenge */}
+      <Card label="Action Challenge" title="Put It Into Practice" color="#C9A962">
+        <div className="bg-gold-50 dark:bg-gold-900/20 rounded-xl p-6 border border-gold-200 dark:border-gold-800">
+          <div className="flex items-start gap-4">
+            <span className="w-10 h-10 rounded-full bg-gold-200 dark:bg-gold-800 flex items-center justify-center text-gold-700 dark:text-gold-300 flex-shrink-0">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </span>
+            <p className="text-charcoal-light dark:text-gray-300 leading-relaxed text-lg">
+              {practices.actionChallenge}
+            </p>
+          </div>
         </div>
       </Card>
     </div>

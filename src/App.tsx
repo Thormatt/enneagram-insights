@@ -66,6 +66,7 @@ const TranscendencePage = lazy(() => import('./components/Transcendence').then(m
 const WisdomLineagePage = lazy(() => import('./components/WisdomLineage').then(m => ({ default: m.WisdomLineagePage })));
 const TriFixExplorer = lazy(() => import('./components/TriFix').then(m => ({ default: m.TriFixExplorer })));
 const ScenarioPage = lazy(() => import('./components/Scenarios').then(m => ({ default: m.ScenarioPage })));
+const JourneyPage = lazy(() => import('./components/Journey').then(m => ({ default: m.JourneyPage })));
 
 // Loading fallback component
 function LoadingFallback({ message = 'Loading...' }: { message?: string }) {
@@ -201,6 +202,15 @@ function App() {
     return (
       <Suspense fallback={<LoadingFallback message="Loading scenarios..." />}>
         <ScenarioPage onClose={() => setViewMode('circle')} />
+      </Suspense>
+    );
+  }
+
+  // Journey/Philosophy view is full screen
+  if (viewMode === 'journey') {
+    return (
+      <Suspense fallback={<LoadingFallback message="Loading..." />}>
+        <JourneyPage onClose={() => setViewMode('circle')} />
       </Suspense>
     );
   }

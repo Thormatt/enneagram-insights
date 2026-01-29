@@ -19,12 +19,19 @@ import {
   getObjectRelationsByType,
   getLevelsByType,
   getEssenceByType,
-  getStoriesForType
+  getStoriesForType,
+  getGrowthPractice,
+  getChildhoodPattern,
+  getMisidentification,
+  getParentingStyle,
+  getLeadershipStyle
 } from '../../data';
 import type { TypeNumber, InstinctType } from '../../types';
 import { CoreSection } from './CoreSection';
 import { ExperienceSection } from './ExperienceSection';
 import { GrowthSection } from './GrowthSection';
+import { OriginsSection } from './OriginsSection';
+import { LifeSection } from './LifeSection';
 
 interface TypeDetailPageProps {
   typeNumber: TypeNumber;
@@ -32,7 +39,7 @@ interface TypeDetailPageProps {
   onClose?: () => void;
 }
 
-type SectionId = 'core' | 'experience' | 'growth' | 'framework';
+type SectionId = 'core' | 'experience' | 'growth' | 'origins' | 'life' | 'framework';
 
 interface Section {
   id: SectionId;
@@ -43,6 +50,8 @@ const sections: Section[] = [
   { id: 'core', label: 'Core' },
   { id: 'experience', label: 'Experience' },
   { id: 'growth', label: 'Growth' },
+  { id: 'origins', label: 'Origins' },
+  { id: 'life', label: 'Life' },
   { id: 'framework', label: 'Framework' }
 ];
 
@@ -82,6 +91,11 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
       levels: getLevelsByType(typeNumber),
       essence: getEssenceByType(typeNumber),
       stories: getStoriesForType(typeNumber),
+      practices: getGrowthPractice(typeNumber),
+      childhood: getChildhoodPattern(typeNumber),
+      misidentification: getMisidentification(typeNumber),
+      parenting: getParentingStyle(typeNumber),
+      leadership: getLeadershipStyle(typeNumber),
     };
   }, [typeNumber]);
 
@@ -96,7 +110,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
 
   if (!typeData) return null;
 
-  const { type, color, wings, viceVirtue, fixation, holyIdea, integration, disintegration, subtypes, defense, shadow, bodyPattern, harmonic, hornevian, objectRelations, levels, essence, stories } = typeData;
+  const { type, color, wings, viceVirtue, fixation, holyIdea, integration, disintegration, subtypes, defense, shadow, bodyPattern, harmonic, hornevian, objectRelations, levels, essence, stories, practices, childhood, misidentification, parenting, leadership } = typeData;
 
   return (
     <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors overflow-x-hidden">
@@ -263,6 +277,24 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
                 defense={defense}
                 shadow={shadow}
                 bodyPattern={bodyPattern}
+                practices={practices}
+              />
+            )}
+
+            {activeSection === 'origins' && (
+              <OriginsSection
+                typeNumber={typeNumber}
+                color={color}
+                childhood={childhood}
+                misidentification={misidentification}
+              />
+            )}
+
+            {activeSection === 'life' && (
+              <LifeSection
+                color={color}
+                parenting={parenting}
+                leadership={leadership}
               />
             )}
 

@@ -256,10 +256,56 @@ export interface UserProfile {
 }
 
 // ============================================
+// LAYER 9: Life Contexts & Practices
+// ============================================
+
+export interface ParentingStyle {
+  type: TypeNumber;
+  styleName: string;
+  strengths: string[];
+  challenges: string[];
+  strugglesWith: string[];
+  growthTips: string[];
+}
+
+export interface ChildhoodPattern {
+  type: TypeNumber;
+  familyAtmosphere: string;
+  lostMessage: string;
+  copingStrategy: string;
+  healingMessage: string;
+}
+
+export interface LeadershipStyle {
+  type: TypeNumber;
+  styleName: string;
+  strengths: string[];
+  blindSpots: string[];
+  communicationStyle: string;
+  feedbackTriggers: string[];
+  idealEnvironment: string[];
+}
+
+export interface GrowthPractice {
+  type: TypeNumber;
+  journalPrompts: string[];
+  meditationFocus: string;
+  cognitiveReframing: string;
+  emotionalPractice: string;
+  actionChallenge: string;
+}
+
+export interface Misidentification {
+  type: TypeNumber;
+  oftenConfusedWith: TypeNumber[];
+  keyDifferences: Partial<Record<TypeNumber, string[]>>; // e.g., { 9: ["4 is more dramatic", "9 is more steady"] }
+}
+
+// ============================================
 // UI State Types
 // ============================================
 
-export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence' | 'wisdomLineage' | 'tritypes' | 'scenarios';
+export type ViewMode = 'circle' | 'diagrams' | 'compare' | 'detail' | 'quiz' | 'profile' | 'transcendence' | 'wisdomLineage' | 'tritypes' | 'scenarios' | 'journey';
 export type CircleLayer = 'basic' | 'dynamics' | 'groups' | 'subtypes';
 export type DiagramType = 'centers' | 'triads' | 'relationships';
 
