@@ -12,7 +12,7 @@ import {
   generateGrowthSummary,
 } from '../engine';
 import type { TypeNumber, InstinctType } from '../../../types';
-import { getTritypeInfo } from '../../../data/tritypes/tritypeDescriptions';
+import { getTritypeInfoFromCode } from '../../../data/tritypes/tritypeDescriptions';
 
 // Growth arrow mapping (direction of integration)
 const GROWTH_ARROWS: Record<TypeNumber, TypeNumber> = {
@@ -72,7 +72,7 @@ export function AdaptiveResults({ results, onSave, onRetake }: AdaptiveResultsPr
 
   // Get tritype info
   const tritypeInfo = results.tritype
-    ? getTritypeInfo(results.tritype.gut, results.tritype.heart, results.tritype.head)
+    ? getTritypeInfoFromCode(results.tritype.code)
     : null;
 
   // Sort all types by percentage for display

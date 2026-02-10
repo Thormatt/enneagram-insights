@@ -24,9 +24,16 @@ export const TriFixCard = memo(function TriFixCard({
   gutType,
   heartType,
   headType,
+  primaryCenter,
   onClick,
   isSelected = false
 }: TriFixCardProps) {
+  const getPrimaryRing = (center: PrimaryCenter) => (
+    primaryCenter === center
+      ? `0 0 0 2px rgba(255,255,255,0.9), 0 0 0 4px ${CENTER_COLORS[center]}`
+      : undefined
+  );
+
   return (
     <button
       onClick={onClick}
@@ -38,25 +45,30 @@ export const TriFixCard = memo(function TriFixCard({
       style={{ contain: 'layout paint' }}
     >
       {/* Tri-Fix Code Display */}
-      <div className="flex items-center gap-1 mb-3">
+      <div className="flex items-center gap-2 mb-3">
         <span
           className="w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold"
-          style={{ backgroundColor: CENTER_COLORS.gut }}
+          style={{ backgroundColor: CENTER_COLORS.gut, boxShadow: getPrimaryRing('gut') }}
         >
           {gutType}
         </span>
         <span
           className="w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold"
-          style={{ backgroundColor: CENTER_COLORS.heart }}
+          style={{ backgroundColor: CENTER_COLORS.heart, boxShadow: getPrimaryRing('heart') }}
         >
           {heartType}
         </span>
         <span
           className="w-7 h-7 rounded-full flex items-center justify-center text-white text-sm font-bold"
-          style={{ backgroundColor: CENTER_COLORS.head }}
+          style={{ backgroundColor: CENTER_COLORS.head, boxShadow: getPrimaryRing('head') }}
         >
           {headType}
         </span>
+        {primaryCenter && (
+          <span className="text-[10px] uppercase tracking-wide text-charcoal-muted dark:text-gray-500">
+            {primaryCenter}-led
+          </span>
+        )}
       </div>
 
       {/* Name and Archetype */}

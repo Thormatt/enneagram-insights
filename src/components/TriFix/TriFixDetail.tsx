@@ -1,7 +1,16 @@
+import { useState } from 'react';
 import { getCenterColor } from '../../data/core/centers';
 import { getTypeByNumber } from '../../data/core/types';
+import { getTritypeInsights } from '../../data/tritypes/tritypeInsights';
 import type { TypeNumber, PrimaryCenter } from '../../types';
-import type { TriFixInfo } from '../../data/tritypes/tritypeDescriptions';
+import type { TriFixInfo, InstinctualSubtype } from '../../data/tritypes/tritypeDescriptions';
+
+// Subtype color coding per Delphi recommendation
+const SUBTYPE_COLORS = {
+  sp: { bg: '#059669', bgLight: '#D1FAE5', text: '#065F46', label: 'Self-Preservation' },
+  so: { bg: '#2563EB', bgLight: '#DBEAFE', text: '#1E40AF', label: 'Social' },
+  sx: { bg: '#DC2626', bgLight: '#FEE2E2', text: '#991B1B', label: 'Sexual/One-to-One' }
+} as const;
 
 interface TriFixDetailProps {
   triFix: TriFixInfo;
@@ -22,6 +31,8 @@ export function TriFixDetail({
   onClose,
   onCompare
 }: TriFixDetailProps) {
+  const [selectedSubtype, setSelectedSubtype] = useState<InstinctualSubtype>('sp');
+
   const gutInfo = getTypeByNumber(gutType);
   const heartInfo = getTypeByNumber(heartType);
   const headInfo = getTypeByNumber(headType);
@@ -33,6 +44,7 @@ export function TriFixDetail({
   ];
 
   const primaryColor = getCenterColor(primaryCenter);
+  const insights = getTritypeInsights({ gutType, heartType, headType, primaryCenter });
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm-lg overflow-hidden">
@@ -49,7 +61,12 @@ export function TriFixDetail({
                 <span
                   key={center}
                   className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold border-2 border-white/30"
-                  style={{ backgroundColor: getCenterColor(center) }}
+                  style={{
+                    backgroundColor: getCenterColor(center),
+                    boxShadow: center === primaryCenter
+                      ? '0 0 0 2px rgba(255,255,255,0.85), 0 0 0 4px rgba(255,255,255,0.35)'
+                      : undefined
+                  }}
                 >
                   {type}
                 </span>
@@ -61,6 +78,14 @@ export function TriFixDetail({
             </h2>
             <p className="text-white/80 text-lg">
               {triFix.archetype}
+            </p>
+            <p className="text-white/80 text-sm mt-2">
+              Tritype: <span className="font-semibold">{triFix.code}</span>
+              {insights.setCode !== triFix.code && (
+                <>
+                  {' '}| Set: <span className="font-semibold">{insights.setCode}</span>
+                </>
+              )}
             </p>
           </div>
 
@@ -97,6 +122,72 @@ export function TriFixDetail({
           <p className="text-charcoal dark:text-gray-200 leading-relaxed">
             {triFix.description}
           </p>
+        </section>
+
+        {/* Practical Snapshot */}
+        <section className="bg-cream-50 dark:bg-gray-900 rounded-xl p-5">
+          <h3 className="font-serif text-lg font-semibold text-charcoal dark:text-white mb-4">
+            Practical Snapshot
+          </h3>
+
+          <p className="text-sm text-charcoal dark:text-gray-200 leading-relaxed mb-5">
+            {insights.portrait}
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div
+              className="p-4 rounded-xl border-2 bg-white/60 dark:bg-gray-800/40"
+              style={{ borderColor: primaryColor }}
+            >
+              <div className="text-xs font-semibold uppercase text-charcoal-muted dark:text-gray-400 mb-2">
+                Lead ({primaryCenter}-led)
+              </div>
+              <div className="font-semibold text-charcoal dark:text-white">
+                {insights.lead.label}
+              </div>
+              <p className="text-sm text-charcoal-muted dark:text-gray-300 mt-2 leading-relaxed">
+                You tend to {insights.lead.insight}.
+              </p>
+            </div>
+
+            {insights.supports.map((s) => (
+              <div
+                key={s.type}
+                className="p-4 rounded-xl border border-warm-border dark:border-gray-700 bg-white/60 dark:bg-gray-800/40"
+              >
+                <div className="text-xs font-semibold uppercase text-charcoal-muted dark:text-gray-400 mb-2">
+                  Support
+                </div>
+                <div className="font-semibold text-charcoal dark:text-white">
+                  {s.label}
+                </div>
+                <p className="text-sm text-charcoal-muted dark:text-gray-300 mt-2 leading-relaxed">
+                  You also {s.insight}.
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 space-y-3">
+            <p className="text-sm text-charcoal dark:text-gray-200 leading-relaxed">
+              <span className="font-semibold">Stress loop:</span> {insights.stressLoop}
+            </p>
+            <p className="text-sm text-charcoal dark:text-gray-200 leading-relaxed">
+              <span className="font-semibold">Growth experiment:</span> {insights.growthExperiment}
+            </p>
+            <div>
+              <div className="text-xs font-semibold uppercase text-charcoal-muted dark:text-gray-400 mb-2">
+                Self-check
+              </div>
+              <ul className="space-y-1">
+                {insights.selfChecks.map((q, idx) => (
+                  <li key={idx} className="text-sm text-charcoal-muted dark:text-gray-300 leading-relaxed">
+                    {q}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
 
         {/* Component Types */}
@@ -194,6 +285,99 @@ export function TriFixDetail({
             "{triFix.innerExperience}"
           </p>
         </section>
+
+        {/* Instinctual Subtype Variations */}
+        {triFix.subtypes && (
+          <section className="border-t border-warm-border dark:border-gray-700 pt-6">
+            <h3 className="font-serif text-lg font-semibold text-charcoal dark:text-white mb-4">
+              Instinctual Subtype Variations
+            </h3>
+            <p className="text-sm text-charcoal-muted dark:text-gray-400 mb-4">
+              How this tri-fix expresses differently based on your instinctual drive.
+            </p>
+
+            {/* Subtype Tabs */}
+            <div className="flex gap-2 mb-5">
+              {(['sp', 'so', 'sx'] as InstinctualSubtype[]).map((subtype) => {
+                const colors = SUBTYPE_COLORS[subtype];
+                const isSelected = selectedSubtype === subtype;
+                return (
+                  <button
+                    key={subtype}
+                    onClick={() => setSelectedSubtype(subtype)}
+                    className={`flex-1 px-4 py-3 rounded-xl font-medium text-sm transition-all ${
+                      isSelected
+                        ? 'text-white shadow-md'
+                        : 'bg-cream-100 dark:bg-gray-700 text-charcoal-muted dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-600'
+                    }`}
+                    style={isSelected ? { backgroundColor: colors.bg } : undefined}
+                  >
+                    <span className="block text-xs uppercase tracking-wide mb-0.5">
+                      {subtype.toUpperCase()}
+                    </span>
+                    {colors.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Subtype Content */}
+            {triFix.subtypes[selectedSubtype] && (
+              <div
+                className="rounded-xl p-5 border-2"
+                style={{
+                  backgroundColor: SUBTYPE_COLORS[selectedSubtype].bgLight,
+                  borderColor: SUBTYPE_COLORS[selectedSubtype].bg
+                }}
+              >
+                <h4
+                  className="font-serif text-xl font-bold mb-3"
+                  style={{ color: SUBTYPE_COLORS[selectedSubtype].text }}
+                >
+                  {triFix.subtypes[selectedSubtype].title}
+                </h4>
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-charcoal-muted mb-1">
+                      Core Focus
+                    </div>
+                    <p className="text-charcoal dark:text-gray-800">
+                      {triFix.subtypes[selectedSubtype].focus}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-charcoal-muted mb-1">
+                      Blindspot
+                    </div>
+                    <p className="text-charcoal dark:text-gray-800">
+                      {triFix.subtypes[selectedSubtype].blindspot}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-charcoal-muted mb-1">
+                      In Relationships
+                    </div>
+                    <p className="text-charcoal dark:text-gray-800">
+                      {triFix.subtypes[selectedSubtype].relationships}
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold uppercase text-charcoal-muted mb-1">
+                      Stress Loop
+                    </div>
+                    <p className="text-charcoal dark:text-gray-800">
+                      {triFix.subtypes[selectedSubtype].stressLoop}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Center Integration Insight */}
         <section className="border-t border-warm-border dark:border-gray-700 pt-6">

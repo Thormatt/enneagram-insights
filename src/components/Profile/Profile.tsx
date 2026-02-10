@@ -13,6 +13,9 @@ import {
   getWuWeiPractice
 } from '../../data';
 import { useAppStore } from '../../stores';
+import { useSupabaseSync } from '../../hooks';
+import { AccountSection, AuthModal } from '../Auth';
+import { useAuth } from '../../hooks';
 import type { InstinctType } from '../../types';
 
 type ProfileTab = 'overview' | 'growth' | 'shadow' | 'journal';
@@ -82,6 +85,13 @@ export function Profile() {
   const [userNotes, setUserNotes] = useState(loadUserNotes);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
 
+  // Initialize Supabase sync - this keeps local and cloud profiles in sync
+  useSupabaseSync();
+
+  // Auth state
+  const { user, signOut } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   // Save journal entries to localStorage whenever they change
   useEffect(() => {
     saveJournalEntries(journalEntries);
@@ -123,17 +133,47 @@ export function Profile() {
               </svg>
             </div>
             <h2 className="text-2xl font-serif font-bold text-charcoal dark:text-white mb-4">No Profile Yet</h2>
-            <p className="text-charcoal-light dark:text-gray-400 mb-8">
+            <p className="text-charcoal-light dark:text-gray-400 mb-6">
               Take the Enneagram assessment to discover your type and create your personal profile.
             </p>
-            <button
-              onClick={() => setViewMode('quiz')}
-              className="px-6 py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold rounded-xl shadow-warm hover:shadow-warm-lg transition-all"
-            >
-              Take the Quiz
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setViewMode('quiz')}
+                className="px-6 py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold rounded-xl shadow-warm hover:shadow-warm-lg transition-all"
+              >
+                Take the Quiz
+              </button>
+
+              {/* Auth Section */}
+              {user ? (
+                <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl">
+                  <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-400 mb-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-medium">Signed in</span>
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{user.email}</p>
+                  <button
+                    onClick={() => signOut()}
+                    className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-charcoal dark:text-white font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                >
+                  Sign In to Sync
+                </button>
+              )}
+            </div>
           </div>
         </div>
+
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </div>
     );
   }
@@ -343,6 +383,16 @@ export function Profile() {
                   </div>
                 )}
               </div>
+
+              {/* Account & Sync Section */}
+              <AccountSection
+                localProfile={userProfile ? {
+                  coreType: userProfile.coreType,
+                  wing: userProfile.wing,
+                  instinctStack: userProfile.instinctStack,
+                  tritype: userProfile.tritype,
+                } : null}
+              />
             </motion.div>
           )}
 

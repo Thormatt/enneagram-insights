@@ -13,6 +13,7 @@
     "test:quiz": "vitest run --reporter=verbose src/testing/baseline.test.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.93.3",
     "d3": "^7.9.0",
     "framer-motion": "^11.18.0",
     "html-to-image": "^1.11.13",

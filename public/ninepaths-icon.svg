@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C3A2B"/>
+      <stop offset="50%" stop-color="#2D5A52"/>
+      <stop offset="100%" stop-color="#364C63"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C4785C"/>
+      <stop offset="40%" stop-color="#7D9B84"/>
+      <stop offset="100%" stop-color="#364C63"/>
+    </linearGradient>
+    <radialGradient id="gl" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C4785C" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#C4785C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(60, 60)">
+    <circle cx="0" cy="0" r="56" fill="url(#gl)"/>
+    <circle cx="0" cy="0" r="46" fill="none" stroke="url(#g2)" stroke-width="3" opacity="0.8"/>
+    <polygon points="0,-46 -39.84,23 39.84,23" fill="none" stroke="url(#g1)" stroke-width="2" opacity="0.5"/>
+    <polyline points="26.8,-37.26 26.8,37.26 -43.73,-15.01 43.73,-15.01 -26.8,37.26 -26.8,-37.26 26.8,-37.26" fill="none" stroke="url(#g2)" stroke-width="1.2" opacity="0.35"/>
+    <circle cx="0" cy="-46" r="5.5" fill="#8C3A2B"/>
+    <circle cx="26.8" cy="-37.26" r="5" fill="#9E4A3A"/>
+    <circle cx="43.73" cy="-15.01" r="5" fill="#4A6E5E"/>
+    <circle cx="43.73" cy="15.01" r="5" fill="#2D5A52"/>
+    <circle cx="26.8" cy="37.26" r="5" fill="#2F5B56"/>
+    <circle cx="0" cy="46" r="5" fill="#364C63"/>
+    <circle cx="-26.8" cy="37.26" r="5" fill="#3D5468"/>
+    <circle cx="-43.73" cy="15.01" r="5" fill="#4A5A6A"/>
+    <circle cx="-43.73" cy="-15.01" r="5" fill="#6E3D30"/>
+  </g>
+</svg>

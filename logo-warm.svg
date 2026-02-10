@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Icon: Warm editorial enneagram -->
+  <g transform="translate(60, 60)">
+    <!-- Filled warm circle background -->
+    <circle cx="0" cy="0" r="48" fill="#FAF5F2" stroke="#E8E4DB" stroke-width="1"/>
+
+    <!-- Outer ring - terracotta -->
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#C4785C" stroke-width="2.5" opacity="0.6"/>
+
+    <!-- Inner triangle (3-6-9) -->
+    <polygon points="0,-38 -32.91,19 32.91,19" fill="none" stroke="#C4785C" stroke-width="1.5" opacity="0.35"/>
+
+    <!-- Hexad lines 1-4-2-8-5-7 -->
+    <polyline points="22.17,-30.79 22.17,30.79 -36.12,-12.43 36.12,-12.43 -22.17,30.79 -22.17,-30.79 22.17,-30.79" fill="none" stroke="#C9A962" stroke-width="1" opacity="0.3"/>
+
+    <!-- 9 points as warm dots -->
+    <!-- Gut center - terracotta tones -->
+    <circle cx="0" cy="-40" r="5" fill="#C4785C"/>
+    <circle cx="22.17" cy="-30.79" r="4" fill="#D68B6E"/>
+    <circle cx="-22.17" cy="-30.79" r="4" fill="#D68B6E"/>
+
+    <!-- Heart center - sage tones -->
+    <circle cx="36.12" cy="-12.43" r="4" fill="#7D9B84"/>
+    <circle cx="40" cy="0" r="4" fill="#5F7F66" opacity="0"/>
+    <circle cx="36.12" cy="12.43" r="4" fill="#7D9B84"/>
+    <circle cx="22.17" cy="30.79" r="4" fill="#7D9B84"/>
+
+    <!-- Head center - gold tones -->
+    <circle cx="0" cy="40" r="4" fill="#C9A962" opacity="0"/>
+    <circle cx="-36.12" cy="12.43" r="4" fill="#C9A962"/>
+    <circle cx="-36.12" cy="-12.43" r="4" fill="#C9A962"/>
+
+    <!-- Central accent dot -->
+    <circle cx="0" cy="0" r="2" fill="#C4785C" opacity="0.4"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="122" y="68" font-family="Lora, Georgia, serif" font-weight="600" font-size="40" fill="#2D2A24" letter-spacing="0.5">
+    <tspan fill="#C4785C">nine</tspan><tspan fill="#2D2A24">paths</tspan>
+  </text>
+
+  <!-- Subtle tagline -->
+  <text x="124" y="88" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="11" fill="#8A8578" letter-spacing="2.5">A MAP OF CONSCIOUSNESS</text>
+</svg>

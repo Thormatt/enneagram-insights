@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getCenterColor } from '../../data/core/centers';
 import { CENTERS } from '../../data/tritypes/tritypeDescriptions';
 import type { TypeNumber, PrimaryCenter } from '../../types';
 
 interface TriFixWheelProps {
   size?: number;
-  onComplete: (gut: TypeNumber, heart: TypeNumber, head: TypeNumber) => void;
+  onComplete: (gut: TypeNumber, heart: TypeNumber, head: TypeNumber, primaryCenter: PrimaryCenter, code: string) => void;
   selectedGut?: TypeNumber;
   selectedHeart?: TypeNumber;
   selectedHead?: TypeNumber;
+  selectedPrimaryCenter?: PrimaryCenter;
 }
 
 export function TriFixWheel({
@@ -16,12 +17,44 @@ export function TriFixWheel({
   onComplete,
   selectedGut,
   selectedHeart,
-  selectedHead
+  selectedHead,
+  selectedPrimaryCenter
 }: TriFixWheelProps) {
   const [activeCenter, setActiveCenter] = useState<PrimaryCenter>('gut');
   const [gut, setGut] = useState<TypeNumber | undefined>(selectedGut);
   const [heart, setHeart] = useState<TypeNumber | undefined>(selectedHeart);
   const [head, setHead] = useState<TypeNumber | undefined>(selectedHead);
+  const [primaryCenter, setPrimaryCenter] = useState<PrimaryCenter>(selectedPrimaryCenter ?? 'gut');
+
+  useEffect(() => {
+    setGut(selectedGut);
+  }, [selectedGut]);
+
+  useEffect(() => {
+    setHeart(selectedHeart);
+  }, [selectedHeart]);
+
+  useEffect(() => {
+    setHead(selectedHead);
+  }, [selectedHead]);
+
+  useEffect(() => {
+    setPrimaryCenter(selectedPrimaryCenter ?? 'gut');
+  }, [selectedPrimaryCenter]);
+
+  useEffect(() => {
+    if (!gut) {
+      setActiveCenter('gut');
+      return;
+    }
+    if (!heart) {
+      setActiveCenter('heart');
+      return;
+    }
+    if (!head) {
+      setActiveCenter('head');
+    }
+  }, [gut, heart, head]);
 
   const centerRadius = size * 0.35;
   const typeRadius = size * 0.12;
@@ -65,9 +98,18 @@ export function TriFixWheel({
 
   const isComplete = gut && heart && head;
 
+  const getTritypeCode = () => {
+    if (!gut || !heart || !head) return '';
+    if (primaryCenter === 'gut') return `${gut}${heart}${head}`;
+    if (primaryCenter === 'heart') return `${heart}${gut}${head}`;
+    return `${head}${gut}${heart}`;
+  };
+
+  const tritypeCode = getTritypeCode();
+
   const handleComplete = () => {
     if (gut && heart && head) {
-      onComplete(gut, heart, head);
+      onComplete(gut, heart, head, primaryCenter, tritypeCode);
     }
   };
 
@@ -76,6 +118,7 @@ export function TriFixWheel({
     setHeart(undefined);
     setHead(undefined);
     setActiveCenter('gut');
+    setPrimaryCenter('gut');
   };
 
   const centerLabels: Record<PrimaryCenter, string> = {
@@ -119,7 +162,7 @@ export function TriFixWheel({
 
       {/* Instruction */}
       <p className="text-sm text-charcoal-muted dark:text-gray-400">
-        {isComplete ? 'Your tri-fix is complete!' : centerLabels[activeCenter]}
+        {isComplete ? 'Choose your primary center to set the order.' : centerLabels[activeCenter]}
       </p>
 
       {/* SVG Wheel */}
@@ -200,9 +243,30 @@ export function TriFixWheel({
           dominantBaseline="central"
           className="fill-charcoal dark:fill-white text-xs font-semibold uppercase"
         >
-          {isComplete ? `${gut}${heart}${head}` : activeCenter.toUpperCase()}
+          {isComplete ? tritypeCode : activeCenter.toUpperCase()}
         </text>
       </svg>
+
+      {/* Primary center selection */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <span className="text-xs uppercase tracking-wide text-charcoal-muted dark:text-gray-500">
+          Primary
+        </span>
+        {centers.map(({ center }) => (
+          <button
+            key={center}
+            onClick={() => setPrimaryCenter(center)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+              primaryCenter === center
+                ? 'text-white shadow-warm'
+                : 'bg-cream-100 dark:bg-gray-800 text-charcoal-light dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-700'
+            }`}
+            style={primaryCenter === center ? { backgroundColor: getCenterColor(center) } : undefined}
+          >
+            {center === 'gut' ? 'Gut-led' : center === 'heart' ? 'Heart-led' : 'Head-led'}
+          </button>
+        ))}
+      </div>
 
       {/* Action buttons */}
       <div className="flex items-center gap-3">
@@ -217,7 +281,7 @@ export function TriFixWheel({
             onClick={handleComplete}
             className="px-6 py-2 bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium rounded-full shadow-warm transition-all duration-150"
           >
-            Explore {gut}{heart}{head}
+            Explore {tritypeCode}
           </button>
         )}
       </div>

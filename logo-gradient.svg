@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600&amp;display=swap');
+    </style>
+
+    <!-- Gradient flowing through all three center colors -->
+    <linearGradient id="triGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C3A2B"/>
+      <stop offset="50%" stop-color="#2D5A52"/>
+      <stop offset="100%" stop-color="#364C63"/>
+    </linearGradient>
+
+    <linearGradient id="triGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C4785C"/>
+      <stop offset="40%" stop-color="#7D9B84"/>
+      <stop offset="100%" stop-color="#364C63"/>
+    </linearGradient>
+
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8C3A2B"/>
+      <stop offset="50%" stop-color="#2D5A52"/>
+      <stop offset="100%" stop-color="#364C63"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C4785C" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#C4785C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Icon: Gradient modern enneagram -->
+  <g transform="translate(60, 60)">
+    <!-- Soft glow -->
+    <circle cx="0" cy="0" r="52" fill="url(#glow)"/>
+
+    <!-- Outer circle with gradient -->
+    <circle cx="0" cy="0" r="44" fill="none" stroke="url(#triGrad2)" stroke-width="3" opacity="0.8"/>
+
+    <!-- Inner triangle (3-6-9) -->
+    <polygon points="0,-44 -38.1,22 38.1,22" fill="none" stroke="url(#triGrad)" stroke-width="2" opacity="0.5"/>
+
+    <!-- Hexad 1-4-2-8-5-7 -->
+    <polyline points="25.63,-35.63 25.63,35.63 -41.81,-14.36 41.81,-14.36 -25.63,35.63 -25.63,-35.63 25.63,-35.63" fill="none" stroke="url(#triGrad2)" stroke-width="1.2" opacity="0.35"/>
+
+    <!-- 9 gradient-colored dots -->
+    <!-- Type 9 -->
+    <circle cx="0" cy="-44" r="5" fill="#8C3A2B"/>
+    <!-- Type 1 -->
+    <circle cx="25.63" cy="-35.63" r="4.5" fill="#9E4A3A"/>
+    <!-- Type 2 -->
+    <circle cx="41.81" cy="-14.36" r="4.5" fill="#4A6E5E"/>
+    <!-- Type 3 -->
+    <circle cx="41.81" cy="14.36" r="4.5" fill="#2D5A52"/>
+    <!-- Type 4 -->
+    <circle cx="25.63" cy="35.63" r="4.5" fill="#2F5B56"/>
+    <!-- Type 5 -->
+    <circle cx="0" cy="44" r="4.5" fill="#364C63"/>
+    <!-- Type 6 -->
+    <circle cx="-25.63" cy="35.63" r="4.5" fill="#3D5468"/>
+    <!-- Type 7 -->
+    <circle cx="-41.81" cy="14.36" r="4.5" fill="#4A5A6A"/>
+    <!-- Type 8 -->
+    <circle cx="-41.81" cy="-14.36" r="4.5" fill="#6E3D30"/>
+  </g>
+
+  <!-- Wordmark with gradient -->
+  <text x="125" y="66" font-family="Lora, Georgia, serif" font-weight="600" font-size="42" fill="url(#textGrad)" letter-spacing="-0.5">ninepaths</text>
+
+  <!-- Subtle dot separator + tagline -->
+  <text x="127" y="87" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="11" fill="#8A8578" letter-spacing="2">NINE PATTERNS. ONE ESSENCE.</text>
+</svg>

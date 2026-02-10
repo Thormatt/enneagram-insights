@@ -1,4 +1,5 @@
 import { getCenterColor } from '../../data/core/centers';
+import { getTritypeInsights } from '../../data/tritypes/tritypeInsights';
 import type { TypeNumber, PrimaryCenter } from '../../types';
 import type { TriFixInfo } from '../../data/tritypes/tritypeDescriptions';
 
@@ -23,6 +24,19 @@ export function TriFixComparison({
   onClose,
   onSwap
 }: TriFixComparisonProps) {
+  const insights1 = getTritypeInsights({
+    gutType: triFix1.gutType,
+    heartType: triFix1.heartType,
+    headType: triFix1.headType,
+    primaryCenter: triFix1.primaryCenter
+  });
+  const insights2 = getTritypeInsights({
+    gutType: triFix2.gutType,
+    heartType: triFix2.heartType,
+    headType: triFix2.headType,
+    primaryCenter: triFix2.primaryCenter
+  });
+
   const sharedTypes: TypeNumber[] = [];
   const types1 = [triFix1.gutType, triFix1.heartType, triFix1.headType];
   const types2 = [triFix2.gutType, triFix2.heartType, triFix2.headType];
@@ -265,6 +279,49 @@ export function TriFixComparison({
                   {triFix2.primaryCenter === 'gut' ? 'Instinct-first' : triFix2.primaryCenter === 'heart' ? 'Emotion-first' : 'Mind-first'}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Practical Snapshot */}
+        <div className="border-t border-warm-border dark:border-gray-700 pt-6 mt-6">
+          <h4 className="font-serif font-semibold text-charcoal dark:text-white mb-3">
+            Practical Snapshot
+          </h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-cream-50 dark:bg-gray-900 rounded-xl p-4">
+              <span
+                className="text-xs font-semibold uppercase block mb-2"
+                style={{ color: getCenterColor(triFix1.primaryCenter) }}
+              >
+                {triFix1.triFix.code} {triFix1.primaryCenter}-led
+              </span>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed mb-3">
+                {insights1.portrait}
+              </p>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed">
+                <span className="font-semibold">Stress loop:</span> {insights1.stressLoop}
+              </p>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed mt-2">
+                <span className="font-semibold">Growth experiment:</span> {insights1.growthExperiment}
+              </p>
+            </div>
+            <div className="bg-cream-50 dark:bg-gray-900 rounded-xl p-4">
+              <span
+                className="text-xs font-semibold uppercase block mb-2"
+                style={{ color: getCenterColor(triFix2.primaryCenter) }}
+              >
+                {triFix2.triFix.code} {triFix2.primaryCenter}-led
+              </span>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed mb-3">
+                {insights2.portrait}
+              </p>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed">
+                <span className="font-semibold">Stress loop:</span> {insights2.stressLoop}
+              </p>
+              <p className="text-sm text-charcoal dark:text-gray-300 leading-relaxed mt-2">
+                <span className="font-semibold">Growth experiment:</span> {insights2.growthExperiment}
+              </p>
             </div>
           </div>
         </div>

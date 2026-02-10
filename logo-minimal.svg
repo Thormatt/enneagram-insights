@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:wght@500&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Icon: Minimal geometric enneagram -->
+  <g transform="translate(60, 60)">
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="44" fill="none" stroke="#2D2A24" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- Three colored arcs for the three centers -->
+    <!-- Gut arc (types 8,9,1 = top) -->
+    <path d="M 0,-44 A 44,44 0 0,1 36.22,24.89" fill="none" stroke="#8C3A2B" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Heart arc (types 2,3,4) -->
+    <path d="M 36.22,24.89 A 44,44 0 0,1 -36.22,24.89" fill="none" stroke="#2D5A52" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Head arc (types 5,6,7) -->
+    <path d="M -36.22,24.89 A 44,44 0 0,1 0,-44" fill="none" stroke="#364C63" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+    <!-- 9 dots -->
+    <!-- Type 9 (top) - gut -->
+    <circle cx="0" cy="-44" r="3.5" fill="#8C3A2B"/>
+    <!-- Type 1 - gut -->
+    <circle cx="25.63" cy="-35.63" r="3.5" fill="#8C3A2B"/>
+    <!-- Type 8 - gut -->
+    <circle cx="-25.63" cy="-35.63" r="3.5" fill="#8C3A2B"/>
+
+    <!-- Type 2 - heart -->
+    <circle cx="41.81" cy="-14.36" r="3.5" fill="#2D5A52"/>
+    <!-- Type 3 - heart -->
+    <circle cx="41.81" cy="14.36" r="3.5" fill="#2D5A52"/>
+    <!-- Type 4 - heart -->
+    <circle cx="25.63" cy="35.63" r="3.5" fill="#2D5A52"/>
+
+    <!-- Type 5 - head -->
+    <circle cx="0" cy="44" r="3" fill="#364C63"/>
+    <!-- Type 6 - head -->
+    <circle cx="-41.81" cy="14.36" r="3.5" fill="#364C63"/>
+    <!-- Type 7 - head -->
+    <circle cx="-41.81" cy="-14.36" r="3.5" fill="#364C63"/>
+
+    <!-- Inner triangle (3-6-9) - very subtle -->
+    <polygon points="0,-44 -41.81,14.36 41.81,14.36" fill="none" stroke="#2D2A24" stroke-width="0.75" opacity="0.15"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="125" y="70" font-family="Lora, Georgia, serif" font-weight="500" font-size="42" fill="#2D2A24" letter-spacing="-0.5">ninepaths</text>
+</svg>

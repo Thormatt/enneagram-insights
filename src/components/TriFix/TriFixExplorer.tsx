@@ -25,23 +25,16 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
   const [showDetail, setShowDetail] = useState(false);
   const userProfile = useAppStore((state) => state.userProfile);
   const updateUserProfile = useAppStore((state) => state.updateUserProfile);
+  const compareSelectedCodes = [compareTriFix1?.code, compareTriFix2?.code].filter(
+    (code): code is string => Boolean(code)
+  );
 
-  const determinePrimaryCenter = (gut: TypeNumber): PrimaryCenter => {
-    // For simplicity, we'll use the gut type to determine primary center
-    // In reality, this should come from user selection or quiz results
-    if ([8, 9, 1].includes(gut)) return 'gut';
-    return 'gut'; // Default to gut-led
-  };
-
-  const handleSelectTriFix = useCallback((code: string, gut: TypeNumber, heart: TypeNumber, head: TypeNumber) => {
-    const primaryCenter = determinePrimaryCenter(gut);
+  const handleSelectTriFix = useCallback((code: string, gut: TypeNumber, heart: TypeNumber, head: TypeNumber, primaryCenter: PrimaryCenter) => {
     setSelectedTriFix({ code, gut, heart, head, primaryCenter });
     setShowDetail(true);
   }, []);
 
-  const handleWheelComplete = useCallback((gut: TypeNumber, heart: TypeNumber, head: TypeNumber) => {
-    const code = `${gut}${heart}${head}`;
-    const primaryCenter = determinePrimaryCenter(gut);
+  const handleWheelComplete = useCallback((gut: TypeNumber, heart: TypeNumber, head: TypeNumber, primaryCenter: PrimaryCenter, code: string) => {
     setSelectedTriFix({ code, gut, heart, head, primaryCenter });
     setShowDetail(true);
   }, []);
@@ -49,13 +42,13 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
   const handleStartCompare = useCallback(() => {
     if (selectedTriFix) {
       setCompareTriFix1(selectedTriFix);
+      setCompareTriFix2(null);
       setShowDetail(false);
-      setActiveTab('grid');
+      setActiveTab('compare');
     }
   }, [selectedTriFix]);
 
-  const handleSelectForCompare = useCallback((code: string, gut: TypeNumber, heart: TypeNumber, head: TypeNumber) => {
-    const primaryCenter = determinePrimaryCenter(gut);
+  const handleSelectForCompare = useCallback((code: string, gut: TypeNumber, heart: TypeNumber, head: TypeNumber, primaryCenter: PrimaryCenter) => {
     const triFix = { code, gut, heart, head, primaryCenter };
 
     if (!compareTriFix1) {
@@ -189,7 +182,7 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
         {activeTab === 'grid' && !showDetail && (
           <TriFixGrid
             onSelect={handleSelectTriFix}
-            selectedCode={selectedTriFix?.code}
+            selectedCodes={selectedTriFix ? [selectedTriFix.code] : []}
           />
         )}
 
@@ -209,6 +202,7 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
                 selectedGut={selectedTriFix?.gut}
                 selectedHeart={selectedTriFix?.heart}
                 selectedHead={selectedTriFix?.head}
+                selectedPrimaryCenter={selectedTriFix?.primaryCenter}
               />
             </div>
           </div>
@@ -220,14 +214,14 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
             {compareTriFix1 && compareTriFix2 ? (
               <TriFixComparison
                 triFix1={{
-                  triFix: triFixDescriptions[getTriFixKey(compareTriFix1.gut, compareTriFix1.heart, compareTriFix1.head)],
+                  triFix: triFixDescriptions[getTriFixKey(compareTriFix1.gut, compareTriFix1.heart, compareTriFix1.head, compareTriFix1.primaryCenter)],
                   gutType: compareTriFix1.gut,
                   heartType: compareTriFix1.heart,
                   headType: compareTriFix1.head,
                   primaryCenter: compareTriFix1.primaryCenter
                 }}
                 triFix2={{
-                  triFix: triFixDescriptions[getTriFixKey(compareTriFix2.gut, compareTriFix2.heart, compareTriFix2.head)],
+                  triFix: triFixDescriptions[getTriFixKey(compareTriFix2.gut, compareTriFix2.heart, compareTriFix2.head, compareTriFix2.primaryCenter)],
                   gutType: compareTriFix2.gut,
                   heartType: compareTriFix2.heart,
                   headType: compareTriFix2.head,
@@ -268,7 +262,7 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
 
                 <TriFixGrid
                   onSelect={handleSelectForCompare}
-                  selectedCode={compareTriFix1?.code || compareTriFix2?.code}
+                  selectedCodes={compareSelectedCodes}
                 />
               </div>
             )}
@@ -279,7 +273,7 @@ export function TriFixExplorer({ onClose }: { onClose?: () => void }) {
         {showDetail && selectedTriFix && (
           <div className="max-w-3xl mx-auto">
             <TriFixDetail
-              triFix={triFixDescriptions[getTriFixKey(selectedTriFix.gut, selectedTriFix.heart, selectedTriFix.head)]}
+              triFix={triFixDescriptions[getTriFixKey(selectedTriFix.gut, selectedTriFix.heart, selectedTriFix.head, selectedTriFix.primaryCenter)]}
               gutType={selectedTriFix.gut}
               heartType={selectedTriFix.heart}
               headType={selectedTriFix.head}
