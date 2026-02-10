@@ -1,10 +1,13 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.tsx'
 import ImageGenerator from './views/ImageGenerator.tsx'
+import { AuthCallback } from './components/Auth/AuthCallback.tsx'
+
+const LandingPage = lazy(() => import('./views/LandingPage.tsx'))
 
 // Register service worker for offline support
 registerSW({
@@ -21,8 +24,18 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={null}>
+              <LandingPage />
+            </Suspense>
+          }
+        />
+        <Route path="/app/*" element={<App />} />
         <Route path="/generator" element={<ImageGenerator />} />
-        <Route path="*" element={<App />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
