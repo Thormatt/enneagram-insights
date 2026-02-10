@@ -5,8 +5,6 @@ import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import App from './App.tsx'
 import ImageGenerator from './views/ImageGenerator.tsx'
-import { AuthCallback } from './components/Auth/AuthCallback.tsx'
-
 const LandingPage = lazy(() => import('./views/LandingPage.tsx'))
 
 // Register service worker for offline support
@@ -34,7 +32,6 @@ createRoot(document.getElementById('root')!).render(
         />
         <Route path="/app/*" element={<App />} />
         <Route path="/generator" element={<ImageGenerator />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
