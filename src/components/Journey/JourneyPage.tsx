@@ -183,10 +183,22 @@ export function JourneyPage({ onClose }: JourneyPageProps) {
           </section>
 
           {/* Closing */}
-          <section className="text-center pt-8 border-t border-warm-border dark:border-gray-700">
+          <section className="text-center pt-8 border-t border-warm-border dark:border-gray-700 space-y-8">
             <blockquote className="text-xl sm:text-2xl font-serif italic text-charcoal dark:text-gray-200 max-w-xl mx-auto">
               "The goal is not to become a better prisoner, but to realize the door was never locked."
             </blockquote>
+
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-base transition-colors shadow-warm"
+              >
+                Continue
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            )}
           </section>
         </motion.article>
       </main>
