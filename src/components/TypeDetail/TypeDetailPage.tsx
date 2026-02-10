@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeToggle } from '../Layout/ThemeToggle';
+import { MOTION_DURATION } from '../../lib/motion';
 import {
   getTypeByNumber,
   getCenterColor,
@@ -115,7 +116,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
   return (
     <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors overflow-x-hidden">
       {/* Combined Header */}
-      <header className="sticky top-0 z-10 border-b border-warm-border dark:border-gray-700" style={{ backgroundColor: color }}>
+      <header className="sticky top-0 z-20 border-b border-warm-border dark:border-gray-700" style={{ backgroundColor: color }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           {/* Top row: navigation and actions */}
           <div className="flex items-center justify-between h-14 gap-2">
@@ -244,7 +245,7 @@ export function TypeDetailPage({ typeNumber, onNavigate, onClose }: TypeDetailPa
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.1 }}
+            transition={{ duration: MOTION_DURATION.fast }}
           >
             {activeSection === 'core' && (
               <CoreSection

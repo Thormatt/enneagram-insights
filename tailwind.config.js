@@ -24,6 +24,7 @@ export default {
         },
         charcoal: {
           DEFAULT: '#2D2A24',
+          dark: '#1F1C17',
           light: '#5C584E',
           muted: '#8A8578',
         },
@@ -105,6 +106,19 @@ export default {
           800: '#212D3A',
           900: '#19232D',
           light: '#A3B5CC', // For dark mode
+        },
+        // Alias for existing components using "storm" tokens
+        storm: {
+          50: '#F5F7F9',
+          100: '#E8ECF0',
+          200: '#CDD5DE',
+          300: '#A9B8C7',
+          400: '#7C92A8',
+          500: '#364C63',
+          600: '#2F4256',
+          700: '#283848',
+          800: '#212D3A',
+          900: '#19232D',
         },
       },
       fontFamily: {

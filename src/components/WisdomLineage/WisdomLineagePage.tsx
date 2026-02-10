@@ -24,8 +24,8 @@ const VERIFICATION_CONFIG: Record<HistoricalStatus, {
     label: 'Historically Verified',
     shortLabel: 'Verified',
     color: '#22c55e',
-    bgColor: 'bg-green-900/50',
-    borderColor: 'border-green-700',
+    bgColor: 'bg-sage-900/50',
+    borderColor: 'border-sage-700',
     lineStyle: 'solid',
     icon: '✓',
   },
@@ -33,8 +33,8 @@ const VERIFICATION_CONFIG: Record<HistoricalStatus, {
     label: 'Historically Plausible',
     shortLabel: 'Plausible',
     color: '#f59e0b',
-    bgColor: 'bg-amber-900/50',
-    borderColor: 'border-amber-700',
+    bgColor: 'bg-gold-900/50',
+    borderColor: 'border-gold-700',
     lineStyle: 'dashed',
     icon: '~',
   },
@@ -42,8 +42,8 @@ const VERIFICATION_CONFIG: Record<HistoricalStatus, {
     label: 'Modern Synthesis',
     shortLabel: 'Modern',
     color: '#a855f7',
-    bgColor: 'bg-purple-900/50',
-    borderColor: 'border-purple-700',
+    bgColor: 'bg-head-900/50',
+    borderColor: 'border-head-700',
     lineStyle: 'dotted',
     icon: '◆',
   },
@@ -51,8 +51,8 @@ const VERIFICATION_CONFIG: Record<HistoricalStatus, {
     label: 'Modern Insight',
     shortLabel: 'Insight',
     color: '#06b6d4',
-    bgColor: 'bg-cyan-900/50',
-    borderColor: 'border-cyan-700',
+    bgColor: 'bg-head-900/50',
+    borderColor: 'border-head-700',
     lineStyle: 'dotted',
     icon: '◇',
   },
@@ -184,14 +184,14 @@ export function WisdomLineagePage({ onClose }: WisdomLineagePageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-gray-900/95 backdrop-blur border-b border-amber-800/30">
+      <header className="sticky top-0 z-20 bg-gray-900/95 backdrop-blur border-b border-gold-800/30">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-600/30 to-emerald-700/30 flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sage-600/30 to-sage-700/30 flex items-center justify-center">
+                <svg className="w-6 h-6 text-sage-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-6m0 0c-2.5-2-4-4.5-4-7a4 4 0 118 0c0 2.5-1.5 5-4 7z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c1.5-1.5 2-3 2-4.5a2 2 0 10-4 0c0 1.5.5 3 2 4.5z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.5 10c-1.5-.5-3-.5-4.5 0a2 2 0 102 3.5c1-1 2-2 2.5-3.5z" />
@@ -200,7 +200,7 @@ export function WisdomLineagePage({ onClose }: WisdomLineagePageProps) {
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-white">The Wisdom Lineage</h1>
-                <p className="text-xs text-amber-400/70">Streams of awakening through time</p>
+                <p className="text-xs text-gold-400/70">Streams of awakening through time</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -210,7 +210,7 @@ export function WisdomLineagePage({ onClose }: WisdomLineagePageProps) {
                   onClick={() => setViewMode('timeline')}
                   className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                     viewMode === 'timeline'
-                      ? 'bg-amber-600 text-white'
+                      ? 'bg-gold-600 text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
@@ -220,7 +220,7 @@ export function WisdomLineagePage({ onClose }: WisdomLineagePageProps) {
                   onClick={() => setViewMode('tree')}
                   className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                     viewMode === 'tree'
-                      ? 'bg-amber-600 text-white'
+                      ? 'bg-gold-600 text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
@@ -247,7 +247,7 @@ export function WisdomLineagePage({ onClose }: WisdomLineagePageProps) {
       <div className="max-w-4xl mx-auto px-4 py-8 text-center">
         <p className="text-lg text-gray-300 leading-relaxed">
           These traditions are not all branches of one tree. They're more like{' '}
-          <span className="text-amber-400">different wells that all hit water</span>.
+          <span className="text-gold-400">different wells that all hit water</span>.
           Some are directly connected; others arrived at similar insights independently.
           Click any tradition to explore its teachings and connections.
         </p>
@@ -313,7 +313,7 @@ function TimelineView({ traditionsByEra, selectedTradition, onSelect }: Timeline
   return (
     <div className="relative">
       {/* Central timeline line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-600/50 via-amber-500/30 to-purple-600/50 -translate-x-1/2" />
+      <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold-600/50 via-gold-500/30 to-head-600/50 -translate-x-1/2" />
 
       {traditionsByEra.map((era) => (
         <div key={era.label} className="relative mb-16">
@@ -341,7 +341,7 @@ function TimelineView({ traditionsByEra, selectedTradition, onSelect }: Timeline
                   onClick={() => onSelect(tradition.id)}
                   className={`relative p-5 rounded-xl border text-left transition-all ${
                     selectedTradition === tradition.id
-                      ? 'bg-gray-800 border-amber-500 shadow-lg shadow-amber-500/20'
+                      ? 'bg-gray-800 border-gold-500 shadow-lg shadow-gold-500/20'
                       : 'bg-gray-800/50 border-gray-700 hover:border-gray-600 hover:bg-gray-800'
                   } ${i % 2 === 0 ? 'md:mr-8' : 'md:ml-8'}`}
                   style={{
@@ -385,7 +385,7 @@ function TimelineView({ traditionsByEra, selectedTradition, onSelect }: Timeline
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full ${
                           tradition.enneagramConnection.strength === 'direct'
-                            ? 'bg-green-900/50 text-green-400'
+                            ? 'bg-sage-900/50 text-sage-400'
                             : tradition.enneagramConnection.strength === 'strong'
                             ? 'bg-blue-900/50 text-blue-400'
                             : tradition.enneagramConnection.strength === 'moderate'
@@ -463,12 +463,12 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
   return (
     <div className="space-y-8">
       {/* Direct Enneagram lineage highlight */}
-      <div className="p-6 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-xl border border-green-700/50">
-        <h3 className="text-lg font-semibold text-green-300 mb-2">The Direct Enneagram Lineage</h3>
+      <div className="p-6 bg-gradient-to-r from-sage-900/30 to-sage-900/30 rounded-xl border border-sage-700/50">
+        <h3 className="text-lg font-semibold text-sage-300 mb-2">The Direct Enneagram Lineage</h3>
         <p className="text-gray-300 text-sm mb-2">
           The historically traceable path to the modern Enneagram:
         </p>
-        <p className="text-amber-400/80 text-xs mb-4 italic">
+        <p className="text-gold-400/80 text-xs mb-4 italic">
           Note: Sufi influence on Gurdjieff is plausible but debated. Ichazo created the personality system in the 1960s.
         </p>
         <div className="flex items-center justify-center gap-2 flex-wrap">
@@ -483,8 +483,8 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
                     onClick={() => onSelect(id)}
                     className={`px-4 py-2 rounded-lg border transition-all flex items-center gap-2 ${
                       selectedTradition === id
-                        ? 'bg-green-600 border-green-500 text-white'
-                        : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-green-600'
+                        ? 'bg-sage-600 border-sage-500 text-white'
+                        : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-sage-600'
                     }`}
                     style={{
                       borderLeftWidth: '3px',
@@ -512,12 +512,12 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
               </div>
             );
           })}
-          <span className="text-purple-500 text-xl mx-1">→</span>
+          <span className="text-head-500 text-xl mx-1">→</span>
           <div className="flex flex-col items-center gap-1">
-            <span className="px-4 py-2 bg-purple-600 rounded-lg text-white font-medium">
+            <span className="px-4 py-2 bg-head-600 rounded-lg text-white font-medium">
               Modern Enneagram
             </span>
-            <span className="text-xs text-purple-400">20th Century</span>
+            <span className="text-xs text-head-400">20th Century</span>
           </div>
         </div>
       </div>
@@ -558,7 +558,7 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
                       onClick={() => onSelect(tradId)}
                       className={`relative w-full p-3 rounded-lg border text-left transition-all flex items-center gap-3 ${
                         selectedTradition === tradId
-                          ? 'border-amber-500 bg-gray-800 shadow-lg'
+                          ? 'border-gold-500 bg-gray-800 shadow-lg'
                           : 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-800'
                       }`}
                       style={{
@@ -633,8 +633,8 @@ function TreeView({ traditions, selectedTradition, onSelect }: TreeViewProps) {
           <svg className="w-6 h-6 text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
-          <div className="px-6 py-3 bg-gradient-to-r from-amber-900/50 to-purple-900/50 rounded-xl border border-amber-600/50">
-            <div className="text-amber-300 font-semibold">The Modern Synthesis</div>
+          <div className="px-6 py-3 bg-gradient-to-r from-gold-900/50 to-head-900/50 rounded-xl border border-gold-600/50">
+            <div className="text-gold-300 font-semibold">The Modern Synthesis</div>
             <div className="text-gray-400 text-sm mt-1">Different wells, same water</div>
           </div>
         </div>
@@ -813,7 +813,7 @@ function TraditionDetailPanel({
                 <div className="space-y-3">
                   {tradition.keyFigures.map((figure, i) => (
                     <div key={i} className="flex gap-3">
-                      <span className="text-amber-400 font-medium">{figure.name}</span>
+                      <span className="text-gold-400 font-medium">{figure.name}</span>
                       <span className="text-gray-400">— {figure.contribution}</span>
                     </div>
                   ))}
@@ -850,7 +850,7 @@ function TraditionDetailPanel({
                 <ul className="space-y-2">
                   {tradition.practices.map((practice, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500 mt-2 flex-shrink-0" />
                       {practice}
                     </li>
                   ))}
@@ -902,7 +902,7 @@ function TraditionDetailPanel({
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     tradition.enneagramConnection.strength === 'direct'
-                      ? 'bg-green-900/50 text-green-400'
+                      ? 'bg-sage-900/50 text-sage-400'
                       : tradition.enneagramConnection.strength === 'strong'
                       ? 'bg-blue-900/50 text-blue-400'
                       : tradition.enneagramConnection.strength === 'moderate'
@@ -925,7 +925,7 @@ function TraditionDetailPanel({
                 <ul className="space-y-2">
                   {tradition.enneagramConnection.sharedConcepts.map((concept, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-sage-500 mt-2 flex-shrink-0" />
                       {concept}
                     </li>
                   ))}
@@ -936,7 +936,7 @@ function TraditionDetailPanel({
                 <ul className="space-y-2">
                   {tradition.enneagramConnection.differences.map((diff, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500 mt-2 flex-shrink-0" />
                       {diff}
                     </li>
                   ))}
@@ -954,7 +954,7 @@ function TraditionDetailPanel({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h4 className="text-sm font-medium text-amber-400 uppercase tracking-wider mb-3">{title}</h4>
+      <h4 className="text-sm font-medium text-gold-400 uppercase tracking-wider mb-3">{title}</h4>
       {children}
     </div>
   );

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { MOTION_DURATION } from '../../lib/motion';
 
 interface LayoutProps {
   children: ReactNode;
@@ -35,7 +36,7 @@ export function Layout({ children }: LayoutProps) {
                 initial={{ x: -280 }}
                 animate={{ x: 0 }}
                 exit={{ x: -280 }}
-                transition={{ type: 'tween', duration: 0.1 }}
+                transition={{ type: 'tween', duration: MOTION_DURATION.fast }}
                 className="fixed left-0 top-0 bottom-0 z-50 lg:hidden"
               >
                 <div className="h-full flex flex-col">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../stores';
+import { MOTION_DURATION } from '../../lib/motion';
 import {
   enneagramTypes,
   getCenterColor,
@@ -35,7 +36,7 @@ export function Diagrams({ width = 600, height = 500 }: DiagramsProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.1 }}
+          transition={{ duration: MOTION_DURATION.fast }}
           className="w-full flex justify-center"
         >
           {diagramType === 'centers' && (

@@ -90,10 +90,10 @@ export function AdaptiveQuiz({ onComplete, onClose }: AdaptiveQuizProps) {
   }, [state, progress]);
 
   return (
-    <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cream-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-charcoal dark:bg-gray-900 border-b border-charcoal-light/20 dark:border-gray-700 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="bg-charcoal/95 dark:bg-gray-900/95 border-b border-charcoal-light/20 dark:border-gray-700 sticky top-0 z-20 backdrop-blur-sm">
+        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-xl font-serif font-bold text-white">
               Adaptive Assessment

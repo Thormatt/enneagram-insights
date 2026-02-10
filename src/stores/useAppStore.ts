@@ -34,6 +34,7 @@ interface AppState {
   // Onboarding state
   hasCompletedOnboarding: boolean;
   userExperienceLevel: UserExperienceLevel;
+  hasSeenJourney: boolean;
 
   // Actions
   setViewMode: (mode: ViewMode) => void;
@@ -49,6 +50,7 @@ interface AppState {
   updateUserProfile: (updates: Partial<UserProfile>) => void;
   addSavedComparison: (type1: TypeNumber, type2: TypeNumber) => void;
   removeSavedComparison: (type1: TypeNumber, type2: TypeNumber) => void;
+  markJourneySeen: () => void;
   completeOnboarding: (experienceLevel: 'new' | 'familiar') => void;
   clearSelection: () => void;
 }
@@ -68,6 +70,7 @@ export const useAppStore = create<AppState>()(
       userProfile: null,
       hasCompletedOnboarding: true,
       userExperienceLevel: null,
+      hasSeenJourney: false,
 
       // Actions
       setViewMode: (mode) => set({ viewMode: mode }),
@@ -153,6 +156,8 @@ export const useAppStore = create<AppState>()(
         }
       },
 
+      markJourneySeen: () => set({ hasSeenJourney: true }),
+
       completeOnboarding: (experienceLevel) => set({
         hasCompletedOnboarding: true,
         userExperienceLevel: experienceLevel
@@ -173,7 +178,8 @@ export const useAppStore = create<AppState>()(
         userProfile: state.userProfile,
         theme: state.theme,
         hasCompletedOnboarding: state.hasCompletedOnboarding,
-        userExperienceLevel: state.userExperienceLevel
+        userExperienceLevel: state.userExperienceLevel,
+        hasSeenJourney: state.hasSeenJourney
       })
     }
   )

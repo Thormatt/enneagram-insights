@@ -18,6 +18,7 @@ import {
   getObjectRelationsByType
 } from '../../data';
 import { useAppStore } from '../../stores';
+import { MOTION_DURATION } from '../../lib/motion';
 import type { TypeNumber, Subtype } from '../../types';
 
 interface TypeCardProps {
@@ -170,7 +171,7 @@ export function TypeCard({ typeNumber }: TypeCardProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.1 }}
+            transition={{ duration: MOTION_DURATION.fast }}
           >
             {activeTab === 'core' && (
               <div className="space-y-6">

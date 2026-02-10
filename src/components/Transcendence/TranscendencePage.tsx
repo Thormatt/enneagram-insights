@@ -38,13 +38,13 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
   }, [activeSection]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-950 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-head-900 to-gray-900">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-900 border-b border-purple-800/50">
+      <div className="sticky top-0 z-20 bg-gray-900/95 backdrop-blur-sm border-b border-head-800/50">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-4">
-              <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
+              <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-terracotta-400 to-head-400">
                 ∅
               </span>
               <h1 className="text-xl font-semibold text-white">Beyond Type</h1>
@@ -71,15 +71,15 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
         <div className="max-w-4xl mx-auto text-center">
           <div>
             <div className="w-32 h-32 mx-auto mb-8 relative">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 opacity-20" />
-              <div className="relative w-full h-full rounded-full border-2 border-purple-400/50 flex items-center justify-center bg-gray-900">
-                <span className="text-6xl font-light text-purple-300">0</span>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-terracotta-500 to-head-500 opacity-20" />
+              <div className="relative w-full h-full rounded-full border-2 border-terracotta-400/50 flex items-center justify-center bg-gray-900">
+                <span className="text-6xl font-light text-terracotta-300">0</span>
               </div>
             </div>
             <h2 className="text-4xl font-bold text-white mb-4">
               Return to Essence
             </h2>
-            <p className="text-xl text-purple-200/80 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl text-terracotta-200/80 leading-relaxed max-w-2xl mx-auto">
               Your type is not who you ARE—it's your pattern of forgetting who you are.
               The Enneagram is a map of return to wholeness.
             </p>
@@ -88,7 +88,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
       </div>
 
       {/* Section Navigation */}
-      <div className="sticky top-16 z-10 bg-gray-900 border-b border-purple-800/50">
+      <div className="sticky top-14 z-10 bg-gray-900/95 backdrop-blur-sm border-b border-head-800/50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex overflow-x-auto py-2 gap-1">
             {sections.map(section => (
@@ -97,8 +97,8 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                 onClick={() => setActiveSection(section.id)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors min-h-[44px] ${
                   activeSection === section.id
-                    ? 'bg-purple-600 text-white'
-                    : 'text-purple-300 hover:bg-white/10'
+                    ? 'bg-terracotta-600 text-white'
+                    : 'text-terracotta-300 hover:bg-white/10'
                 }`}
               >
                 <span className="mr-2">{section.icon}</span>
@@ -124,7 +124,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {typeZero.signsOfAwakening.map((sign, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-2 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-terracotta-400 mt-2 flex-shrink-0" />
                         <span className="text-gray-300">{sign}</span>
                       </li>
                     ))}
@@ -163,7 +163,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
 
             {activeSection === 'practices' && (
               <div className="space-y-6">
-                <p className="text-purple-200/80 text-lg mb-8">
+                <p className="text-terracotta-200/80 text-lg mb-8">
                   These practices are not about becoming a better version of your type—they're about
                   waking up from the dream of being a type at all. They work for everyone, regardless
                   of type, because they address the universal mechanism of ego-identification.
@@ -185,7 +185,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <ul className="space-y-3">
                       {typeZero.essenceVsPersonality.essence.map((item, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 flex-shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-terracotta-400 mt-1.5 flex-shrink-0" />
                           <span className="text-gray-300">{item}</span>
                         </li>
                       ))}
@@ -204,8 +204,8 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                   </Card>
                 </div>
 
-                <div className="p-6 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-xl border border-purple-700/50">
-                  <h3 className="text-lg font-semibold text-purple-200 mb-3">The Key Insight</h3>
+                <div className="p-6 bg-gradient-to-r from-head-900/30 to-head-900/30 rounded-xl border border-head-700/50">
+                  <h3 className="text-lg font-semibold text-terracotta-200 mb-3">The Key Insight</h3>
                   <p className="text-gray-300 leading-relaxed">
                     Personality is not bad—it's necessary. We couldn't function without it. The problem
                     is identification: believing that the personality IS who we are. When we see personality
@@ -225,22 +225,22 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                       <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                         <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold mb-3">9</div>
-                        <h4 className="font-medium text-purple-300 mb-2">Point Nine</h4>
+                        <h4 className="font-medium text-terracotta-300 mb-2">Point Nine</h4>
                         <p className="text-sm text-gray-400">{typeZero.theInnerTriangle.nine}</p>
                       </div>
                       <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                         <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold mb-3">3</div>
-                        <h4 className="font-medium text-purple-300 mb-2">Point Three</h4>
+                        <h4 className="font-medium text-terracotta-300 mb-2">Point Three</h4>
                         <p className="text-sm text-gray-400">{typeZero.theInnerTriangle.three}</p>
                       </div>
                       <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                         <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold mb-3">6</div>
-                        <h4 className="font-medium text-purple-300 mb-2">Point Six</h4>
+                        <h4 className="font-medium text-terracotta-300 mb-2">Point Six</h4>
                         <p className="text-sm text-gray-400">{typeZero.theInnerTriangle.six}</p>
                       </div>
                     </div>
-                    <div className="p-4 bg-purple-900/20 rounded-lg border border-purple-700/50 mt-4">
-                      <h4 className="font-medium text-purple-300 mb-2">Movement</h4>
+                    <div className="p-4 bg-head-900/20 rounded-lg border border-head-700/50 mt-4">
+                      <h4 className="font-medium text-terracotta-300 mb-2">Movement</h4>
                       <p className="text-gray-400">{typeZero.theInnerTriangle.movement}</p>
                     </div>
                   </div>
@@ -251,11 +251,11 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                     <p className="text-gray-300 leading-relaxed">{typeZero.theHexad.description}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                        <h4 className="font-medium text-amber-300 mb-2">Movement Pattern</h4>
+                        <h4 className="font-medium text-gold-300 mb-2">Movement Pattern</h4>
                         <p className="text-sm text-gray-400">{typeZero.theHexad.movement}</p>
                       </div>
                       <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                        <h4 className="font-medium text-amber-300 mb-2">Meaning</h4>
+                        <h4 className="font-medium text-gold-300 mb-2">Meaning</h4>
                         <p className="text-sm text-gray-400">{typeZero.theHexad.meaning}</p>
                       </div>
                     </div>
@@ -265,7 +265,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                 <div className="flex justify-center py-8">
                   <div className="relative w-48 h-48 sm:w-64 sm:h-64">
                     {/* Outer circle */}
-                    <div className="absolute inset-0 rounded-full border-2 border-purple-500/50" />
+                    <div className="absolute inset-0 rounded-full border-2 border-terracotta-500/50" />
                     {/* Inner triangle */}
                     <svg className="absolute inset-0" viewBox="0 0 100 100">
                       <polygon
@@ -284,12 +284,12 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                       />
                     </svg>
                     {/* Center point */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-purple-500/50 blur-sm" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-terracotta-500/50 blur-sm" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white" />
                     {/* Number labels */}
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 text-purple-300 font-bold text-sm sm:text-base">9</span>
-                    <span className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-purple-300 font-bold text-sm sm:text-base">3</span>
-                    <span className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-purple-300 font-bold text-sm sm:text-base">6</span>
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 text-terracotta-300 font-bold text-sm sm:text-base">9</span>
+                    <span className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 text-terracotta-300 font-bold text-sm sm:text-base">3</span>
+                    <span className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 text-terracotta-300 font-bold text-sm sm:text-base">6</span>
                   </div>
                 </div>
               </div>
@@ -298,12 +298,12 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
             {activeSection === 'dao-path' && (
               <div className="space-y-6">
                 {/* Dao Path Header */}
-                <div className="p-6 bg-gradient-to-r from-emerald-900/30 to-teal-900/30 rounded-xl border border-emerald-700/50 mb-8">
+                <div className="p-6 bg-gradient-to-r from-sage-900/30 to-head-900/30 rounded-xl border border-sage-700/50 mb-8">
                   <div className="flex items-center gap-4 mb-4">
                     <span className="text-4xl">道</span>
                     <div>
-                      <h2 className="text-2xl font-bold text-emerald-200">The Dao Path</h2>
-                      <p className="text-emerald-400/70">Taoist wisdom for the Enneagram journey</p>
+                      <h2 className="text-2xl font-bold text-sage-200">The Dao Path</h2>
+                      <p className="text-sage-400/70">Taoist wisdom for the Enneagram journey</p>
                     </div>
                   </div>
                   <p className="text-gray-300 leading-relaxed">
@@ -322,7 +322,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                 {/* The Sacred Pause */}
                 <div className="max-w-xl space-y-12">
                   {/* Poetic Insight */}
-                  <p className="text-2xl md:text-3xl font-light text-purple-100 leading-relaxed">
+                  <p className="text-2xl md:text-3xl font-light text-cream-100 leading-relaxed">
                     Beyond all types, beneath every thought, there is presence.
                   </p>
 
@@ -334,7 +334,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                   </div>
 
                   {/* Forward Integration */}
-                  <p className="text-purple-300/70 text-base">
+                  <p className="text-terracotta-300/70 text-base">
                     When you return to explore the types, carry this quiet space with you.
                   </p>
 
@@ -342,7 +342,7 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
                   <div className="pt-8">
                     <button
                       onClick={onClose}
-                      className="px-8 py-4 bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/50 rounded-xl text-purple-200 font-medium transition-colors"
+                      className="px-8 py-4 bg-terracotta-600/30 hover:bg-terracotta-600/50 border border-terracotta-500/50 rounded-xl text-terracotta-200 font-medium transition-colors"
                     >
                       Return to Center
                     </button>
@@ -354,12 +354,12 @@ export function TranscendencePage({ onClose }: TranscendencePageProps) {
       </div>
 
       {/* Footer */}
-      <div className="py-12 px-4 border-t border-purple-800/50">
+      <div className="py-12 px-4 border-t border-head-800/50">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-purple-300/60 text-sm italic">
+          <p className="text-terracotta-300/60 text-sm italic">
             "Man is a machine, but a machine that can know it is a machine—and only then can it cease to be a machine."
           </p>
-          <p className="text-purple-400/40 text-xs mt-2">— G.I. Gurdjieff</p>
+          <p className="text-terracotta-400/40 text-xs mt-2">— G.I. Gurdjieff</p>
         </div>
       </div>
     </div>
@@ -375,7 +375,7 @@ interface CardProps {
 
 function Card({ title, accentColor = '#a78bfa', children }: CardProps) {
   return (
-    <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden">
+    <div className="bg-gray-800/50 rounded-2xl border border-gray-700/50 overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-700/50">
         <h3 className="text-lg font-semibold" style={{ color: accentColor }}>{title}</h3>
       </div>
@@ -393,13 +393,13 @@ function TeachingCard({ teaching }: TeachingCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden">
+    <div className="bg-gray-800/50 rounded-2xl border border-gray-700/50 overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
       >
         <div>
-          <h4 className="text-lg font-semibold text-purple-300">{teaching.title}</h4>
+          <h4 className="text-lg font-semibold text-terracotta-300">{teaching.title}</h4>
           <p className="text-sm text-gray-500">{teaching.source}</p>
         </div>
         <svg
@@ -417,8 +417,8 @@ function TeachingCard({ teaching }: TeachingCardProps) {
             {teaching.teaching}
           </p>
           {teaching.practice && (
-            <div className="p-4 bg-purple-900/20 rounded-lg border border-purple-700/50">
-              <h5 className="text-sm font-medium text-purple-300 mb-2">Practice</h5>
+            <div className="p-4 bg-head-900/20 rounded-lg border border-head-700/50">
+              <h5 className="text-sm font-medium text-terracotta-300 mb-2">Practice</h5>
               <p className="text-gray-400 text-sm">{teaching.practice}</p>
             </div>
           )}

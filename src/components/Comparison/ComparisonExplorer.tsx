@@ -57,9 +57,33 @@ export function ComparisonExplorer({
     tips: false
   });
   const [showStickyHeader, setShowStickyHeader] = useState(false);
+  const [showFullStory, setShowFullStory] = useState(false);
+  const [showSubtypeStory, setShowSubtypeStory] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const handleType1Change = (value: TypeNumber | null) => {
+    setType1(value);
+    setShowFullStory(false);
+    setShowSubtypeStory(false);
+  };
+
+  const handleType2Change = (value: TypeNumber | null) => {
+    setType2(value);
+    setShowFullStory(false);
+    setShowSubtypeStory(false);
+  };
+
+  const handleSubtype1Change = (value: InstinctType | null) => {
+    setSubtype1(value);
+    setShowSubtypeStory(false);
+  };
+
+  const handleSubtype2Change = (value: InstinctType | null) => {
+    setSubtype2(value);
+    setShowSubtypeStory(false);
   };
 
   useEffect(() => {
@@ -98,11 +122,11 @@ export function ComparisonExplorer({
   );
   const relationshipParagraphs = useMemo(
     () => (relationshipStory?.narrative ? relationshipStory.narrative.split('\n\n') : []),
-    [relationshipStory?.narrative]
+    [relationshipStory]
   );
   const subtypeParagraphs = useMemo(
     () => (subtypeStory?.narrative ? subtypeStory.narrative.split('\n\n') : []),
-    [subtypeStory?.narrative]
+    [subtypeStory]
   );
 
   // Get relationship archetype
@@ -236,14 +260,14 @@ export function ComparisonExplorer({
           <TypeSelector
             label="First Type"
             value={type1}
-            onChange={setType1}
+            onChange={handleType1Change}
             types={allTypes}
             excludeType={null}
           />
           <TypeSelector
             label="Second Type"
             value={type2}
-            onChange={setType2}
+            onChange={handleType2Change}
             types={allTypes}
             excludeType={null}
           />
@@ -307,40 +331,66 @@ export function ComparisonExplorer({
                     </div>
                   )}
 
-                  {/* General Relationship Story - BROAD (shown first) */}
+                  {/* General Relationship Story */}
                   {relationshipStory && (
-                    <div className="mb-8 bg-cream-100 dark:bg-gray-800 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-700">
-                      <div className="p-6 bg-gradient-to-r from-charcoal to-charcoal-light dark:from-gray-700 dark:to-gray-600 text-white">
-                        <h3 className="text-2xl font-serif font-bold">{relationshipStory.title}</h3>
-                        <p className="text-cream-300 dark:text-gray-300 italic mt-1">{relationshipStory.subtitle}</p>
+                    <div className="mb-8 space-y-3">
+                      <div className="rounded-2xl border border-warm-border dark:border-gray-700 bg-white dark:bg-gray-800 p-5 sm:p-6">
+                        <h3 className="text-2xl font-serif font-bold text-charcoal dark:text-white">{relationshipStory.title}</h3>
+                        <p className="text-charcoal-light dark:text-gray-300 italic mt-1">{relationshipStory.subtitle}</p>
+                        {relationshipParagraphs[0] && (
+                          <p className="mt-4 text-charcoal-light dark:text-gray-300 leading-relaxed">
+                            {relationshipParagraphs[0]}
+                          </p>
+                        )}
+                        <button
+                          onClick={() => setShowFullStory((current) => !current)}
+                          className="mt-4 px-4 py-2 rounded-full text-sm font-medium border border-warm-border dark:border-gray-600 text-charcoal dark:text-gray-200 hover:bg-cream-200 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          {showFullStory ? 'Hide Full Narrative' : 'Read Full Narrative'}
+                        </button>
                       </div>
-                      <div className="p-6 bg-white dark:bg-gray-800">
-                        <div className="prose prose-warm dark:prose-invert max-w-none">
-                          {relationshipParagraphs.map((paragraph, i) => (
-                            <p key={i} className="text-charcoal-light dark:text-gray-200 leading-relaxed mb-4 last:mb-0">
-                              {paragraph}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="p-6 bg-sage-50 dark:bg-emerald-900/20 border-t border-warm-border dark:border-gray-700">
-                        <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-emerald-300 mb-2 flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                          The Growth Moment
-                        </h4>
-                        <p className="text-sage-700 dark:text-emerald-200">{relationshipStory.growthMoment}</p>
-                      </div>
-                      <div className="p-6 bg-gold-50 dark:bg-amber-900/20 border-t border-warm-border dark:border-gray-700">
-                        <h4 className="text-lg font-serif font-semibold text-gold-700 dark:text-amber-300 mb-2 flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          Reflection
-                        </h4>
-                        <p className="text-gold-700 dark:text-amber-200 italic">{relationshipStory.reflection}</p>
-                      </div>
+
+                      <AnimatePresence>
+                        {showFullStory && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            className="bg-cream-100 dark:bg-gray-800 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-700"
+                          >
+                            <div className="p-6 bg-gradient-to-r from-charcoal to-head-700 dark:from-gray-700 dark:to-gray-600 text-white">
+                              <h4 className="text-xl font-serif font-bold">Narrative</h4>
+                            </div>
+                            <div className="p-6 bg-white dark:bg-gray-800">
+                              <div className="prose prose-warm dark:prose-invert max-w-none">
+                                {relationshipParagraphs.map((paragraph, i) => (
+                                  <p key={i} className="text-charcoal-light dark:text-gray-200 leading-relaxed mb-4 last:mb-0">
+                                    {paragraph}
+                                  </p>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="p-6 bg-sage-50 dark:bg-emerald-900/20 border-t border-warm-border dark:border-gray-700">
+                              <h4 className="text-lg font-serif font-semibold text-sage-700 dark:text-emerald-300 mb-2 flex items-center gap-2">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                The Growth Moment
+                              </h4>
+                              <p className="text-sage-700 dark:text-emerald-200">{relationshipStory.growthMoment}</p>
+                            </div>
+                            <div className="p-6 bg-gold-50 dark:bg-amber-900/20 border-t border-warm-border dark:border-gray-700">
+                              <h4 className="text-lg font-serif font-semibold text-gold-700 dark:text-amber-300 mb-2 flex items-center gap-2">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Reflection
+                              </h4>
+                              <p className="text-gold-700 dark:text-amber-200 italic">{relationshipStory.reflection}</p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   )}
 
@@ -348,28 +398,38 @@ export function ComparisonExplorer({
                   {type1 && type2 && (
                     <div className="mb-8">
                       {/* Subtype Selectors */}
-                      <div className="p-4 bg-gradient-to-r from-amber-50 via-violet-50 to-pink-50 dark:from-amber-900/20 dark:via-violet-900/20 dark:to-pink-900/20 rounded-xl border border-warm-border dark:border-gray-600 mb-4">
+                      <div className="p-4 bg-gradient-to-r from-cream-100 via-cream-50 to-sage-50 dark:from-gray-800 dark:via-gray-800 dark:to-sage-900/20 rounded-xl border border-warm-border dark:border-gray-600 mb-4">
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center flex items-center justify-center gap-2">
-                          <svg className="w-4 h-4 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-4 h-4 text-terracotta-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                           </svg>
                           Dive Deeper: Compare Specific Subtypes
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <SubtypeSelector label={`Type ${type1} Subtype`} value={subtype1} onChange={setSubtype1} typeNumber={type1} />
-                          <SubtypeSelector label={`Type ${type2} Subtype`} value={subtype2} onChange={setSubtype2} typeNumber={type2} />
+                          <SubtypeSelector label={`Type ${type1} Subtype`} value={subtype1} onChange={handleSubtype1Change} typeNumber={type1} />
+                          <SubtypeSelector label={`Type ${type2} Subtype`} value={subtype2} onChange={handleSubtype2Change} typeNumber={type2} />
                         </div>
+                        {subtypeStory && (
+                          <div className="mt-4 text-center">
+                            <button
+                              onClick={() => setShowSubtypeStory((current) => !current)}
+                              className="px-4 py-2 rounded-full text-sm font-medium border border-warm-border dark:border-gray-600 text-charcoal dark:text-gray-200 hover:bg-cream-200 dark:hover:bg-gray-700 transition-colors"
+                            >
+                              {showSubtypeStory ? 'Hide Subtype Narrative' : 'Show Subtype Narrative'}
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Subtype-Specific Relationship Story */}
-                      {subtypeStory && (
+                      {subtypeStory && showSubtypeStory && (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-gradient-to-br from-amber-50 via-violet-50 to-pink-50 dark:from-amber-900/20 dark:via-violet-900/20 dark:to-pink-900/20 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600"
+                          className="bg-gradient-to-br from-cream-100 via-cream-50 to-sage-50 dark:from-gray-800 dark:via-gray-800 dark:to-sage-900/20 rounded-2xl overflow-hidden border border-warm-border dark:border-gray-600"
                         >
-                          <div className="p-6 bg-gradient-to-r from-amber-600 via-violet-600 to-pink-600 text-white">
-                            <div className="flex items-center gap-2 text-amber-100 text-sm mb-2">
+                          <div className="p-6 bg-gradient-to-r from-charcoal to-head-700 text-white">
+                            <div className="flex items-center gap-2 text-cream-300 text-sm mb-2">
                               <span className="px-2 py-0.5 rounded-full bg-white/20">
                                 {subtype1?.toUpperCase()}
                               </span>

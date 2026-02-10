@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense, useEffect, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Layout } from './components/Layout';
 import { EnneagramCircle } from './components/Circle';
@@ -6,6 +7,7 @@ import { TypeCard } from './components/TypeCard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAppStore, createUserProfile } from './stores';
 import { useUrlSync } from './hooks';
+import { MOTION_DURATION } from './lib/motion';
 import type { TypeNumber, WingVariant, InstinctStack } from './types';
 import './index.css';
 
@@ -80,6 +82,14 @@ function LoadingFallback({ message = 'Loading...' }: { message?: string }) {
   );
 }
 
+function FullscreenShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen bg-cream-100 dark:bg-gray-950 transition-colors">
+      {children}
+    </div>
+  );
+}
+
 function App() {
   // Sync URL query params with app state
   useUrlSync();
@@ -91,6 +101,8 @@ function App() {
   const selectType = useAppStore((state) => state.selectType);
   const setViewMode = useAppStore((state) => state.setViewMode);
   const setUserProfile = useAppStore((state) => state.setUserProfile);
+  const hasSeenJourney = useAppStore((state) => state.hasSeenJourney);
+  const markJourneySeen = useAppStore((state) => state.markJourneySeen);
   const [typeCardOpen, setTypeCardOpen] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
@@ -145,6 +157,7 @@ function App() {
   // Open TypeCard drawer when type is selected on smaller screens
   useEffect(() => {
     if (selectedType && !isLargeScreen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTypeCardOpen(true);
     }
   }, [selectedType, isLargeScreen]);
@@ -152,79 +165,95 @@ function App() {
   // Quiz view is full screen
   if (viewMode === 'quiz') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading quiz..." />}>
-        <Quiz
-          onComplete={handleQuizComplete}
-          onClose={() => setViewMode('circle')}
-        />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading quiz..." />}>
+          <Quiz
+            onComplete={handleQuizComplete}
+            onClose={() => setViewMode('circle')}
+          />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Profile view is full screen
   if (viewMode === 'profile') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading profile..." />}>
-        <Profile />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading profile..." />}>
+          <Profile />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Transcendence view is full screen
   if (viewMode === 'transcendence') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading essence teachings..." />}>
-        <TranscendencePage onClose={() => setViewMode('circle')} />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading essence teachings..." />}>
+          <TranscendencePage onClose={() => setViewMode('circle')} />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Wisdom Lineage view is full screen
   if (viewMode === 'wisdomLineage') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading wisdom traditions..." />}>
-        <WisdomLineagePage onClose={() => setViewMode('circle')} />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading wisdom traditions..." />}>
+          <WisdomLineagePage onClose={() => setViewMode('circle')} />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Tri-Fix Explorer view is full screen
   if (viewMode === 'tritypes') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading tri-fix explorer..." />}>
-        <TriFixExplorer onClose={() => setViewMode('circle')} />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading tri-fix explorer..." />}>
+          <TriFixExplorer onClose={() => setViewMode('circle')} />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Interactive Scenarios view is full screen
   if (viewMode === 'scenarios') {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading scenarios..." />}>
-        <ScenarioPage onClose={() => setViewMode('circle')} />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading scenarios..." />}>
+          <ScenarioPage onClose={() => setViewMode('circle')} />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Journey/Philosophy view is full screen
-  if (viewMode === 'journey') {
+  if (viewMode === 'journey' || !hasSeenJourney) {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading..." />}>
-        <JourneyPage onClose={() => setViewMode('circle')} />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading..." />}>
+          <JourneyPage onClose={() => { markJourneySeen(); setViewMode('circle'); }} />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
   // Detail view is full screen
   if (viewMode === 'detail' && selectedType) {
     return (
-      <Suspense fallback={<LoadingFallback message="Loading details..." />}>
-        <TypeDetailPage
-          typeNumber={selectedType}
-          onNavigate={handleTypeNavigate}
-          onClose={handleCloseDetail}
-        />
-      </Suspense>
+      <FullscreenShell>
+        <Suspense fallback={<LoadingFallback message="Loading details..." />}>
+          <TypeDetailPage
+            typeNumber={selectedType}
+            onNavigate={handleTypeNavigate}
+            onClose={handleCloseDetail}
+          />
+        </Suspense>
+      </FullscreenShell>
     );
   }
 
@@ -268,7 +297,7 @@ function App() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: MOTION_DURATION.fast }}
                 className="w-full max-w-4xl mx-auto p-2 sm:p-4 pb-8"
               >
                 <ComparisonExplorer
@@ -287,7 +316,7 @@ function App() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: MOTION_DURATION.fast }}
               className="flex-1 min-w-[400px] max-w-[600px] overflow-y-auto"
               aria-label={`Details for Type ${selectedType}`}
             >
@@ -325,7 +354,7 @@ function App() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.12 }}
+              transition={{ type: 'tween', duration: MOTION_DURATION.fast }}
               className="fixed right-0 top-0 bottom-0 w-full sm:w-[400px] md:w-[480px] bg-cream-50 dark:bg-gray-900 shadow-warm-lg z-50 overflow-y-auto"
               aria-label={`Details for Type ${selectedType}`}
             >

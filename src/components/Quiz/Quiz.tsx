@@ -165,7 +165,7 @@ export function Quiz({ onComplete, onClose }: QuizProps) {
   };
 
   return (
-    <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cream-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
       <div className="bg-charcoal dark:bg-gray-900 border-b border-charcoal-light/20 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">

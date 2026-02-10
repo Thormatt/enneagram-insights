@@ -104,10 +104,10 @@ export function Profile() {
 
   if (!userProfile) {
     return (
-      <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800 flex flex-col">
+      <div className="min-h-screen bg-cream-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 flex flex-col">
         {/* Header with close button */}
-        <header className="bg-charcoal dark:bg-gray-900 px-4 py-4">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-charcoal/95 dark:bg-gray-900/95 backdrop-blur-sm px-4">
+          <div className="max-w-4xl mx-auto flex items-center justify-between h-14">
             <h1 className="font-serif text-xl font-bold text-white">Profile</h1>
             <div className="flex items-center gap-2">
               <ThemeToggle />
@@ -163,10 +163,10 @@ export function Profile() {
                 </div>
               ) : (
                 <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-charcoal dark:text-white font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                  disabled
+                  className="px-6 py-3 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-medium rounded-xl cursor-not-allowed"
                 >
-                  Sign In to Sync
+                  Sign In — Coming Soon
                 </button>
               )}
             </div>
@@ -237,9 +237,9 @@ export function Profile() {
   if (!type) return null;
 
   return (
-    <div className="min-h-screen bg-cream-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cream-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
-      <div className="bg-charcoal dark:bg-gray-900 border-b border-charcoal-light/20 dark:border-gray-700">
+      <div className="sticky top-0 z-20 bg-charcoal/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-charcoal-light/20 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center gap-4 sm:gap-6">
             <div
@@ -306,7 +306,7 @@ export function Profile() {
               className="space-y-6"
             >
               {/* Core Summary */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Core Type</h2>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">{type.briefDescription}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -323,7 +323,7 @@ export function Profile() {
 
               {/* Wing */}
               {wingData && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Wing: {userProfile.wing}</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{wingData.name}</p>
                   <p className="text-gray-700 dark:text-gray-300">{wingData.description}</p>
@@ -332,7 +332,7 @@ export function Profile() {
 
               {/* Dominant Instinct & Subtype */}
               {dominantInstinct && dominantSubtype && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Dominant Instinct</h2>
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -353,7 +353,7 @@ export function Profile() {
               )}
 
               {/* Personal Notes */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Personal Notes</h2>
                   <button
@@ -407,7 +407,7 @@ export function Profile() {
             >
               {/* Integration Path */}
               {integration && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Growth Direction: Type {integration.movesTo}
                   </h2>
@@ -439,7 +439,7 @@ export function Profile() {
 
               {/* Vice to Virtue */}
               {viceVirtue && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Passion to Virtue</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg border-l-4 border-red-400">
@@ -456,7 +456,7 @@ export function Profile() {
 
               {/* Wu Wei Practice Teaser */}
               {wuWeiPractice && (
-                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl shadow-sm p-6 border border-emerald-200/50 dark:border-emerald-700/30">
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-2xl shadow-warm p-6 border border-emerald-200/50 dark:border-emerald-700/30">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-xl">道</span>
@@ -501,7 +501,7 @@ export function Profile() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Understanding Your Shadow</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                   Shadow work involves acknowledging the parts of yourself that you tend to deny or project onto others.
@@ -563,7 +563,7 @@ export function Profile() {
               className="space-y-6"
             >
               {/* New Entry */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">New Journal Entry</h2>
                 <textarea
                   value={newEntry}
@@ -616,7 +616,7 @@ export function Profile() {
                       key={entry.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6"
+                      className="bg-white dark:bg-gray-800 rounded-2xl shadow-warm p-6"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">

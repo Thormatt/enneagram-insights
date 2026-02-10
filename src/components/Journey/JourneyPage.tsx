@@ -9,7 +9,7 @@ export function JourneyPage({ onClose }: JourneyPageProps) {
   return (
     <div className="min-h-screen bg-cream-100 dark:bg-gray-900 transition-colors">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-cream-100/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-warm-border dark:border-gray-700">
+      <header className="sticky top-0 z-20 bg-cream-100/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-warm-border dark:border-gray-700">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             <h1 className="text-lg font-serif font-semibold text-charcoal dark:text-white">
